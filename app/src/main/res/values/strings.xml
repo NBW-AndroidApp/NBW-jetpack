@@ -40,5 +40,8 @@
         habitant. Aliquam sem fringilla ut morbi. Sagittis aliquam malesuada bibendum arcu vitae.
 
     </string>
+    <string name="login_title">login</string>
+    <string name="map_title">map</string>
+    <string name="waiver_title">waiver</string>
 
 </resources>

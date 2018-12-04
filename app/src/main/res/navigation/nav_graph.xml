@@ -3,21 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/login">
+    app:startDestination="@id/loginFragment">
 
     <fragment
-        android:id="@+id/login"
+        android:id="@+id/loginFragment"
         android:name="org.nieghborhoodbikeworks.nbw.ui.login.LoginFragment"
         android:label="login_fragment"
-        tools:layout="@layout/login_fragment">
-        <action
-            android:id="@+id/action_login_to_waiver"
-            app:destination="@id/waiver" />
-    </fragment>
+        tools:layout="@layout/login_fragment"></fragment>
     <fragment
-        android:id="@+id/waiver"
+        android:id="@+id/waiverFragment"
         android:name="org.nieghborhoodbikeworks.nbw.ui.waiver.WaiverFragment"
         android:label="waiver_fragment"
         tools:layout="@layout/waiver_fragment" />
-
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="org.nieghborhoodbikeworks.nbw.ui.map.MapFragment"
+        android:label="map_fragment"
+        tools:layout="@layout/map_fragment" />
 </navigation>
