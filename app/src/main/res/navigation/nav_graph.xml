@@ -19,5 +19,11 @@
         android:id="@+id/mapFragment"
         android:name="org.nieghborhoodbikeworks.nbw.ui.map.MapFragment"
         android:label="map_fragment"
-        tools:layout="@layout/map_fragment" />
+        tools:layout="@layout/map_fragment" ></fragment>
+    <action
+        android:id="@+id/action_global_waiverFragment"
+        app:destination="@+id/waiverFragment" />
+    <action
+        android:id="@+id/action_global_mapFragment"
+        app:destination="@id/mapFragment" /><action android:id="@+id/action_global_loginFragment" app:destination="@id/loginFragment"/>
 </navigation>
