@@ -76,16 +76,18 @@ public class MainActivity extends AppCompatActivity {
                 menuItem.setChecked(true);
                 // close drawer when item is tapped
                 mDrawerLayout.closeDrawers();
-                NavController navController = findNavController(MainActivity.this, R.id.nav_host_fragment);
                 switch (menuItem.getItemId()) {
                     case R.id.nav_login: {
-                        navController.navigate(R.id.loginFragment);
+                        mNavController.navigate(R.id.loginFragment);
+                        break;
                     }
                     case R.id.nav_waiver: {
-                        navController.navigate(R.id.waiverFragment);
+                        mNavController.navigate(R.id.waiverFragment);
+                        break;
                     }
                     case R.id.nav_map: {
-                        navController.navigate(R.id.mapFragment);
+                        mNavController.navigate(R.id.mapFragment);
+                        break;
                     }
                 }
                 return true;
