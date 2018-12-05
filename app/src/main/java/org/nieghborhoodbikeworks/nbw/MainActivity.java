@@ -13,12 +13,16 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> cd35d600cf3a8913ed8acda4c59110e9de2aaf42
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+<<<<<<< HEAD
 //        if (savedInstanceState == null) {
 //            getSupportFragmentManager().beginTransaction()
 //                    .replace(R.id.container, LoginFragment.newInstance())
@@ -53,5 +57,34 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+=======
 
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+>>>>>>> cd35d600cf3a8913ed8acda4c59110e9de2aaf42
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        // set item as selected to persist highlight
+                        menuItem.setChecked(true);
+                        // close drawer when item is tapped
+                        mDrawerLayout.closeDrawers();
+                        NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment);
+                        switch (menuItem.getItemId()) {
+                            case R.id.nav_login: {
+                                navController.navigate(R.id.loginFragment);
+                            }
+                            case R.id.nav_waiver: {
+                                navController.navigate(R.id.waiverFragment);
+                            }
+                            case R.id.nav_map: {
+                                navController.navigate(R.id.mapFragment);
+                            }
+                        }
+                        return true;
+                    }
+                });
+    }
 }
