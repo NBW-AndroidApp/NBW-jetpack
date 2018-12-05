@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_login"
+            android:title="@string/login_title" />
+        <item
+            android:id="@+id/nav_map"
+            android:title="@string/map_title" />
+        <item
+            android:id="@+id/nav_waiver"
+            android:title="@string/waiver_title" />
+    </group>
+</menu>
