@@ -1,6 +1,6 @@
 package org.nieghborhoodbikeworks.nbw.ui.Orientation;
 
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel;
 
 public class OrientationViewModel extends ViewModel {
 }

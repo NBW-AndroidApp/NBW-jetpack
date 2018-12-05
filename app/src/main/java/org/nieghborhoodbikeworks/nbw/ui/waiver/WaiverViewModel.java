@@ -1,6 +1,6 @@
 package org.nieghborhoodbikeworks.nbw.ui.waiver;
 
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel;
 
 public class WaiverViewModel extends ViewModel {
     // TODO: Implement the ViewModel
