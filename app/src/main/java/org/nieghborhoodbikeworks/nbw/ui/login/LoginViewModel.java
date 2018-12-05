@@ -1,6 +1,6 @@
 package org.nieghborhoodbikeworks.nbw.ui.login;
 
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel;
 
 public class LoginViewModel extends ViewModel {
     // TODO: Implement the ViewModel
