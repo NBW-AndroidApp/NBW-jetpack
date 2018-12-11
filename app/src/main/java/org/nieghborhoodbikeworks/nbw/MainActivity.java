@@ -13,18 +13,13 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-//        if (savedInstanceState == null) {
-//            getSupportFragmentManager().beginTransaction()
-//                    .replace(R.id.container, LoginFragment.newInstance())
-//                    .commitNow();
-//        }
+
         mDrawerLayout = findViewById(R.id.drawer_layout);
+
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -34,9 +29,7 @@ public class MainActivity extends AppCompatActivity {
                         menuItem.setChecked(true);
                         // close drawer when item is tapped
                         mDrawerLayout.closeDrawers();
-
                         NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment);
-
                         switch (menuItem.getItemId()) {
                             case R.id.nav_login: {
                                 navController.navigate(R.id.loginFragment);
@@ -48,10 +41,8 @@ public class MainActivity extends AppCompatActivity {
                                 navController.navigate(R.id.mapFragment);
                             }
                         }
-
                         return true;
                     }
                 });
     }
-
 }
