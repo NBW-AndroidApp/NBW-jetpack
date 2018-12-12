@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "716067143877",
+    "firebase_url": "https://nbw-jetpack.firebaseio.com",
+    "project_id": "nbw-jetpack",
+    "storage_bucket": "nbw-jetpack.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:716067143877:android:58a6c45e2874c5da",
+        "android_client_info": {
+          "package_name": "org.nieghborhoodbikeworks.nbw"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "716067143877-16np673ujsir48n0h8skh4cqn1ocdt67.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.nieghborhoodbikeworks.nbw",
+            "certificate_hash": "91902bf2dd6cd9945a09a42349d1ff07a8db9322"
+          }
+        },
+        {
+          "client_id": "716067143877-md4u0c8hbse2dme9qdu2i4ceisklo6no.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVgZI9NPWM_p--F2mUzfzGOUqrZLe0jOg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "716067143877-md4u0c8hbse2dme9qdu2i4ceisklo6no.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
