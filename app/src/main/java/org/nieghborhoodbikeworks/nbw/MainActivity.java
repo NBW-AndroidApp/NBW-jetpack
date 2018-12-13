@@ -85,6 +85,10 @@ public class MainActivity extends AppCompatActivity {
                         mNavController.navigate(R.id.waiverFragment);
                         break;
                     }
+                    case R.id.nav_queue: {
+                        mNavController.navigate(R.id.queueFragment);
+                        break;
+                    }
                     case R.id.nav_map: {
                         mNavController.navigate(R.id.mapFragment);
                         break;
