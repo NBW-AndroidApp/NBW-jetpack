@@ -25,4 +25,9 @@
         android:name="org.nieghborhoodbikeworks.nbw.ui.map.MapFragment"
         android:label="map_fragment"
         tools:layout="@layout/map_fragment" />
+    <fragment
+        android:id="@+id/signupFragment"
+        android:name="org.nieghborhoodbikeworks.nbw.ui.signup.SignUpFragment"
+        android:label="signup_fragment"
+        tools:layout="@layout/signup_fragment"/>
 </navigation>

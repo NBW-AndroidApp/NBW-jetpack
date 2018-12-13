@@ -98,4 +98,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    // Method for fragments to set their own titles on relevant screens
+    public void setActionBarTitle(String title) {
+        if (title != null) {
+            getSupportActionBar().setTitle(title);
+        }
+    }
 }
