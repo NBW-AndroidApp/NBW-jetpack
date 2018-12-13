@@ -2,48 +2,57 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/login"
+    android:id="@+id/signup"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.login.LoginFragment"
+    tools:context=".ui.signup.SignUpFragment"
     android:background="@android:color/white">
 
     <!--Have to resize image for efficient performance on UI thread-->
     <!--<ImageView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:src="@drawable/philly_silhouette"-->
-        <!--android:cropToPadding="true"-->
-        <!--android:scaleType="centerCrop"-->
-        <!--/>-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:src="@drawable/philly_silhouette"-->
+    <!--android:cropToPadding="true"-->
+    <!--android:scaleType="centerCrop"-->
+    <!--/>-->
 
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center"
+        android:layout_width="300sp"
+        android:layout_height="463dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.317">
+        app:layout_constraintVertical_bias="0.476"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20sp"
             android:layout_marginBottom="30sp"
             android:gravity="center_horizontal"
-            android:text="@string/welcome"
-            android:textSize="20sp"
+            android:text="@string/signup_title"
+            android:textSize="25sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.533"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.123" />
+            app:layout_constraintVertical_bias="0.09" />
+
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="20sp"
+            android:hint="@string/name" />
 
         <EditText
             android:id="@+id/email"
@@ -62,36 +71,34 @@
             android:hint="@string/password_hint"
             android:inputType="textPassword" />
 
+        <EditText
+            android:id="@+id/password_verify"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="20sp"
+            android:hint="@string/verify_password"
+            android:inputType="textPassword" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="20sp"
+            android:text="@string/age_consent" />
+
+
         <Button
-            android:id="@+id/login_button"
+            android:id="@+id/signup_button"
             android:layout_width="200sp"
             android:layout_height="50sp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="20sp"
+            android:layout_marginBottom="15sp"
             android:background="@drawable/rounded_button"
-            android:text="@string/login" />
-
-        <TextView
-            android:id="@+id/forgot_password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20sp"
-            android:text="@string/forgot_password"
-            android:textColor="@android:color/holo_red_light" />
-
-        <TextView
-            android:id="@+id/sign_up"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20sp"
-            android:gravity="center_horizontal"
-            android:text="@string/signup_question"
-            android:textColor="@color/colorPrimary"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:text="@string/signup" />
     </LinearLayout>
+
+
 
 
 

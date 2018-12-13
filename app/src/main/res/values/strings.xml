@@ -47,10 +47,16 @@
     <string name="login_title">Login to Your Account</string>
     <string name="login">Login</string>
     <string name="welcome">Welcome to Neighborhood Bike Works</string>
-    <string name="username">Username</string>
-    <string name="username_hint">E.g. johndoe</string>
+    <string name="email">E-mail</string>
     <string name="password_hint">Password</string>
-    <string name="signup_question">Don\'t have an account?</string>
-    <string name="signup_title">Sign up!</string>
+    <string name="signup_question"><u>Don\'t have an account?</u></string>
+    <string name="forgot_password"><u>Forgot password?</u></string>
+    <string name="string_divider">&#160;&#160;&#160;&#160;</string>
 
+    <!--Signup fragment settings-->
+    <string name="signup_title">Sign Up with NBW</string>
+    <string name="name">John Doe</string>
+    <string name="age_consent">I am over 18 years old.</string>
+    <string name="verify_password">Verify Password</string>
+    <string name="signup">Sign Up</string>
 </resources>
