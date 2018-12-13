@@ -40,8 +40,17 @@
         habitant. Aliquam sem fringilla ut morbi. Sagittis aliquam malesuada bibendum arcu vitae.
 
     </string>
-    <string name="login_title">login</string>
     <string name="map_title">map</string>
     <string name="waiver_title">waiver</string>
+
+    <!--Login Fragment strings-->
+    <string name="login_title">Login to Your Account</string>
+    <string name="login">Login</string>
+    <string name="welcome">Welcome to Neighborhood Bike Works</string>
+    <string name="username">Username</string>
+    <string name="username_hint">E.g. johndoe</string>
+    <string name="password_hint">Password</string>
+    <string name="signup_question">Don\'t have an account?</string>
+    <string name="signup_title">Sign up!</string>
 
 </resources>
