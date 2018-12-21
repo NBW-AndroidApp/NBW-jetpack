@@ -1,21 +1,18 @@
 package org.nieghborhoodbikeworks.nbw;
 
 import com.google.android.material.navigation.NavigationView;
-
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
-
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import static androidx.navigation.Navigation.findNavController;
 import static androidx.navigation.ui.NavigationUI.setupActionBarWithNavController;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -83,6 +80,10 @@ public class MainActivity extends AppCompatActivity {
                     }
                     case R.id.nav_waiver: {
                         mNavController.navigate(R.id.waiverFragment);
+                        break;
+                    }
+                    case R.id.nav_queue: {
+                        mNavController.navigate(R.id.queueFragment);
                         break;
                     }
                     case R.id.nav_map: {

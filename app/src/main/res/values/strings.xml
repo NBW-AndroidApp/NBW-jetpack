@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">NBW</string>
 
-    <string name="accept">Accept</string>
-    <string name="decline">Decline</string>
-    <string name="agreement"><b>End-User License Agreement for Neighborhood Bike Works App</b>
+    <!--Waiver Fragment strings-->
+    <string name="waiver_title">Waiver</string>
+    <string name="waiver_layouttitle">NEIGHBORHOOD BIKE WORKS</string>
+    <string name="waiver_subtitle">PARTICIPATION AGREEMENT</string>
+    <string name="waiver_text"><b>Placeholder Agreement Text</b>
 
         \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
         tempor incididunt ut labore et dolore magna aliqua. Eu lobortis elementum nibh tellus.
@@ -11,16 +13,12 @@
         augue mauris augue. Risus commodo viverra maecenas accumsan lacus. Fusce ut placerat orci
         nulla pellentesque dignissim enim sit amet. Ut sem viverra aliquet eget sit amet tellus. Nec
         dui nunc mattis enim ut. Id interdum velit laoreet id donec ultrices. Vitae congue mauris
-        rhoncus aenean vel elit scelerisque.
-
-        \n\n<b>Software Product License</b>
-
-        \n\nScelerisque eu ultrices vitae auctor eu augue. Posuere morbi leo urna molestie.
-        Ullamcorper sit amet risus nullam eget felis. Erat velit scelerisque in dictum. Tempus
-        egestas sed sed risus pretium quam vulputate dignissim. Facilisis volutpat est velit egestas
-        dui id ornare arcu. Pretium viverra suspendisse potenti nullam ac tortor. Faucibus a
-        pellentesque sit amet. Varius vel pharetra vel turpis nunc eget lorem. Id velit ut tortor
-        pretium viverra suspendisse. Ipsum suspendisse ultrices gravida dictum fusce ut placerat
+        rhoncus aenean vel elit scelerisque.Scelerisque eu ultrices vitae auctor eu augue. Posuere
+        morbi leo urna molestie. Ullamcorper sit amet risus nullam eget felis. Erat velit scelerisque
+        in dictum. Tempus egestas sed sed risus pretium quam vulputate dignissim. Facilisis volutpat
+        est velit egestas dui id ornare arcu. Pretium viverra suspendisse potenti nullam ac tortor.
+        Faucibus a pellentesque sit amet. Varius vel pharetra vel turpis nunc eget lorem. Id velit ut
+        tortor pretium viverra suspendisse. Ipsum suspendisse ultrices gravida dictum fusce ut placerat
         orci. Mi in nulla posuere sollicitudin aliquam ultrices. Mollis nunc sed id semper risus in
         hendrerit. Maecenas pharetra convallis posuere morbi leo urna molestie at. Mi in nulla
         posuere sollicitudin aliquam. Elit scelerisque mauris pellentesque pulvinar pellentesque
@@ -39,9 +37,29 @@
         posuere sollicitudin aliquam. Elit scelerisque mauris pellentesque pulvinar pellentesque
         habitant. Aliquam sem fringilla ut morbi. Sagittis aliquam malesuada bibendum arcu vitae.
 
+        \n\n<b>I have read this agreement, fully understand its terms, understand that I have given up
+        substantial rights by signing it and have signed it freely and without any inducement or
+        assurance of any nature and intend it to be a complete and unconditional release of all
+        liability to the greatest extent allowed by law and agree that if any portion of this
+        agreement is held to be invalid, the balance, notwithstanding, shall continue in full force
+        and effect.</b>
+
     </string>
+    <string name="waiver_end"> I have READ and AGREED to the terms and conditions (required)</string>
+    <string name="waiver_signature">Sign your name</string>
+    <string name="waiver_date">Date (MM/DD/YYYY)</string>
+
+    <!--Queue Fragment strings-->
+    <string name="queue_title">Sign-in Queue</string>
+    <string name="dummy_text">
+        1. Rafael Rodriguez
+        \n2. Rudy Hernandez
+        \n3. Ahmed Ishtiaque
+        \n4. Jackson Meyer-Lee
+    </string>
+
+    <!--Map Fragment strings-->
     <string name="map_title">map</string>
-    <string name="waiver_title">waiver</string>
 
     <!--Login Fragment strings-->
     <string name="login_title">Login to Your Account</string>
