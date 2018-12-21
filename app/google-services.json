@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "716067143877-j04fbup7g1rsv8sc2seni6f9a6a3n7rm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.nieghborhoodbikeworks.nbw",
+            "certificate_hash": "d0b1fad8710676a3822295b00f91a98f49c11148"
+          }
+        },
+        {
           "client_id": "716067143877-md4u0c8hbse2dme9qdu2i4ceisklo6no.apps.googleusercontent.com",
           "client_type": 3
         }
