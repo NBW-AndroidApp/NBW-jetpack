@@ -2,10 +2,13 @@ package org.nieghborhoodbikeworks.nbw.ui.login;
 
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,11 +27,14 @@ import com.google.firebase.auth.FirebaseUser;
 
 import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
+import org.nieghborhoodbikeworks.nbw.SharedViewModel;
 import org.nieghborhoodbikeworks.nbw.ui.signup.SignUpFragment;
+
+import java.util.concurrent.Executor;
 
 public class LoginFragment extends Fragment {
     private String TAG = "LoginFragment";
-    private LoginSignUpViewModel mViewModel;
+    private SharedViewModel mViewModel;
     private FirebaseAuth mAuth;
     private Button mLogInButton;
     private EditText mEmailText, mPasswordText;
@@ -62,7 +68,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(LoginSignUpViewModel.class);
+        mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
 
         // TODO: Use the ViewModel
         mAuth = mViewModel.getAuth();
@@ -105,37 +111,29 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Here!");
-                SignUpFragment newSignUpFragment = new SignUpFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(((ViewGroup)getView().getParent()).getId(), newSignUpFragment)
-                        .addToBackStack("SignUpFragment")
-                        .commit();
+                Navigation.findNavController(v).navigate(R.id.signupFragment);
             }
         });
     }
 
     public void createAccount(String email, String password) {
         Log.d(TAG, "createAccount:" + email);
-        mAuth.createUserWithEmailAndPassword(email, password);
-//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if (task.isSuccessful()) {
-//                            // Sign in success, update UI with the signed-in user's information
-//                            Log.d(TAG, "createUserWithEmail:success");
-//                            FirebaseUser user = mAuth.getCurrentUser();
-//                            updateUI(user);
-//                        } else {
-//                            // If sign in fails, display a message to the user.
-//                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-//                            Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
-//                                    Toast.LENGTH_SHORT).show();
-//                            updateUI(null);
-//                        }
-//
-//                        // ...
-//                    }
-//                });
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener((Executor) this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "createUserWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(getActivity(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
 }

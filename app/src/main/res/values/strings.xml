@@ -77,4 +77,7 @@
     <string name="age_consent">I am over 18 years old.</string>
     <string name="verify_password">Verify Password</string>
     <string name="signup">Sign Up</string>
+
+    <!--Waiver sign resources-->
+    <string name="sign_waiver">Sign</string>
 </resources>
