@@ -1,4 +1,4 @@
-package org.nieghborhoodbikeworks.nbw.ui.login;
+package org.nieghborhoodbikeworks.nbw;
 
 import android.util.Log;
 import android.widget.Toast;
@@ -13,8 +13,8 @@ import com.google.firebase.auth.FirebaseUser;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
-public class LoginSignUpViewModel extends ViewModel {
-    private String TAG = "LoginSignUpViewModel";
+public class SharedViewModel extends ViewModel {
+    private String TAG = "SharedViewModel";
     private String mEmail;
     private String mPassword;
     private FirebaseAuth mAuth;

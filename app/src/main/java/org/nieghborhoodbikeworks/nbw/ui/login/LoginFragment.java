@@ -2,6 +2,8 @@ package org.nieghborhoodbikeworks.nbw.ui.login;
 
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,11 +26,12 @@ import com.google.firebase.auth.FirebaseUser;
 
 import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
+import org.nieghborhoodbikeworks.nbw.SharedViewModel;
 import org.nieghborhoodbikeworks.nbw.ui.signup.SignUpFragment;
 
 public class LoginFragment extends Fragment {
     private String TAG = "LoginFragment";
-    private LoginSignUpViewModel mViewModel;
+    private SharedViewModel mViewModel;
     private FirebaseAuth mAuth;
     private Button mLogInButton;
     private EditText mEmailText, mPasswordText;
@@ -62,7 +65,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(LoginSignUpViewModel.class);
+        mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
 
         // TODO: Use the ViewModel
         mAuth = mViewModel.getAuth();
