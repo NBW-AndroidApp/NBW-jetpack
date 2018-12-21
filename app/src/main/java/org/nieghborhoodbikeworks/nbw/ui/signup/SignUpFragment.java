@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import org.nieghborhoodbikeworks.nbw.MainActivity;
@@ -30,9 +31,11 @@ public class SignUpFragment extends Fragment {
         Log.d(TAG, "HERE!");
         View v = inflater.inflate(R.layout.signup_fragment, container, false);
 
-        Button signupButton = v.findViewById(R.id.signup_button);
+        final Button signupButton = v.findViewById(R.id.signup_button);
         final EditText emailEditText = v.findViewById(R.id.email);
         final EditText passwordEditText = v.findViewById(R.id.password);
+        final CheckBox ageCheckBox = v.findViewById(R.id.age_checkbox);
+
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -41,6 +44,18 @@ public class SignUpFragment extends Fragment {
                 FragmentManager fm = getFragmentManager();
                 LoginFragment loginFrag = (LoginFragment)fm.findFragmentById(R.id.loginFragment);
                 loginFrag.createAccount(email, password);
+            }
+        });
+
+        signupButton.setEnabled(false);
+        ageCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (((CheckBox) v).isChecked()) {
+                    signupButton.setEnabled(true);
+                } else {
+                    signupButton.setEnabled(false);
+                }
             }
         });
 
