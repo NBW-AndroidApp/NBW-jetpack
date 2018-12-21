@@ -5,8 +5,8 @@
     android:id="@+id/waiver"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.waiver.WaiverFragment"
-    android:background="@drawable/philly_silhouette">
+    tools:context=".ui.waiver.WaiverFragment">
+    <!--android:background="@drawable/philly_silhouette">-->
 
     <LinearLayout
         android:id="@+id/waiver_content"
@@ -91,7 +91,16 @@
             android:descendantFocusability="beforeDescendants"
             android:focusableInTouchMode="true"
             android:hint="@string/waiver_date"
-            android:inputType="date" />
+            android:inputType="date"
+            android:layout_marginBottom="20sp"/>
+        <Button
+            android:id="@+id/submit_waiver_button"
+            android:layout_width="200sp"
+            android:layout_height="50sp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="15sp"
+            android:background="@drawable/rounded_button"
+            android:text="@string/sign_waiver"/>
 
     </LinearLayout>
 
