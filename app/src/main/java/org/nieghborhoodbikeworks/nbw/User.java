@@ -5,6 +5,15 @@ public class User {
     private String email;
     private boolean signedWaiver;
     private String uid;
+    private boolean admin;
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
 
     public User(String name, String email) {
         this.setName(name);

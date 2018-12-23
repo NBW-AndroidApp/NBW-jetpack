@@ -21,6 +21,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
+import org.nieghborhoodbikeworks.nbw.User;
 import org.nieghborhoodbikeworks.nbw.ui.login.LoginFragment;
 
 import androidx.annotation.NonNull;
@@ -33,37 +34,77 @@ import androidx.navigation.Navigation;
 public class SignUpFragment extends Fragment {
     private String TAG = "SignUpFragment";
     private SharedViewModel mViewModel;
+    private Button mSignUpButton;
+    private EditText mEmail, mPassword, mPasswordVerify, mName;
+    private CheckBox mAgeCheckBox;
 
     public SignUpFragment(){}
 
+    /**
+     * Initializes the Sign Up Fragment and loads its visual elements into member variables.
+     * mViewModel is set as the SharedViewModel used by MainActivity. This way, data is available
+     * between fragments since SharedViewModel manages data for MainActivity.
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-//        ((MainActivity) getActivity()).setActionBarTitle("Sign Up with NBW");
+        // Set Title for the Fragment.
+        ((MainActivity) getActivity()).setActionBarTitle("Sign Up with NBW");
         // Get the view from fragment XML
         View v = inflater.inflate(R.layout.signup_fragment, container, false);
+
+        // Fetch SharedViewModel from MainActivity.
         mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
 
-        final Button signupButton = v.findViewById(R.id.signup_button);
-        final EditText emailEditText = v.findViewById(R.id.email);
-        final EditText passwordEditText = v.findViewById(R.id.password);
-        final CheckBox ageCheckBox = v.findViewById(R.id.age_checkbox);
-        final EditText passwordVerifyEditText = v.findViewById(R.id.password_verify);
-        final EditText nameEditText = v.findViewById(R.id.name);
-        signupButton.setOnClickListener(new View.OnClickListener() {
+        // Assign values to the variables involved on the Fragment view.
+        mSignUpButton= v.findViewById(R.id.signup_button);
+        mEmail = v.findViewById(R.id.email);
+        mPassword = v.findViewById(R.id.password);
+        mAgeCheckBox = v.findViewById(R.id.age_checkbox);
+        mPasswordVerify = v.findViewById(R.id.password_verify);
+        mName = v.findViewById(R.id.name);
+
+        // Set views for listening events
+        return v;
+    }
+
+    /**
+     * This is the functional portion of the SignUpFragment.
+     * It contains two onClickListeners, on mSignUpButton and mAgeCheckBox.
+     *
+     * When the user presses the mSignUpButton: E-mail, password, passwordVerify
+     * and name are checked for validity. If any of them is invalid, then a Toast is shown to the user
+     * to enter valid credentials. If all of them are valid, the info is taken in and a {@link FirebaseUser}
+     * FirebaseUser is created as well as a {@link com.google.firebase.database.FirebaseDatabase}
+     * FirebaseDataBase User instance. After that, the person is navigated into the UserChoiceFragment.
+     * @param savedInstanceState
+     */
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mSignUpButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
-            public void onClick(final View v) {
-                Log.d(TAG, "here!");
-                String email = emailEditText.getText().toString();
-                final String password = passwordEditText.getText().toString();
-                final String name = nameEditText.getText().toString();
-                String passwordVerify = passwordVerifyEditText.getText().toString();
+            public void onClick(View v) {
+                Log.d(TAG, "Sign up initiated");
+                String email = mEmail.getText().toString();
+                String password = mPassword.getText().toString();
+                String name = mName.getText().toString();
+                String passwordVerify = mPasswordVerify.getText().toString();
                 if (!(isValidEmail(email) && (password.equals(passwordVerify)))) {
-                    Toast.makeText(getActivity(), "Please provide a valid email address.",
+                    Toast.makeText(getActivity(), "Please enter valid email and passwords.",
                             Toast.LENGTH_SHORT).show();
+                    mPassword.setText("");
+                    mPasswordVerify.setText("");
                 }
                 else {
                     Log.d(TAG, "verifying");
+                    final User user = new User(name, email);
                     mViewModel.getAuth().createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -71,22 +112,15 @@ public class SignUpFragment extends Fragment {
                                     if (task.isSuccessful()) {
                                         // Sign in success, update UI with the signed-in user's information
                                         Log.d(TAG, "createUserWithEmail:success");
-                                        FirebaseUser user = mViewModel.getAuth().getCurrentUser();
-                                        mViewModel.checkDatabaseUser(user);
-                                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                                .setDisplayName(name)
-                                                .build();
-                                        user.updateProfile(profileUpdates);
-                                        if (!mViewModel.checkWaiverStatus(user)) {
-                                            Navigation.findNavController(v).navigate(R.id.waiverFragment);
-                                        }
-                                        else {
-                                            Navigation.findNavController(v).navigate(R.id.queueFragment);
-                                        }
+                                        Toast.makeText(getActivity(),
+                                                String.format("Hello %s! Signing you in.", user.getName()),
+                                                Toast.LENGTH_SHORT).show();
+                                        user.setUid(mViewModel.getAuth().getUid());
+                                        mViewModel.createDatabaseUser(user);
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                        Toast.makeText(getActivity(), "Authentication failed.",
+                                        Toast.makeText(getActivity(), task.getException().getMessage(),
                                                 Toast.LENGTH_SHORT).show();
                                     }
                                 }
@@ -96,20 +130,23 @@ public class SignUpFragment extends Fragment {
             }
         });
 
-        signupButton.setEnabled(false);
-        ageCheckBox.setOnClickListener(new View.OnClickListener() {
+        mSignUpButton.setEnabled(false);
+        mAgeCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (((CheckBox) v).isChecked()) {
-                    signupButton.setEnabled(true);
+                    mSignUpButton.setEnabled(true);
                 } else {
-                    signupButton.setEnabled(false);
+                    mSignUpButton.setEnabled(false);
                 }
             }
         });
 
-        // Set views for listening events
-        return v;
+
+    }
+
+    private boolean isValidPassword(String password) {
+        return password.length() >= 6;
     }
 
     public final static boolean isValidEmail(CharSequence target) {
