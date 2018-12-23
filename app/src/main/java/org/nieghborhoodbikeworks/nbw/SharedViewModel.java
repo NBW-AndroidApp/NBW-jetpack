@@ -31,7 +31,11 @@ public class SharedViewModel extends ViewModel {
     private Task mSignInTask;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference mUserDatabase = mDatabase.getReference().child("users");
-    private boolean mUserWaiverStatus;
+
+    public DatabaseReference getUserDatabase() {
+        return mUserDatabase;
+    }
+
     private LinkedList<FirebaseUser> mQueue = new LinkedList<FirebaseUser>();
     private MutableLiveData<LinkedList<FirebaseUser>> liveData;
     private User mUser;
@@ -68,17 +72,6 @@ public class SharedViewModel extends ViewModel {
         this.mQueue = mQueue;
     }
 
-    public boolean checkUserWaiverStatus() {
-        return mUserWaiverStatus;
-    }
-
-    public void setUserWaiverStatus(boolean userWaiverStatus) {
-        mUserWaiverStatus = userWaiverStatus;
-        final FirebaseUser user = mAuth.getCurrentUser();
-        mUserDatabase.child("users").child(user.getUid()).child("signedWaiver")
-                .setValue(userWaiverStatus);
-    }
-
     public String getEmail() {
         return mEmail;
     }
@@ -111,22 +104,6 @@ public class SharedViewModel extends ViewModel {
         return mSignInTask;
     }
 
-    public boolean checkWaiverStatus(final User user) {
-        final boolean[] status = {false};
-        mUserDatabase.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                status[0] = (boolean) dataSnapshot.child(user.getUid()).child("signedWaiver").getValue();
-                mUserWaiverStatus = status[0];
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d(TAG, "Failed to fetch status");
-            }
-        });
-        return status[0];
-    }
 
     /**
      * Creates a user in {@link FirebaseDatabase} Firebase Realtime Database given a newly registered User.
@@ -135,5 +112,40 @@ public class SharedViewModel extends ViewModel {
      */
     public void createDatabaseUser(User user) {
         mUserDatabase.child(user.getUid()).setValue(user);
+    }
+
+
+    /**
+     * Given a UID, fetches the corresponding Database user and saves that user to mUser
+     * @param uid
+     * @return
+     */
+    public void fetchUser(String uid, final MyCallback dataFetchCallback) {
+        mUserDatabase.child(uid).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            Log.d(TAG, "User exists in remote!");
+                            mUser = dataSnapshot.getValue(User.class);
+                            dataFetchCallback.onCallback(mUser);
+                        }
+                        else {
+                            Log.d(TAG, "user doesn't exist.");
+                            mUser = null;
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.d(TAG, "Can't fetch Firebase Database user:" + databaseError.getMessage());
+                        mUser = null;
+                        dataFetchCallback.onCallback(mUser);
+                    }
+                });
+    }
+
+    public interface MyCallback {
+        void onCallback(User user);
     }
 }

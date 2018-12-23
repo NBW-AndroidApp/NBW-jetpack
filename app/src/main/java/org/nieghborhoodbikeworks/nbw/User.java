@@ -15,10 +15,13 @@ public class User {
         this.admin = admin;
     }
 
+    public User() {}
+
     public User(String name, String email) {
         this.setName(name);
         this.setEmail(email);
         this.setSignedWaiver(false);
+        this.setAdmin(false);
     }
 
     public String getName() {
@@ -37,7 +40,7 @@ public class User {
         this.email = email;
     }
 
-    public boolean isSignedWaiver() {
+    public boolean hasSignedWaiver() {
         return signedWaiver;
     }
 
