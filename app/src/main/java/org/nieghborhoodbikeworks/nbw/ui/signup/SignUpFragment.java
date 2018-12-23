@@ -96,7 +96,8 @@ public class SignUpFragment extends Fragment {
                 String password = mPassword.getText().toString();
                 String name = mName.getText().toString();
                 String passwordVerify = mPasswordVerify.getText().toString();
-                if (!(isValidEmail(email) && (password.equals(passwordVerify)))) {
+                if (!(isValidEmail(email) && isValidPassword(password)
+                        && (password.equals(passwordVerify)))) {
                     Toast.makeText(getActivity(), "Please enter valid email and passwords.",
                             Toast.LENGTH_SHORT).show();
                     mPassword.setText("");
@@ -141,16 +142,25 @@ public class SignUpFragment extends Fragment {
                 }
             }
         });
-
-
     }
 
+    /**
+     * Checks if a given password is valid. this is in place so it can be modified to have stricter
+     * rules in the future.
+     * @param password
+     * @return
+     */
     private boolean isValidPassword(String password) {
         return password.length() >= 6;
     }
 
+    /**
+     * Checks e-mail validity using Android's {@link android.util.Patterns}.
+     * @param target
+     * @return
+     */
     public final static boolean isValidEmail(CharSequence target) {
-        Log.d("SignUp", String.valueOf((!TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches())));
-        return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+        return !TextUtils.isEmpty(target) &&
+                android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 }
