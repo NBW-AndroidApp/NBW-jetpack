@@ -1,8 +1,10 @@
 package org.nieghborhoodbikeworks.nbw.ui.login;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -39,6 +41,8 @@ public class LoginFragment extends Fragment {
     private Button mLogInButton;
     private EditText mEmailText, mPasswordText;
     private TextView mForgotPassword, mSignUp;
+    private FirebaseUser mUser;
+    private AlertDialog.Builder mAlertDialog;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -85,7 +89,7 @@ public class LoginFragment extends Fragment {
 
         mLogInButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 String email = mEmailText.getText().toString();
                 String password = mPasswordText.getText().toString();
                 mViewModel.signIn(email, password).addOnCompleteListener(new OnCompleteListener() {
@@ -95,6 +99,33 @@ public class LoginFragment extends Fragment {
                             Log.d(TAG, "signInWithEmail:success");
                             Toast.makeText(getActivity(),
                                     "Signed in!", Toast.LENGTH_SHORT).show();
+                            mUser = mViewModel.getAuth().getCurrentUser();
+                            if (!mViewModel.checkWaiverStatus(mUser)) {
+                                Navigation.findNavController(v).navigate(R.id.waiverFragment);
+                            } else {
+                                mAlertDialog = new AlertDialog.Builder(getActivity())
+                                        .setTitle("Sign-in Successful!")
+                                        .setMessage("What would you like to do?")
+                                        .setPositiveButton("Add me to the queue",
+                                                new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog,
+                                                                        int which) {
+                                                        Navigation.findNavController(v).
+                                                                navigate(R.id.queueFragment);
+                                                    }
+                                                })
+                                        .setNegativeButton("Watch orientation videos",
+                                                new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog,
+                                                                        int which) {
+                                                        Navigation.findNavController(v).
+                                                                navigate(R.id.orientationFragment);
+                                                    }
+                                                });
+                                mAlertDialog.show();
+                            }
                         }
                         else {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
