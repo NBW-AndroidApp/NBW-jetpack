@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
@@ -54,11 +55,11 @@ public class SignUpFragment extends Fragment {
             public void onClick(final View v) {
                 Log.d(TAG, "here!");
                 String email = emailEditText.getText().toString();
-                String password = passwordEditText.getText().toString();
-                String name = nameEditText.getText().toString();
+                final String password = passwordEditText.getText().toString();
+                final String name = nameEditText.getText().toString();
                 String passwordVerify = passwordVerifyEditText.getText().toString();
                 if (!(isValidEmail(email) && (password.equals(passwordVerify)))) {
-                    Toast.makeText(getActivity(), "BITCH you think I'm dumb?",
+                    Toast.makeText(getActivity(), "Please provide a valid email address.",
                             Toast.LENGTH_SHORT).show();
                 }
                 else {
@@ -72,6 +73,10 @@ public class SignUpFragment extends Fragment {
                                         Log.d(TAG, "createUserWithEmail:success");
                                         FirebaseUser user = mViewModel.getAuth().getCurrentUser();
                                         mViewModel.checkDatabaseUser(user);
+                                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                                .setDisplayName(name)
+                                                .build();
+                                        user.updateProfile(profileUpdates);
                                         if (!mViewModel.checkWaiverStatus(user)) {
                                             Navigation.findNavController(v).navigate(R.id.waiverFragment);
                                         }

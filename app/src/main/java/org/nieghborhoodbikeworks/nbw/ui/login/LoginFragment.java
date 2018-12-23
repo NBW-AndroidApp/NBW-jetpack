@@ -40,7 +40,6 @@ public class LoginFragment extends Fragment {
     private EditText mEmailText, mPasswordText;
     private TextView mForgotPassword, mSignUp;
 
-
     public static LoginFragment newInstance() {
         return new LoginFragment();
     }
@@ -114,26 +113,6 @@ public class LoginFragment extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.signupFragment);
             }
         });
-    }
-
-    public void createAccount(String email, String password) {
-        Log.d(TAG, "createAccount:" + email);
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener((Executor) this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(getActivity(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
     }
 
 }

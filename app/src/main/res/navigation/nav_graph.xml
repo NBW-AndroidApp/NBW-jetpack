@@ -17,7 +17,7 @@
         tools:layout="@layout/waiver_fragment" />
     <fragment
         android:id="@+id/queueFragment"
-        android:name="org.nieghborhoodbikeworks.nbw.ui.waiver.WaiverFragment"
+        android:name="org.nieghborhoodbikeworks.nbw.ui.queue.QueueFragment"
         android:label="queue_fragment"
         tools:layout="@layout/queue_fragment" />
     <fragment
@@ -30,4 +30,9 @@
         android:name="org.nieghborhoodbikeworks.nbw.ui.signup.SignUpFragment"
         android:label="signup_fragment"
         tools:layout="@layout/signup_fragment"/>
+    <fragment
+        android:id="@+id/orientationFragment"
+        android:name="org.nieghborhoodbikeworks.nbw.ui.Orientation.OrientationFragment"
+        android:label="orientation_fragment"
+        tools:layout="@layout/orientation_fragment"/>
 </navigation>

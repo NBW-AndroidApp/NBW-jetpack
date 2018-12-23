@@ -1,221 +1,116 @@
 package org.nieghborhoodbikeworks.nbw.ui.queue;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.nieghborhoodbikeworks.nbw.R;
+import org.nieghborhoodbikeworks.nbw.SharedViewModel;
+
+import java.util.ArrayList;
+
+import static androidx.constraintlayout.widget.StateSet.TAG;
 
 public class QueueFragment extends Fragment {
 
-    private QueueViewModel mViewModel;
+    private SharedViewModel mViewModel;
 
-    public static QueueFragment newInstance() {
-        return new QueueFragment();
-    }
+    public QueueFragment newInstance() { return new QueueFragment(); }
+
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private AlertDialog.Builder alertDialogBuilder;
+    private Observer mObserver;
+    private TextView displayQueue;
+    private ArrayList<String> mQueue;
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference databaseReference;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.queue_fragment, container, false);
+        final View view = inflater.inflate(R.layout.queue_fragment, container, false);
+        mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
+        displayQueue = view.findViewById(R.id.textView4);
+        return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(QueueViewModel.class);
-        // TODO: Use the ViewModel
+        databaseReference = mDatabase.getReference();
+        mDatabase = mViewModel.getDatabase();
+        ValueEventListener queueListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mQueue = (ArrayList<String>) dataSnapshot.child("queue").getValue();
+                Log.d(TAG, "verifying");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "loadQueue:onCancelled", databaseError.toException());
+            }
+        };
+        databaseReference.addValueEventListener(queueListener);
+
+        alertDialogBuilder = new AlertDialog.Builder(getActivity())
+                .setTitle("Queue")
+                .setMessage("Would you like to add yourself to the queue?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+//                      some logic for when the user decides to be added to the queue
+//                      databaseReference.child("queue").updateChildren();
+                      databaseReference.child("queue").setValue(user);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+//                      some logic for when the user decides to not be added to the queue
+                    }
+                });
+
+        alertDialogBuilder.show();
+
+//        mObserver = new Observer<LinkedList<FirebaseUser>>() {
+//            @Override
+//            public void onChanged(@Nullable final LinkedList<FirebaseUser> updatedQueue) {
+//                // Update the UI
+//                displayQueue.setText(this.updateUI(updatedQueue));
+//            }
+//
+//            private String updateUI(LinkedList<FirebaseUser> updatedQueue) {
+//                String result;
+//                for(FirebaseUser user:updatedQueue) {
+//                    user.getDisplayName();
+//                }
+//                return result;
+//            }
+//        };
+//
+//        mLiveData.observe(getActivity(), mObserver);
+
     }
 
-//    /**
-//     * A single link of a linked list
-//     */
-//    class MemberLink {
-//        protected Member mMember;
-//        protected MemberLink mNext;
-//
-//        public MemberLink(Member member, MemberLink next) {
-//            mMember = member;
-//            mNext = next;
-//        }
-//
-//        public Member getMember() {
-//            return mMember;
-//        }
-//        public MemberLink getNext() {
-//            return mNext;
-//        }
-//        public void setNext(MemberLink ml) { mNext = ml; }
-//
-//    }
-//
-//    class MemberIterator implements Iterator<Member> {
-//        protected MemberLink mCur;
-//        protected MemberLink mPrev = null;
-//        protected MemberLink mPrevPrev = null;
-//
-//        public MemberIterator(MemberLink firstLink) {
-//            mCur = firstLink;
-//        }
-//
-//        public boolean hasNext() {
-//            return mCur != null;
-//        }
-//
-//        public Member next() {
-//            Member m = mCur.getMember();
-//            mPrevPrev = mPrev;
-//            mPrev = mCur;
-//            mCur = mCur.getNext();
-//            return m;
-//        }
-//
-//        public void dequeue() {
-//            if (mCur == null && (mPrevPrev == null || mPrevPrev.getNext() == null)) {
-//                mPrev.mMember = null;
-//                mCur = mPrev;
-//            } else {
-//                //at the head
-//                if (mPrevPrev == null) {
-//                    mPrev.setNext(mCur.mNext);
-//                    mCur.setNext(mPrev);
-//                    mPrev.mMember = mCur.mMember;
-//                    mCur = mPrev;
-//                    mPrev = null;
-//                }
-//            }
-//        }
-//    }
-//
-//    public class MemberList extends DataSetObservable implements Iterable<Member>, Collection<Member> {
-//        protected ArrayList<DataSetObserver> registeredObservers = new ArrayList<>();
-//        protected MemberLink mFirst;
-//
-//        public MemberList() {
-//            mFirst = null;
-//        }
-//
-//        //Creates a Linked List by making each array element a SquirrelLink and having them point to
-//        // the element in the array that is immediately after it
-//        MemberList(ArrayList<Member> members) {
-//            for (int i = members.size() - 1; i >= 0; i--) {
-//                enqueue(members.get(i));
-//            }
-//        }
-//
-//        /**
-//         * Adds a member to the back of the queue.
-//         * @param member The member to add to the list
-//         * @return {this}, the updated object after adding the member to the back of the list.
-//         */
-//        public MemberList enqueue(Member member) {
-//            mFirst = new MemberLink(member, mFirst);
-//            // notify Observers;
-//            return this;
-//        }
-//
-//        /**
-//         * Get the first Member in the queue
-//         * @return first member when queue is not empty
-//         * @throws NullPointerException when queue is empty
-//         */
-//        public Member getFirst() {
-//            if (mFirst != null) {
-//                return mFirst.getMember();
-//            } else {
-//                throw new NullPointerException();
-//            }
-//        }
-//
-//        /**
-//         *
-//         * @return The size of the list
-//         */
-//        @Override
-//        public int size() {
-//            int i = 0;
-//            for (MemberLink c = mFirst; c != null; c = c.getNext()) {
-//                i++;
-//            }
-//            if (i == 1) {
-//                if (mFirst.mMember == null) {
-//                    i--;
-//                }
-//            }
-//            return i;
-//        }
-//
-//        /**
-//         *
-//         * @return Whether or not the linked list is empty
-//         */
-//        @Override
-//        public boolean isEmpty() {
-//            if (mFirst == null) {
-//                return true;
-//            } else {
-//                return false;
-//            }
-//        }
-//
-//        @NonNull
-//        @Override
-//        public Iterator<Member> iterator() {
-//            return new MemberIterator(mFirst);
-//        }
-//
-//        /**
-//         *
-//         * @param <T>
-//         * @param ts
-//         * @return Returns all node data (i.e. Members) in a list
-//         */
-//        @NonNull
-//        @Override
-//        @SuppressWarnings("unchecked")
-//        public <T> T[] toArray(@NonNull T[] ts) {
-//            int i = 0;
-//            MemberIterator j = new MemberIterator(mFirst);
-//            while (j.hasNext()) {
-//                ts[i] = ((T) j.mCur.getMember());
-//                j.next();
-//                i++;
-//            }
-//            return ts;
-//        }
-//
-//        @NonNull
-//        @Override
-//        public Object[] toArray() {
-//            Object[] arr = new Object[size()];
-//            int j = 0;
-//            for (Iterator<Member> i = iterator(); i.hasNext(); j++) {
-//                arr[j] = i.next();
-//            }
-//            return arr;
-//        }
-//
-//        //Goes through the collection and adds each squirrel in the collection to the back of the queue
-//        @Override
-//        public boolean addAll(@NonNull Collection<? extends Member> collection) {
-//            for (Member member : collection) {
-//                this.enqueue(member);
-//            }
-//            return true;
-//        }
-//
-//        //Reassigns head to point to null, making the rest of the links in the list inaccessible (i.e.
-//        //they all go to garbage collection)
-//        @Override
-//        public void clear() {
-//            this.mFirst = null;
-//        }
 }
+
