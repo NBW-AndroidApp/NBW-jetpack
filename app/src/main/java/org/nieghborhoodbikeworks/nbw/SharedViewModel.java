@@ -27,6 +27,10 @@ public class SharedViewModel extends ViewModel {
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference mUserDatabase = mDatabase.getReference().child("users");
     private LinkedList<FirebaseUser> mQueue = new LinkedList<>();
+
+    public DatabaseReference getUserDatabase() {
+        return mUserDatabase;
+    }
     private MutableLiveData<LinkedList<FirebaseUser>> liveData;
     private User mUser;
 

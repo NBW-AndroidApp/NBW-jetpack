@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,13 +44,12 @@ public class LoginFragment extends Fragment {
     private Button mLogInButton;
     private EditText mEmailText, mPasswordText;
     private TextView mForgotPassword, mSignUp;
-    private FirebaseUser mUser;
     private AlertDialog.Builder mAlertDialog;
+    private View mView;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
     }
-
 
     /**
      * This initializes the UI variables once the fragment starts up, and returns the view
@@ -63,20 +63,20 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        ((MainActivity) getActivity()).setActionBarTitle("Welcome to NBW");
+        ((MainActivity) getActivity()).setActionBarTitle("Login to NBW");
         // Get the view from fragment XML
-        View v = inflater.inflate(R.layout.login_fragment, container, false);
+        mView = inflater.inflate(R.layout.login_fragment, container, false);
 
         // Set button for logging in
-        mLogInButton = v.findViewById(R.id.login_button);
-        mEmailText = v.findViewById(R.id.email);
-        mPasswordText = v.findViewById(R.id.password);
-        mSignUp = v.findViewById(R.id.sign_up);
-        mForgotPassword = v.findViewById(R.id.forgot_password);
+        mLogInButton = mView.findViewById(R.id.login_button);
+        mEmailText = mView.findViewById(R.id.email);
+        mPasswordText = mView.findViewById(R.id.password);
+        mSignUp = mView.findViewById(R.id.sign_up);
+        mForgotPassword = mView.findViewById(R.id.forgot_password);
 
         // TODO: Set onClickListeners for new account and forgot password
 
-        return v;
+        return mView;
     }
 
     /**
@@ -178,7 +178,6 @@ public class LoginFragment extends Fragment {
             }
         });
     }
-
     /**
      * This simply shows an alert to the app's screen. It's pushed here to allow less cluttering
      * in login's onActivityCreated above.

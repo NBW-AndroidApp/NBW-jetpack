@@ -27,6 +27,7 @@ public class User {
         this.setName(name);
         this.setEmail(email);
         this.setSignedWaiver(false);
+        this.setAdmin(false);
     }
 
     public String getName() {
@@ -45,7 +46,7 @@ public class User {
         this.email = email;
     }
 
-    // IMPORTANT: PLEASE DON'T CHANGE THIS TO hasSignedWaiver SIMPLY BECAUSE IT'S MORE INTUITIVE.
+    // IMPORTANT: PLEASE DON'T CHANGE THIS FROM isSignedWaiver SIMPLY BECAUSE IT'S MORE INTUITIVE.
     // FIREBASE WILL NOT WRITE THE RIGHT DATA IF YOU DO, AND I DON'T KNOW WHY.
     public boolean isSignedWaiver() {
         return signedWaiver;
