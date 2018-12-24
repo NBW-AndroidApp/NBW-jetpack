@@ -1,4 +1,1 @@
 language: android
-android:
-  components:
-    android-28
