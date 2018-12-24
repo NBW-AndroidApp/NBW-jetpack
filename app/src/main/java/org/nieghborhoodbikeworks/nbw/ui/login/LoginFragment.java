@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseUser;
 import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
+import org.nieghborhoodbikeworks.nbw.User;
 import org.nieghborhoodbikeworks.nbw.ui.signup.SignUpFragment;
 
 import java.util.concurrent.Executor;
@@ -41,7 +42,7 @@ public class LoginFragment extends Fragment {
     private Button mLogInButton;
     private EditText mEmailText, mPasswordText;
     private TextView mForgotPassword, mSignUp;
-    private FirebaseUser mUser;
+    private User mUser;
     private AlertDialog.Builder mAlertDialog;
 
     public static LoginFragment newInstance() {
@@ -99,33 +100,33 @@ public class LoginFragment extends Fragment {
                             Log.d(TAG, "signInWithEmail:success");
                             Toast.makeText(getActivity(),
                                     "Signed in!", Toast.LENGTH_SHORT).show();
-                            mUser = mViewModel.getAuth().getCurrentUser();
-                            if (!mViewModel.checkWaiverStatus(mUser)) {
-                                Navigation.findNavController(v).navigate(R.id.waiverFragment);
-                            } else {
-                                mAlertDialog = new AlertDialog.Builder(getActivity())
-                                        .setTitle("Sign-in Successful!")
-                                        .setMessage("What would you like to do?")
-                                        .setPositiveButton("Add me to the queue",
-                                                new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog,
-                                                                        int which) {
-                                                        Navigation.findNavController(v).
-                                                                navigate(R.id.queueFragment);
-                                                    }
-                                                })
-                                        .setNegativeButton("Watch orientation videos",
-                                                new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog,
-                                                                        int which) {
-                                                        Navigation.findNavController(v).
-                                                                navigate(R.id.orientationFragment);
-                                                    }
-                                                });
-                                mAlertDialog.show();
-                            }
+//                            mUser = mViewModel.getAuth().getCurrentUser();
+//                            if (!mViewModel.checkWaiverStatus(mUser)) {
+//                                Navigation.findNavController(v).navigate(R.id.waiverFragment);
+//                            } else {
+//                                mAlertDialog = new AlertDialog.Builder(getActivity())
+//                                        .setTitle("Sign-in Successful!")
+//                                        .setMessage("What would you like to do?")
+//                                        .setPositiveButton("Add me to the queue",
+//                                                new DialogInterface.OnClickListener() {
+//                                                    @Override
+//                                                    public void onClick(DialogInterface dialog,
+//                                                                        int which) {
+//                                                        Navigation.findNavController(v).
+//                                                                navigate(R.id.queueFragment);
+//                                                    }
+//                                                })
+//                                        .setNegativeButton("Watch orientation videos",
+//                                                new DialogInterface.OnClickListener() {
+//                                                    @Override
+//                                                    public void onClick(DialogInterface dialog,
+//                                                                        int which) {
+//                                                        Navigation.findNavController(v).
+//                                                                navigate(R.id.orientationFragment);
+//                                                    }
+//                                                });
+//                                mAlertDialog.show();
+//                            }
                         }
                         else {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());

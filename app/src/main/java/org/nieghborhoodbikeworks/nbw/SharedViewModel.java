@@ -17,10 +17,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.nieghborhoodbikeworks.nbw.ui.signup.SignUpFragment;
 
-import java.util.LinkedList;
-
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class SharedViewModel extends ViewModel {
@@ -32,8 +29,6 @@ public class SharedViewModel extends ViewModel {
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference mUserDatabase = mDatabase.getReference().child("users");
     private boolean mUserWaiverStatus;
-    private LinkedList<FirebaseUser> mQueue = new LinkedList<FirebaseUser>();
-    private MutableLiveData<LinkedList<FirebaseUser>> liveData;
     private User mUser;
 
     public User getUser() {
@@ -50,22 +45,6 @@ public class SharedViewModel extends ViewModel {
 
     public void setDatabase(FirebaseDatabase mDatabase) {
         this.mDatabase = mDatabase;
-    }
-
-    public MutableLiveData<LinkedList<FirebaseUser>> getLiveData() {
-        return liveData;
-    }
-
-    public void setLiveData(MutableLiveData<LinkedList<FirebaseUser>> liveData) {
-        this.liveData = liveData;
-    }
-
-    public LinkedList<FirebaseUser> getQueue() {
-        return mQueue;
-    }
-
-    public void setQueue(LinkedList<FirebaseUser> mQueue) {
-        this.mQueue = mQueue;
     }
 
     public boolean checkUserWaiverStatus() {
