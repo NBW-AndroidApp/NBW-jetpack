@@ -17,10 +17,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    buildToolsVersion '28.0.3'
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'com.google.android.material:material:1.1.0-alpha01'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
@@ -30,17 +31,16 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
     def nav_version = "1.0.0-alpha07"
-
-    implementation "android.arch.navigation:navigation-fragment:$nav_version" // use -ktx for Kotlin
-    implementation "android.arch.navigation:navigation-ui:$nav_version" // use -ktx for Kotlin
-
+    implementation "android.arch.navigation:navigation-fragment:$nav_version"
+    // use -ktx for Kotlin
+    implementation "android.arch.navigation:navigation-ui:$nav_version"
+    // use -ktx for Kotlin
     // optional - Test helpers
     // this library depends on the Kotlin standard library
     androidTestImplementation "android.arch.navigation:navigation-testing:$nav_version"
     implementation 'com.google.firebase:firebase-core:16.0.6'
     implementation 'com.google.firebase:firebase-database:16.0.5'
     implementation 'com.google.firebase:firebase-auth:16.1.0'
-
     implementation 'com.google.firebase:firebase-core:16.0.6'
 }
 

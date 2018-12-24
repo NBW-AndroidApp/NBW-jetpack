@@ -6,10 +6,12 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
@@ -42,33 +44,64 @@ public class LoginFragment extends Fragment {
     private Button mLogInButton;
     private EditText mEmailText, mPasswordText;
     private TextView mForgotPassword, mSignUp;
-    private User mUser;
     private AlertDialog.Builder mAlertDialog;
+    private View mView;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
     }
 
+    /**
+     * This initializes the UI variables once the fragment starts up, and returns the view
+     * to its parent.
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        ((MainActivity) getActivity()).setActionBarTitle("Welcome to NBW");
+        ((MainActivity) getActivity()).setActionBarTitle("Login to NBW");
         // Get the view from fragment XML
-        View v = inflater.inflate(R.layout.login_fragment, container, false);
+        mView = inflater.inflate(R.layout.login_fragment, container, false);
 
         // Set button for logging in
-        mLogInButton = v.findViewById(R.id.login_button);
-        mEmailText = v.findViewById(R.id.email);
-        mPasswordText = v.findViewById(R.id.password);
-        mSignUp = v.findViewById(R.id.sign_up);
-        mForgotPassword = v.findViewById(R.id.forgot_password);
+        mLogInButton = mView.findViewById(R.id.login_button);
+        mEmailText = mView.findViewById(R.id.email);
+        mPasswordText = mView.findViewById(R.id.password);
+        mSignUp = mView.findViewById(R.id.sign_up);
+        mForgotPassword = mView.findViewById(R.id.forgot_password);
 
-        // To Set onClickListeners for new account and forgot password
+        // TODO: Set onClickListeners for new account and forgot password
 
-        return v;
+        return mView;
     }
 
+    /**
+     * The bulk of the work happens here.
+     *
+     * There are two onClickListeners here.
+     * 1. mLogInButton:
+     *      when the user presses this button, the method checks if the user has entered
+     *      email and password. If this check passes, then {@link FirebaseAuth} FirebaseAuth tries
+     *      to sign them in with the credentials provided, and gives feedback based on how the
+     *      sign in task went.
+     *
+     *      If the sign in is complete, the method initiates a callback for fetching the user's
+     *      data. This callback is situated in {@link SharedViewModel} since we need to wait till the
+     *      data is fetched to take further actions.
+     *      Once the user's data is loaded, we check if the user has already signed a waiver.
+     *      If the waiver has been signed, then an {@link AlertDialog} is shown, which presents the
+     *      user with options to enqueue themselves or watch orientation videos if they like.
+     *      If the user hasn't signed the waiver, they're taken teo the waiver signing page to complete
+     *      the signing.
+     *
+     * 2. mSignUpButton: whenever this button is pressed, the user is taken to the sign up page.
+     *
+     * @param savedInstanceState
+     */
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -88,63 +121,88 @@ public class LoginFragment extends Fragment {
                     Toast.LENGTH_SHORT).show();
         }
 
+        final String[] uid = new String[1];
         mLogInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
                 String email = mEmailText.getText().toString();
                 String password = mPasswordText.getText().toString();
-                mViewModel.signIn(email, password).addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "signInWithEmail:success");
-                            Toast.makeText(getActivity(),
-                                    "Signed in!", Toast.LENGTH_SHORT).show();
-//                            mUser = mViewModel.getAuth().getCurrentUser();
-//                            if (!mViewModel.checkWaiverStatus(mUser)) {
-//                                Navigation.findNavController(v).navigate(R.id.waiverFragment);
-//                            } else {
-//                                mAlertDialog = new AlertDialog.Builder(getActivity())
-//                                        .setTitle("Sign-in Successful!")
-//                                        .setMessage("What would you like to do?")
-//                                        .setPositiveButton("Add me to the queue",
-//                                                new DialogInterface.OnClickListener() {
-//                                                    @Override
-//                                                    public void onClick(DialogInterface dialog,
-//                                                                        int which) {
-//                                                        Navigation.findNavController(v).
-//                                                                navigate(R.id.queueFragment);
-//                                                    }
-//                                                })
-//                                        .setNegativeButton("Watch orientation videos",
-//                                                new DialogInterface.OnClickListener() {
-//                                                    @Override
-//                                                    public void onClick(DialogInterface dialog,
-//                                                                        int which) {
-//                                                        Navigation.findNavController(v).
-//                                                                navigate(R.id.orientationFragment);
-//                                                    }
-//                                                });
-//                                mAlertDialog.show();
-//                            }
-                        }
-                        else {
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(getActivity(), "Auth failed. Check log!",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                if (email.length() == 0 || password.length() == 0) {
+                    Toast.makeText(getActivity(), "Please enter e-mail and password.",
+                            Toast.LENGTH_SHORT).show();
+                }
+
+                else {
+                    mViewModel.signIn(email, password)
+                            .addOnCompleteListener(new OnCompleteListener() {
+                                @Override
+                                public void onComplete(@NonNull Task task) {
+                                    if (task.isSuccessful()) {
+                                        Log.d(TAG, "signInWithEmail:success");
+                                        Toast.makeText(getActivity(),
+                                                "Signed in!", Toast.LENGTH_SHORT).show();
+                                        uid[0] = mViewModel.getAuth().getUid();
+                                        mViewModel.fetchUser(
+                                                uid[0], new SharedViewModel.userDetailCallback() {
+                                                    @Override
+                                                    public void onCallback(User user) {
+                                                        if (user.isSignedWaiver()) {
+                                                            showPostSignInAlert(v);
+                                                        } else {
+                                                            Navigation.findNavController(v).
+                                                                    navigate(R.id.waiverFragment);
+                                                        }
+                                                    }
+                                                });
+
+                                    } else {
+                                        Toast.makeText(getActivity(), task.getException().getMessage(),
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                }
             }
         });
 
         mSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Here!");
-                Navigation.findNavController(v).navigate(R.id.signupFragment);
+                Log.d(TAG, "Taking user to signup fragment.");
+                // Empty these fields before switching fragments.
+                mEmailText.setText("");
+                mPasswordText.setText("");
+
+                Navigation.findNavController(v).
+                        navigate(R.id.signupFragment);
             }
         });
     }
-
+    /**
+     * This simply shows an alert to the app's screen. It's pushed here to allow less cluttering
+     * in login's onActivityCreated above.
+     * @param v
+     */
+    public void showPostSignInAlert(final View v) {
+        mAlertDialog = new AlertDialog.Builder(getActivity())
+                .setTitle("Sign-in Successful!")
+                .setMessage("What would you like to do?")
+                .setPositiveButton("Add me to the queue",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+                                Navigation.findNavController(v).navigate(R.id.queueFragment);
+                            }
+                        })
+                .setNegativeButton("Watch orientation videos",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+                                Navigation.findNavController(v).navigate(R.id.orientationFragment);
+                            }
+                        });
+        mAlertDialog.show();
+    }
 }
