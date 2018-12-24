@@ -1,0 +1,54 @@
+# language: android
+# android:
+#   components:
+#     - build-tools-28.0.3
+#
+#     # The SDK version used to compile your project
+#     - android-28
+#
+#     # Additional components
+#     - extra-google-google_play_services
+#     - extra-google-m2repository
+#     - extra-android-m2repository
+#
+#     # Specify at least one system image,
+#     # if you need to run emulator(s) during your tests
+#     - sys-img-x86-android-28
+#     - sys-img-armeabi-v7a-android-28
+#
+#     licenses:
+#     - 'android-sdk-preview-license-52d11cd2'
+#     - 'android-sdk-license-.+'
+#     - 'google-gdk-license-.+'
+#
+# # This build should run?
+# # Emulator Management: Create, Start and Wait
+# before_script:
+#   - echo no | android create avd --force -n test -t android-28 --abi armeabi-v7a
+#   - emulator -avd test -no-audio -no-window &
+#   - android-wait-for-emulator
+#   - adb shell input keyevent 82 &
+language: android
+jdk: oraclejdk8
+
+android:
+  components:
+    - tools
+    - platform-tools
+    - build-tools-28.0.3
+    - android-28
+    - android-24
+
+    - sys-img-x86-android-28
+    - sys-img-armeabi-v7a-android-24
+  licenses:
+    - 'android-sdk-preview-license-.+'
+    - 'android-sdk-license-.+'
+    - 'google-sdk-licence-.+'
+
+before_script:
+  # Create and start emulator
+  - echo no | android create avd --force -n test -t android-24 --abi armeabi-v7a
+  - emulator -avd test -no-window &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &

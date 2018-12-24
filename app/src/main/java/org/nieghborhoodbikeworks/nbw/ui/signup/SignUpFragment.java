@@ -23,6 +23,7 @@ import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
 import org.nieghborhoodbikeworks.nbw.User;
 import org.nieghborhoodbikeworks.nbw.ui.login.LoginFragment;
+import org.nieghborhoodbikeworks.nbw.ui.waiver.WaiverFragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -90,13 +91,13 @@ public class SignUpFragment extends Fragment {
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 Log.d(TAG, "Sign up initiated");
                 String email = mEmail.getText().toString();
                 String password = mPassword.getText().toString();
                 String name = mName.getText().toString();
                 String passwordVerify = mPasswordVerify.getText().toString();
-                if (!(isValidEmail(email) && (password.equals(passwordVerify)))) {
+                if (!(isValidEmail(email) && (password.equals(passwordVerify)) && isValidPassword(password))) {
                     Toast.makeText(getActivity(), "Please enter valid email and passwords.",
                             Toast.LENGTH_SHORT).show();
                     mPassword.setText("");
@@ -117,6 +118,7 @@ public class SignUpFragment extends Fragment {
                                                 Toast.LENGTH_SHORT).show();
                                         user.setUid(mViewModel.getAuth().getUid());
                                         mViewModel.createDatabaseUser(user);
+                                        Navigation.findNavController(v).navigate(R.id.waiverFragment);
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -141,16 +143,25 @@ public class SignUpFragment extends Fragment {
                 }
             }
         });
-
-
     }
 
+    /**
+     * Checks if a given password is valid. this is in place so it can be modified to have stricter
+     * rules in the future.
+     * @param password
+     * @return
+     */
     private boolean isValidPassword(String password) {
         return password.length() >= 6;
     }
 
+    /**
+     * Checks e-mail validity using Android's {@link android.util.Patterns}.
+     * @param target
+     * @return
+     */
     public final static boolean isValidEmail(CharSequence target) {
-        Log.d("SignUp", String.valueOf((!TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches())));
-        return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+        return !TextUtils.isEmpty(target) &&
+                android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 }
