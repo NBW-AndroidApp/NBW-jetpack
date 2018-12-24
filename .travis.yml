@@ -27,6 +27,7 @@ android:
     - 'android-sdk-license-.+'
     - 'google-gdk-license-.+'
 
+# This build should run?
 # Emulator Management: Create, Start and Wait
 before_script:
   - echo no | android create avd --force -n test -t android-28 --abi armeabi-v7a
