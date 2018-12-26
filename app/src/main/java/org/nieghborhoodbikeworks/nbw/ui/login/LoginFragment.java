@@ -44,6 +44,7 @@ public class LoginFragment extends Fragment {
     private Button mLogInButton;
     private EditText mEmailText, mPasswordText;
     private TextView mForgotPassword, mSignUp;
+    private User mUser;
     private AlertDialog.Builder mAlertDialog;
     private View mView;
 
@@ -127,6 +128,7 @@ public class LoginFragment extends Fragment {
             public void onClick(final View v) {
                 String email = mEmailText.getText().toString();
                 String password = mPasswordText.getText().toString();
+
                 if (email.length() == 0 || password.length() == 0) {
                     Toast.makeText(getActivity(), "Please enter e-mail and password.",
                             Toast.LENGTH_SHORT).show();
@@ -162,6 +164,7 @@ public class LoginFragment extends Fragment {
                                 }
                             });
                 }
+
             }
         });
 

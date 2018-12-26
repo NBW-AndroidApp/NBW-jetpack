@@ -12,10 +12,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class SharedViewModel extends ViewModel {
@@ -26,18 +26,24 @@ public class SharedViewModel extends ViewModel {
     private Task mSignInTask;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference mUserDatabase = mDatabase.getReference().child("users");
-    private LinkedList<FirebaseUser> mQueue = new LinkedList<>();
-
-    public DatabaseReference getUserDatabase() {
-        return mUserDatabase;
-    }
-    private MutableLiveData<LinkedList<FirebaseUser>> liveData;
+    private List<String> mQueue = new ArrayList<String>();
     private User mUser;
-
 
     /*================================================================================
     Getters and setters
     ==================================================================================*/
+    public List<String> getmQueue() {
+        return mQueue;
+    }
+
+    public void setmQueue(List<String> mQueue) {
+        this.mQueue = mQueue;
+    }
+
+    public DatabaseReference getUserDatabase() {
+        return mUserDatabase;
+    }
+
     public User getUser() {
         return mUser;
     }
@@ -52,22 +58,6 @@ public class SharedViewModel extends ViewModel {
 
     public void setDatabase(FirebaseDatabase mDatabase) {
         this.mDatabase = mDatabase;
-    }
-
-    public MutableLiveData<LinkedList<FirebaseUser>> getLiveData() {
-        return liveData;
-    }
-
-    public void setLiveData(MutableLiveData<LinkedList<FirebaseUser>> liveData) {
-        this.liveData = liveData;
-    }
-
-    public LinkedList<FirebaseUser> getQueue() {
-        return mQueue;
-    }
-
-    public void setQueue(LinkedList<FirebaseUser> mQueue) {
-        this.mQueue = mQueue;
     }
 
     public String getEmail() {

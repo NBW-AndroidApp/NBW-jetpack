@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
+import org.nieghborhoodbikeworks.nbw.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,25 +45,36 @@ public class QueueFragment extends Fragment {
 
     public QueueFragment newInstance() { return new QueueFragment(); }
 
-    FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+    private User mUser;
     private AlertDialog.Builder alertDialogBuilder;
-    private FirebaseDatabase mDatabase;
-    private DatabaseReference databaseReference;
+    private FirebaseDatabase mDatabase = mViewModel.getDatabase();
+    private DatabaseReference databaseReference = mDatabase.getReference();
     private View view;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private List<String> mQueue;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.queue_fragment, container, false);
+        view = inflater.inflate(R.layout.queue_fragment, container, false);
         mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
+        mUser = mViewModel.getUser();
+        //mQueue = mViewModel.getmQueue();
+        mRecyclerView = view.findViewById(R.id.queue_recycler_view);
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setHasFixedSize(true);
+        mQueue = new ArrayList<String>();
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mDatabase = mViewModel.getDatabase();
-        databaseReference = mDatabase.getReference();
+
+        // the alert dialog should be buttons
 
         alertDialogBuilder = new AlertDialog.Builder(getActivity())
                 .setTitle("Queue")
@@ -68,8 +82,7 @@ public class QueueFragment extends Fragment {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Map<String, Object> childUpdates = new HashMap<>();
-                        childUpdates.put("Add " + mUser.getDisplayName() + " to the queue",
-                                mUser);
+                        childUpdates.put(mUser.getName(), mUser);
                         databaseReference.child("queue").updateChildren(childUpdates);
                     }
                 })
@@ -83,31 +96,17 @@ public class QueueFragment extends Fragment {
 
         ValueEventListener queueListener = new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot1) {
                 // iterates through the nodes in the queue
-                for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                    // key = "Add " + user.getDisplayName() + " to the queue"
-                    String key = ds.getKey();
-
-                    DatabaseReference users = databaseReference.child("queue").child(key);
-                    ValueEventListener eventListener = new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            // iterates through the users in each node in the queue
-                            for(DataSnapshot user : dataSnapshot.getChildren()) {
-                                // returns the users display name
-                                String username = user.child("displayName").getValue(String.class);
-                                // TODO: Update UI with queue
-                                System.out.println(username);
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) { }
-                    };
-                    users.addListenerForSingleValueEvent(eventListener);
+                for(DataSnapshot ds1 : dataSnapshot1.getChildren()) {
+                    // key = mUser.getName(), value = mUser
+                    String key = ds1.getKey();
+                    if(!key.equals("empty")) {
+                        mQueue.add(key);
+                    }
                 }
-
+                mAdapter = new QueueAdapter(getActivity(), mQueue);
+                mRecyclerView.setAdapter(mAdapter);
             }
 
             @Override
