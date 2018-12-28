@@ -11,11 +11,17 @@ import org.nieghborhoodbikeworks.nbw.R;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueHolder> {
     private LayoutInflater inflater;
     private ArrayList<String> mUsers;
+    private OnItemClicked onClick;
+
+    interface OnItemClicked {
+        void onItemClicked(int position);
+    }
 
     /**
      * The adapter populates the data into the RecyclerView by converting an object at a position
@@ -54,14 +60,24 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueHolder>
      * @param position
      */
     @Override
-    public void onBindViewHolder(@NonNull QueueHolder holder, int position) {
+    public void onBindViewHolder(@NonNull QueueHolder holder, final int position) {
         String currentUser = mUsers.get(position);
         holder.user.setText(currentUser);
+        holder.user.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClick.onItemClicked(position);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return mUsers.size();
+    }
+
+    public void setOnClick(OnItemClicked onClick) {
+        this.onClick = onClick;
     }
 
 }

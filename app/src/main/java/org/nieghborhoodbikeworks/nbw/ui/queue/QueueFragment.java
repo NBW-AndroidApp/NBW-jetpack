@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -120,36 +121,47 @@ public class QueueFragment extends Fragment {
         mEnqueueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // If there is no user currently signed in, mUser.getName() will throw a NPE
-                try {
-                    Map<String, Object> childUpdates = new HashMap<>();
-                    childUpdates.put(mUser.getName(), mUser);
-                    mQueueDatabase.updateChildren(childUpdates);
-                    updateQueue();
-                    FirebaseAuth.getInstance().signOut();
-                    mUser = null;
-                } catch (NullPointerException e) {
-                    // Redirect the user to the login screen if they aren't signed in and would
-                    // like to be added to, or removed from, the queue
-                    Navigation.findNavController(view).navigate(R.id.loginFragment);
-                }
+                enqueueUser();
             }
         });
 
         mDequeueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    mQueueDatabase.child(mUser.getName()).removeValue();
-                    updateQueue();
-                    FirebaseAuth.getInstance().signOut();
-                    mUser = null;
-                } catch (NullPointerException e) {
-                    Navigation.findNavController(view).navigate(R.id.loginFragment);
-                }
+                dequeueUser();
             }
         });
 
+    }
+
+    private void enqueueUser() {
+        // If there is no user currently signed in, mUser.getName() will throw a NPE
+        try {
+            Map<String, Object> childUpdates = new HashMap<>();
+            childUpdates.put(mUser.getName(), mUser);
+            mQueueDatabase.updateChildren(childUpdates);
+            updateQueue();
+            FirebaseAuth.getInstance().signOut();
+            mUser = null;
+        } catch (NullPointerException e) {
+            // Redirect the user to the login screen if they aren't signed in and would
+            // like to be added to, or removed from, the queue
+            Navigation.findNavController(view).navigate(R.id.loginFragment);
+        }
+    }
+
+    private void dequeueUser() {
+        // If there is no user currently signed in, mUser.getName() will throw a NPE
+        try {
+            mQueueDatabase.child(mUser.getName()).removeValue();
+            updateQueue();
+            FirebaseAuth.getInstance().signOut();
+            mUser = null;
+        } catch (NullPointerException e) {
+            // Redirect the user to the login screen if they aren't signed in and would
+            // like to be added to, or removed from, the queue
+            Navigation.findNavController(view).navigate(R.id.loginFragment);
+        }
     }
 
     /**
@@ -189,12 +201,17 @@ public class QueueFragment extends Fragment {
                 if (userDequeued) {
                     mAdapter.notifyItemRemoved(i);
                 }
-                //TODO: Find a better way to accomplish the next two lines
+                //TODO: Find a better way to update the RecyclerView Adapter
                 mAdapter = new QueueAdapter(getActivity(), mQueue);
+                ((QueueAdapter) mAdapter).setOnClick(new QueueAdapter.OnItemClicked() {
+                    @Override
+                    public void onItemClicked(int position) {
+                        //logic for a user to dequeue themselves once they tap on their name
+                    }
+                });
                 mRecyclerView.setAdapter(mAdapter);
                 mWaiting.setText("People currently in the queue: " + String.valueOf(mQueue.size()));
             }
-
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
