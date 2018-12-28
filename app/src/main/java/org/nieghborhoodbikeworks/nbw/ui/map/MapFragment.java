@@ -10,10 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.nieghborhoodbikeworks.nbw.R;
+import org.nieghborhoodbikeworks.nbw.SharedViewModel;
 
 public class MapFragment extends Fragment {
 
-    private MapViewModel mViewModel;
+    private SharedViewModel mViewModel;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -28,7 +29,7 @@ public class MapFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(MapViewModel.class);
+        mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
         // TODO: Use the ViewModel
     }
 

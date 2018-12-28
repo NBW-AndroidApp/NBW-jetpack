@@ -48,15 +48,13 @@
     <string name="waiver_end"> I have READ and AGREED to the terms and conditions (required)</string>
     <string name="waiver_signature">Sign your name</string>
     <string name="waiver_date">Date (MM/DD/YYYY)</string>
+    <string name="sign_waiver">Sign</string>
 
     <!--Queue Fragment strings-->
     <string name="queue_title">Sign-in Queue</string>
-    <string name="dummy_text">
-        1. Rafael Rodriguez
-        \n2. Rudy Hernandez
-        \n3. Ahmed Ishtiaque
-        \n4. Jackson Meyer-Lee
-    </string>
+    <string name="enqueue">Add yourself to the queue</string>
+    <string name="dequeue">Remove yourself from the queue</string>
+    <string name="queue_size">People currently in the queue: 0</string>
 
     <!--Map Fragment strings-->
     <string name="map_title">map</string>
@@ -78,6 +76,4 @@
     <string name="verify_password">Verify Password</string>
     <string name="signup">Sign Up</string>
 
-    <!--Waiver sign resources-->
-    <string name="sign_waiver">Sign</string>
 </resources>

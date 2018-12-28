@@ -6,7 +6,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AlertDialog;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
@@ -19,7 +18,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
@@ -29,8 +27,7 @@ public class WaiverFragment extends Fragment {
 
     private static final String TAG = "WaiverFrag onCreateView";
     private SharedViewModel mViewModel;
-    private FirebaseDatabase mDatabase;
-    private DatabaseReference databaseReference;
+    private DatabaseReference mUserDatabase;
     private CheckBox mAgreementCheckBox;
     private EditText mSignature;
     private EditText mDate;
@@ -49,8 +46,7 @@ public class WaiverFragment extends Fragment {
         Log.d(TAG,"1");
         view = inflater.inflate(R.layout.waiver_fragment, container, false);
         mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
-        mDatabase = mViewModel.getDatabase();
-        databaseReference = mDatabase.getReference();
+        mUserDatabase = mViewModel.getUserDatabase();
         mAgreementCheckBox = view.findViewById(R.id.agreement_checkbox);
         mSignature = view.findViewById(R.id.waiver_signature);
         mDate = view.findViewById(R.id.waiver_date);
@@ -84,7 +80,7 @@ public class WaiverFragment extends Fragment {
                 Toast.makeText(getActivity(), mViewModel.getUser().getName(),
                         Toast.LENGTH_SHORT).show();
                 String userID = mUser.getUid();
-                databaseReference.child("users").child(userID).child("signedWaiver").setValue(true);
+                mUserDatabase.child(userID).child("signedWaiver").setValue(true);
                 Navigation.findNavController(view).navigate(R.id.queueFragment);
             }
         });

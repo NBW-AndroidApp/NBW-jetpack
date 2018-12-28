@@ -1,19 +1,18 @@
 package org.nieghborhoodbikeworks.nbw;
 
 import android.util.Log;
-
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.nieghborhoodbikeworks.nbw.ui.queue.QueueFragment;
+
 import java.util.ArrayList;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
@@ -26,22 +25,23 @@ public class SharedViewModel extends ViewModel {
     private Task mSignInTask;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference mUserDatabase = mDatabase.getReference().child("users");
-    private List<String> mQueue = new ArrayList<String>();
+    private DatabaseReference mQueueDatabase = mDatabase.getReference().child("queue");
+    private ArrayList<String> mQueue = new ArrayList<String>();
     private User mUser;
 
     /*================================================================================
     Getters and setters
     ==================================================================================*/
-    public List<String> getmQueue() {
+    public ArrayList<String> getmQueue() {
         return mQueue;
-    }
-
-    public void setmQueue(List<String> mQueue) {
-        this.mQueue = mQueue;
     }
 
     public DatabaseReference getUserDatabase() {
         return mUserDatabase;
+    }
+
+    public DatabaseReference getmQueueDatabase() {
+        return mQueueDatabase;
     }
 
     public User getUser() {
@@ -87,8 +87,6 @@ public class SharedViewModel extends ViewModel {
     /*================================================================================
     End of getters and setters
     ==================================================================================*/
-
-
     /**
      * Returns an {@link AuthResult} task that determines whether the user was signed in
      * successfully or not.
