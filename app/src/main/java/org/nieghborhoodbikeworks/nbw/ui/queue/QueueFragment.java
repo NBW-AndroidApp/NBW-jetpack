@@ -105,8 +105,6 @@ public class QueueFragment extends Fragment {
         mQueueDatabase = mViewModel.getmQueueDatabase();
         mUser = mViewModel.getUser();
         mQueue = mViewModel.getmQueue();
-        mAdapter = new QueueAdapter(getActivity(), mQueue);
-        mRecyclerView.setAdapter(mAdapter);
 
         mEnqueueButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,6 +174,8 @@ public class QueueFragment extends Fragment {
                 if (userDequeued) {
                     mAdapter.notifyItemRemoved(i);
                 }
+                mAdapter = new QueueAdapter(getActivity(), mQueue);
+                mRecyclerView.setAdapter(mAdapter);
                 mWaiting.setText("People currently in the queue: " + String.valueOf(mQueue.size()));
             }
 
@@ -186,6 +186,7 @@ public class QueueFragment extends Fragment {
             }
         };
         mQueueDatabase.addValueEventListener(queueListener);
+
     }
 
 }
