@@ -80,7 +80,7 @@ public class QueueFragment extends Fragment {
     }
 
     /**
-     * There is one OnClickListener here:
+     * There are two OnClickListeners here:
      *
      * 1. mEnqueueButton:
      *      when the user presses this button, the method adds them to the "queue" node in the
@@ -92,6 +92,14 @@ public class QueueFragment extends Fragment {
      *      If the user is not signed in and they tap on this button, a NullPointerException is
      *      thrown, at which point the user is redirected to theLoginFragment and is prompted to
      *      sign in.
+     *
+     * 2. mDequeueButton:
+     *      when the user presses this button, the method removes them from the "queue" node if they
+     *      are in it. Just like in the mEnqueueButton method, this method uses the same ValueEventListener
+     *      the former method uses.
+     *
+     *      If the user is not signed in and they tap on this button, they will be redirected to the
+     *      LoginFragment.
      *
      * @param savedInstanceState
      */
@@ -105,6 +113,9 @@ public class QueueFragment extends Fragment {
         mQueueDatabase = mViewModel.getmQueueDatabase();
         mUser = mViewModel.getUser();
         mQueue = mViewModel.getmQueue();
+        updateQueue();
+        mAdapter = new QueueAdapter(getActivity(), mQueue);
+        mRecyclerView.setAdapter(mAdapter);
 
         mEnqueueButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,8 +126,8 @@ public class QueueFragment extends Fragment {
                     childUpdates.put(mUser.getName(), mUser);
                     mQueueDatabase.updateChildren(childUpdates);
                     updateQueue();
-//                    FirebaseAuth.getInstance().signOut();
-//                    mUser = null;
+                    FirebaseAuth.getInstance().signOut();
+                    mUser = null;
                 } catch (NullPointerException e) {
                     // Redirect the user to the login screen if they aren't signed in and would
                     // like to be added to, or removed from, the queue
@@ -131,8 +142,8 @@ public class QueueFragment extends Fragment {
                 try {
                     mQueueDatabase.child(mUser.getName()).removeValue();
                     updateQueue();
-//                    FirebaseAuth.getInstance().signOut();
-//                    mUser = null;
+                    FirebaseAuth.getInstance().signOut();
+                    mUser = null;
                 } catch (NullPointerException e) {
                     Navigation.findNavController(view).navigate(R.id.loginFragment);
                 }
@@ -141,6 +152,10 @@ public class QueueFragment extends Fragment {
 
     }
 
+    /**
+     * The updateQueue method reads from the queue node in the database and adds the users to the mQueue
+     * ArrayList.
+     */
     private void updateQueue() {
         // Reads the data on the "queue" node in the database
         ValueEventListener queueListener = new ValueEventListener() {
@@ -174,6 +189,7 @@ public class QueueFragment extends Fragment {
                 if (userDequeued) {
                     mAdapter.notifyItemRemoved(i);
                 }
+                //TODO: Find a better way to accomplish the next two lines
                 mAdapter = new QueueAdapter(getActivity(), mQueue);
                 mRecyclerView.setAdapter(mAdapter);
                 mWaiting.setText("People currently in the queue: " + String.valueOf(mQueue.size()));
