@@ -135,17 +135,17 @@ public class LoginFragment extends Fragment {
                 }
 
                 else {
-                    mViewModel.signIn(email, password)
-                            .addOnCompleteListener(new OnCompleteListener() {
+                    FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                                 @Override
-                                public void onComplete(@NonNull Task task) {
+                                public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
                                         Log.d(TAG, "signInWithEmail:success");
                                         Toast.makeText(getActivity(),
                                                 "Signed in!", Toast.LENGTH_SHORT).show();
-                                        uid[0] = mViewModel.getAuth().getUid();
+                                        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                         mViewModel.fetchUser(
-                                                uid[0], new SharedViewModel.userDetailCallback() {
+                                                uid, new SharedViewModel.userDetailCallback() {
                                                     @Override
                                                     public void onCallback(User user) {
                                                         if (user.isSignedWaiver()) {
@@ -164,7 +164,6 @@ public class LoginFragment extends Fragment {
                                 }
                             });
                 }
-
             }
         });
 
@@ -195,10 +194,18 @@ public class LoginFragment extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialog,
                                                 int which) {
+                                mViewModel.enqueueUser();
                                 Navigation.findNavController(v).navigate(R.id.queueFragment);
                             }
                         })
-                .setNegativeButton("Watch orientation videos",
+                .setNegativeButton("Remove me from the queue", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mViewModel.dequeueUser();
+                        Navigation.findNavController(v).navigate(R.id.queueFragment);
+                    }
+                })
+                .setNeutralButton("Watch orientation videos",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog,

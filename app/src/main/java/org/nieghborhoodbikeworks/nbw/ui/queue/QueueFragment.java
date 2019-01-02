@@ -11,16 +11,13 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,8 +29,6 @@ import org.nieghborhoodbikeworks.nbw.SharedViewModel;
 import org.nieghborhoodbikeworks.nbw.User;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import static androidx.constraintlayout.widget.StateSet.TAG;
 
@@ -110,7 +105,6 @@ public class QueueFragment extends Fragment {
         mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
 
         // Fetch data for queue
-        //mQueue = mViewModel.getmQueue();
         mQueueDatabase = mViewModel.getmQueueDatabase();
         mUser = mViewModel.getUser();
         mQueue = mViewModel.getmQueue();
@@ -121,47 +115,29 @@ public class QueueFragment extends Fragment {
         mEnqueueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                enqueueUser();
+                // If there is no user currently signed in, mUser.getName() will throw a NPE
+                try {
+                    mViewModel.enqueueUser();
+                    updateQueue();
+                } catch (NullPointerException e) {
+                    Navigation.findNavController(view).navigate(R.id.loginFragment);
+                }
             }
         });
 
         mDequeueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dequeueUser();
+                // If there is no user currently signed in, mUser.getName() will throw a NPE
+                try {
+                    mViewModel.dequeueUser();
+                    updateQueue();
+                } catch (NullPointerException e) {
+                    Navigation.findNavController(view).navigate(R.id.loginFragment);
+                }
             }
         });
 
-    }
-
-    private void enqueueUser() {
-        // If there is no user currently signed in, mUser.getName() will throw a NPE
-        try {
-            Map<String, Object> childUpdates = new HashMap<>();
-            childUpdates.put(mUser.getName(), mUser);
-            mQueueDatabase.updateChildren(childUpdates);
-            updateQueue();
-            FirebaseAuth.getInstance().signOut();
-            mUser = null;
-        } catch (NullPointerException e) {
-            // Redirect the user to the login screen if they aren't signed in and would
-            // like to be added to, or removed from, the queue
-            Navigation.findNavController(view).navigate(R.id.loginFragment);
-        }
-    }
-
-    private void dequeueUser() {
-        // If there is no user currently signed in, mUser.getName() will throw a NPE
-        try {
-            mQueueDatabase.child(mUser.getName()).removeValue();
-            updateQueue();
-            FirebaseAuth.getInstance().signOut();
-            mUser = null;
-        } catch (NullPointerException e) {
-            // Redirect the user to the login screen if they aren't signed in and would
-            // like to be added to, or removed from, the queue
-            Navigation.findNavController(view).navigate(R.id.loginFragment);
-        }
     }
 
     /**
@@ -176,11 +152,11 @@ public class QueueFragment extends Fragment {
                 ArrayList<String> updatedQueue = new ArrayList<>();
                 // Iterates through the nodes in the queue
                 for (DataSnapshot ds1 : dataSnapshot1.getChildren()) {
-                    // key = mUser.getName(), value = mUser
-                    String key = ds1.getKey();
+                    // key = mUser.getUid(), value = mUser.getName()
+                    String value = String.valueOf(ds1.getValue());
                     // Add users in the queue
-                    if(!key.equals("empty")) {
-                        updatedQueue.add(key);
+                    if(!value.equals("empty") || !value.equals("test")) {
+                        updatedQueue.add(value);
                     }
                 }
 
@@ -206,7 +182,7 @@ public class QueueFragment extends Fragment {
                 ((QueueAdapter) mAdapter).setOnClick(new QueueAdapter.OnItemClicked() {
                     @Override
                     public void onItemClicked(int position) {
-                        //logic for a user to dequeue themselves once they tap on their name
+                        //logic once a user taps on their name
                     }
                 });
                 mRecyclerView.setAdapter(mAdapter);

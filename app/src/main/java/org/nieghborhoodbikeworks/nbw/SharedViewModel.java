@@ -10,9 +10,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.nieghborhoodbikeworks.nbw.ui.queue.QueueFragment;
-
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
@@ -151,4 +151,23 @@ public class SharedViewModel extends ViewModel {
     public interface userDetailCallback {
         void onCallback(User user);
     }
+
+    public void enqueueUser() {
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put(mUser.getUid(), mUser.getName());
+        mQueueDatabase.updateChildren(childUpdates);
+        FirebaseAuth.getInstance().signOut();
+        mUser = null;
+    }
+
+    public void dequeueUser() {
+        mQueueDatabase.child(mUser.getUid()).removeValue();
+        FirebaseAuth.getInstance().signOut();
+        mUser = null;
+    }
+
+    public void clearQueue() {
+        mQueueDatabase.setValue(null);
+    }
+
 }
