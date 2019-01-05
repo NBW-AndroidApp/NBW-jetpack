@@ -37,8 +37,7 @@ public class QueueFragment extends Fragment {
     private View view;
     private DatabaseReference mQueueDatabase;
     private User mUser;
-    private Button mEnqueueButton;
-    private Button mDequeueButton;
+    private Button mEnqueueButton, mDequeueButton;
     private TextView mWaiting;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;

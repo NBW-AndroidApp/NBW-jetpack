@@ -152,6 +152,10 @@ public class SharedViewModel extends ViewModel {
         void onCallback(User user);
     }
 
+    /**
+     * Writes a new child node to the "Queue" node for every user that decides to be enqueued. The
+     * key for a new node is the user's UID; the value is the user's display name.
+     */
     public void enqueueUser() {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put(mUser.getUid(), mUser.getName());
@@ -160,6 +164,10 @@ public class SharedViewModel extends ViewModel {
         mUser = null;
     }
 
+    /**
+     * Deletes the child nodes in the "Queue" node by the users UID. Allows users with the same
+     * display name to be differentiated.
+     */
     public void dequeueUser() {
         mQueueDatabase.child(mUser.getUid()).removeValue();
         FirebaseAuth.getInstance().signOut();

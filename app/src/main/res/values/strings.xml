@@ -2,7 +2,7 @@
     <string name="app_name">NBW</string>
 
     <!--Waiver Fragment strings-->
-    <string name="waiver_title">Waiver</string>
+    <string name="waiver_title">Waiver Fragment</string>
     <string name="waiver_layouttitle">NEIGHBORHOOD BIKE WORKS</string>
     <string name="waiver_subtitle">PARTICIPATION AGREEMENT</string>
     <string name="waiver_text"><b>Placeholder Agreement Text</b>
@@ -57,7 +57,7 @@
     <string name="queue_size">People currently in the queue: 0</string>
 
     <!--Map Fragment strings-->
-    <string name="map_title">map</string>
+    <string name="map_title">Map Fragment</string>
 
     <!--Login Fragment strings-->
     <string name="login_title">Login to Your Account</string>
@@ -75,5 +75,12 @@
     <string name="age_consent">I am over 18 years old.</string>
     <string name="verify_password">Verify Password</string>
     <string name="signup">Sign Up</string>
+
+    <!--Post Signin Fragment strings-->
+    <string name="user_choice_title">User Choice Fragment</string>
+    <string name="signin_message">What would you like to do?</string>
+
+    <!--Orientation Fragment strings-->
+    <string name="orientation_title">Orientation Fragment</string>
 
 </resources>

@@ -11,6 +11,11 @@
         android:label="login_fragment"
         tools:layout="@layout/login_fragment"/>
     <fragment
+        android:id="@+id/userChoiceFragment"
+        android:name="org.nieghborhoodbikeworks.nbw.ui.postsignin.UserChoiceFragment"
+        android:label="user_choice_fragment"
+        tools:layout="@layout/user_choice_fragment"/>
+    <fragment
         android:id="@+id/waiverFragment"
         android:name="org.nieghborhoodbikeworks.nbw.ui.waiver.WaiverFragment"
         android:label="waiver_fragment"

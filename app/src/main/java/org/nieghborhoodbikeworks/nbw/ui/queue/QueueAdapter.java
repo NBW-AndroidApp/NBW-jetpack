@@ -32,7 +32,6 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueHolder>
      * @param context
      * @param mUsers
      */
-
     public QueueAdapter(Context context, ArrayList<String> mUsers) {
         inflater = LayoutInflater.from(context);
         this.mUsers = mUsers;
