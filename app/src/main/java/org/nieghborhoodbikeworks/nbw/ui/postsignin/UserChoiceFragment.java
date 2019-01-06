@@ -1,6 +1,5 @@
 package org.nieghborhoodbikeworks.nbw.ui.postsignin;
 
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +45,6 @@ public class UserChoiceFragment extends Fragment {
         view = inflater.inflate(R.layout.user_choice_fragment, container, false);
         mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
 
-
         mFragments = new ArrayList<>();
         mFragments.add("Queue");
         mFragments.add("Waiver");
@@ -65,7 +63,7 @@ public class UserChoiceFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mAdapter = new UserChoiceAdapter(getActivity(), mFragments, mViewModel);
+        mAdapter = new UserChoiceAdapter(getActivity(), mFragments);
         mRecyclerView.setAdapter(mAdapter);
     }
 

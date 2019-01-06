@@ -54,7 +54,7 @@
     <string name="queue_title">Sign-in Queue</string>
     <string name="enqueue">Add yourself to the queue</string>
     <string name="dequeue">Remove yourself from the queue</string>
-    <string name="queue_size">People currently in the queue: 0</string>
+    <string name="queue_size">Number of people currently in the queue: 0</string>
 
     <!--Map Fragment strings-->
     <string name="map_title">Map Fragment</string>

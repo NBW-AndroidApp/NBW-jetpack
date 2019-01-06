@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import org.nieghborhoodbikeworks.nbw.R;
-import org.nieghborhoodbikeworks.nbw.SharedViewModel;
 
 import java.util.ArrayList;
 
@@ -17,14 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.UserChoiceHolder>{
 
-    private SharedViewModel mViewModel;
     private LayoutInflater inflater;
     private ArrayList<String> mFragments;
-    private UserChoiceAdapter.OnItemClicked onClick;
-
-    interface OnItemClicked {
-        void onItemClicked(int position);
-    }
 
     public static abstract class UserChoiceHolder extends RecyclerView.ViewHolder {
         public UserChoiceHolder(View itemView) {
@@ -36,9 +29,11 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
             private Button enqueueButton;
             private Button dequeueButton;
             private Button viewQueueButton;
+            private View mView;
 
             public QueueFragmentViewHolder(View view) {
                 super(view);
+                mView = view;
                 enqueueButton = view.findViewById(R.id.card_view_enqueue_button);
                 dequeueButton = view.findViewById(R.id.card_view_dequeue_button);
                 viewQueueButton = view.findViewById(R.id.card_view_queue_button);
@@ -52,15 +47,30 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
                         // this.mViewModel.enqueue();
                     }
                 });
+                dequeueButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // TODO: Next line
+                        // this.mViewModel.enqueue();
+                    }
+                });
+                viewQueueButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Navigation.findNavController(mView).navigate(R.id.queueFragment);
+                    }
+                });
             }
 
         }
 
         public static class WaiverFragmentViewHolder extends UserChoiceHolder {
             private Button viewWaiverButton;
+            private View mView;
 
             public WaiverFragmentViewHolder(View view) {
                 super(view);
+                mView = view;
                 viewWaiverButton = view.findViewById(R.id.card_view_waiver_button);
             }
 
@@ -68,8 +78,7 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
                 viewWaiverButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // TODO: Next line
-                        // Navigation.findNavController(view).navigate(R.id.waiverFragment);
+                         Navigation.findNavController(mView).navigate(R.id.waiverFragment);
                     }
                 });
             }
@@ -78,9 +87,11 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
 
         public static class OrientationFragmentViewHolder extends UserChoiceHolder {
             private Button viewOrientationButton;
+            private View mView;
 
             public OrientationFragmentViewHolder(View view) {
                 super(view);
+                mView = view;
                 viewOrientationButton = view.findViewById(R.id.card_view_orientation_button);
             }
 
@@ -88,8 +99,7 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
                 viewOrientationButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // TODO: Next line
-                        // Navigation.findNavController(view).navigate(R.id.orientationFragment);
+                         Navigation.findNavController(mView).navigate(R.id.orientationFragment);
                     }
                 });
             }
@@ -98,9 +108,11 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
 
         public static class MapFragmentViewHolder extends UserChoiceHolder {
             private Button navigateButton;
+            private View mView;
 
             public MapFragmentViewHolder(View view) {
                 super(view);
+                mView = view;
                 navigateButton = view.findViewById(R.id.card_view_navigate_button);
             }
 
@@ -108,8 +120,7 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
                 navigateButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // TODO: Next line
-                        // Navigation.findNavController(view).navigate(R.id.mapFragment);
+                        Navigation.findNavController(mView).navigate(R.id.mapFragment);
                     }
                 });
             }
@@ -125,9 +136,9 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
      * @param context
      * @param mFragments
      */
-    public UserChoiceAdapter(Context context, ArrayList<String> mFragments, SharedViewModel mViewModel) {
+    public UserChoiceAdapter(Context context, ArrayList<String> mFragments) {
+        inflater = LayoutInflater.from(context);
         this.mFragments = mFragments;
-        this.mViewModel = mViewModel;
     }
 
     @Override
@@ -137,19 +148,19 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
         UserChoiceAdapter.UserChoiceHolder vh = null;
         switch (viewType) {
             case 0:
-                view = View.inflate(parent.getContext(), R.layout.queue_fragment_choice, null);
+                view = inflater.inflate(R.layout.queue_fragment_choice, parent, false);
                 vh = new QueueFragmentViewHolder(view);
                 break;
             case 1:
-                view = View.inflate(parent.getContext(), R.layout.waiver_fragment_choice, null);
+                view = inflater.inflate(R.layout.waiver_fragment_choice, parent, false);
                 vh = new WaiverFragmentViewHolder(view);
                 break;
             case 2:
-                view = View.inflate(parent.getContext(), R.layout.orientation_fragment_choice, null);
+                view = inflater.inflate(R.layout.orientation_fragment_choice, parent, false);
                 vh = new OrientationFragmentViewHolder(view);
                 break;
             case 3:
-                view = View.inflate(parent.getContext(), R.layout.map_fragment_choice, null);
+                view = inflater.inflate(R.layout.map_fragment_choice, parent, false);
                 vh = new MapFragmentViewHolder(view);
                 break;
         }
@@ -177,16 +188,11 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
                 ((MapFragmentViewHolder)holder).bindData();
                 break;
         }
-//        holder.fragment.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                onClick.onItemClicked(position);
-//            }
-//        });
     }
 
     @Override
     public int getItemViewType(int position) {
+        // TODO: Replace the following "if" statement with "switch" statement
         int result = 0;
         if (mFragments.get(position).equals("Queue")) {
             result = 0;
@@ -203,10 +209,6 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
     @Override
     public int getItemCount() {
         return mFragments.size();
-    }
-
-    public void setOnClick(UserChoiceAdapter.OnItemClicked onClick) {
-        this.onClick = onClick;
     }
 
 }
