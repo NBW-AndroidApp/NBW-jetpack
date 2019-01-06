@@ -37,7 +37,7 @@
         tools:layout="@layout/signup_fragment"/>
     <fragment
         android:id="@+id/orientationFragment"
-        android:name="org.nieghborhoodbikeworks.nbw.ui.Orientation.OrientationFragment"
+        android:name="org.nieghborhoodbikeworks.nbw.ui.orientation.OrientationFragment"
         android:label="orientation_fragment"
         tools:layout="@layout/orientation_fragment"/>
 </navigation>

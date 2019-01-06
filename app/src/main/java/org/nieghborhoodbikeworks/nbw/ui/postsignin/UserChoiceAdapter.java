@@ -1,16 +1,21 @@
 package org.nieghborhoodbikeworks.nbw.ui.postsignin;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
+import org.nieghborhoodbikeworks.nbw.SharedViewModel;
 
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,15 +30,19 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
         }
     }
 
+    //TODO: Make better use of the UserChoiceHolder ABSTRACT class
+
         public static class QueueFragmentViewHolder extends UserChoiceHolder {
             private Button enqueueButton;
             private Button dequeueButton;
             private Button viewQueueButton;
             private View mView;
+            private SharedViewModel mViewModel;
 
-            public QueueFragmentViewHolder(View view) {
+            public QueueFragmentViewHolder(View view, SharedViewModel viewModel) {
                 super(view);
                 mView = view;
+                mViewModel = viewModel;
                 enqueueButton = view.findViewById(R.id.card_view_enqueue_button);
                 dequeueButton = view.findViewById(R.id.card_view_dequeue_button);
                 viewQueueButton = view.findViewById(R.id.card_view_queue_button);
@@ -43,15 +52,21 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
                 enqueueButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // TODO: Next line
-                        // this.mViewModel.enqueue();
+                        try {
+                            mViewModel.enqueueUser();
+                        } catch (NullPointerException e) {
+                            Navigation.findNavController(mView).navigate(R.id.loginFragment);
+                        }
                     }
                 });
                 dequeueButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // TODO: Next line
-                        // this.mViewModel.enqueue();
+                        try {
+                            mViewModel.dequeueUser();
+                        } catch (NullPointerException e) {
+                            Navigation.findNavController(mView).navigate(R.id.loginFragment);
+                        }
                     }
                 });
                 viewQueueButton.setOnClickListener(new View.OnClickListener() {
@@ -67,10 +82,12 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
         public static class WaiverFragmentViewHolder extends UserChoiceHolder {
             private Button viewWaiverButton;
             private View mView;
+            private SharedViewModel mViewModel;
 
-            public WaiverFragmentViewHolder(View view) {
+            public WaiverFragmentViewHolder(View view, SharedViewModel viewModel) {
                 super(view);
                 mView = view;
+                mViewModel = viewModel;
                 viewWaiverButton = view.findViewById(R.id.card_view_waiver_button);
             }
 
@@ -88,10 +105,12 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
         public static class OrientationFragmentViewHolder extends UserChoiceHolder {
             private Button viewOrientationButton;
             private View mView;
+            private SharedViewModel mViewModel;
 
-            public OrientationFragmentViewHolder(View view) {
+            public OrientationFragmentViewHolder(View view, SharedViewModel viewModel) {
                 super(view);
                 mView = view;
+                mViewModel = viewModel;
                 viewOrientationButton = view.findViewById(R.id.card_view_orientation_button);
             }
 
@@ -109,10 +128,12 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
         public static class MapFragmentViewHolder extends UserChoiceHolder {
             private Button navigateButton;
             private View mView;
+            private SharedViewModel mViewModel;
 
-            public MapFragmentViewHolder(View view) {
+            public MapFragmentViewHolder(View view, SharedViewModel viewModel) {
                 super(view);
                 mView = view;
+                mViewModel = viewModel;
                 navigateButton = view.findViewById(R.id.card_view_navigate_button);
             }
 
@@ -145,30 +166,32 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
     public UserChoiceAdapter.UserChoiceHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // Inflates the XML layout file that will be used for each row within the list
         View view = null;
+        Context mContext = parent.getContext();
+        SharedViewModel mViewModel = ViewModelProviders.of((FragmentActivity) mContext).get(SharedViewModel.class);
         UserChoiceAdapter.UserChoiceHolder vh = null;
         switch (viewType) {
             case 0:
                 view = inflater.inflate(R.layout.queue_fragment_choice, parent, false);
-                vh = new QueueFragmentViewHolder(view);
+                vh = new QueueFragmentViewHolder(view, mViewModel);
                 break;
             case 1:
                 view = inflater.inflate(R.layout.waiver_fragment_choice, parent, false);
-                vh = new WaiverFragmentViewHolder(view);
+                vh = new WaiverFragmentViewHolder(view, mViewModel);
                 break;
             case 2:
                 view = inflater.inflate(R.layout.orientation_fragment_choice, parent, false);
-                vh = new OrientationFragmentViewHolder(view);
+                vh = new OrientationFragmentViewHolder(view, mViewModel);
                 break;
             case 3:
                 view = inflater.inflate(R.layout.map_fragment_choice, parent, false);
-                vh = new MapFragmentViewHolder(view);
+                vh = new MapFragmentViewHolder(view, mViewModel);
                 break;
         }
         return vh;
     }
 
     /**
-     * Sets the view attributes based on the data
+     * Sets the view attributes based on the data.
      * @param holder
      * @param position
      */

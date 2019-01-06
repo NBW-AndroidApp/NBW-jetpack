@@ -174,6 +174,9 @@ public class SharedViewModel extends ViewModel {
         mUser = null;
     }
 
+    /**
+     * Clears the queue.
+     */
     public void clearQueue() {
         mQueueDatabase.setValue(null);
     }

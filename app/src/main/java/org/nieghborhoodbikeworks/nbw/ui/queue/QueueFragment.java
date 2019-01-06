@@ -185,7 +185,7 @@ public class QueueFragment extends Fragment {
                     }
                 });
                 mRecyclerView.setAdapter(mAdapter);
-                mWaiting.setText("People currently in the queue: " + String.valueOf(mQueue.size()));
+                mWaiting.setText("Number of people currently in the queue: " + String.valueOf(mQueue.size()));
             }
 
             @Override

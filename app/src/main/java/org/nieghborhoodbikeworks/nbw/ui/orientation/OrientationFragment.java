@@ -1,4 +1,4 @@
-package org.nieghborhoodbikeworks.nbw.ui.Orientation;
+package org.nieghborhoodbikeworks.nbw.ui.orientation;
 
 import android.app.Activity;
 import androidx.lifecycle.ViewModelProviders;
