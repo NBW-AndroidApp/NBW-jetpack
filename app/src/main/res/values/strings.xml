@@ -2,7 +2,7 @@
     <string name="app_name">NBW</string>
 
     <!--Waiver Fragment strings-->
-    <string name="waiver_title">Waiver</string>
+    <string name="waiver_title">Waiver Fragment</string>
     <string name="waiver_layouttitle">NEIGHBORHOOD BIKE WORKS</string>
     <string name="waiver_subtitle">PARTICIPATION AGREEMENT</string>
     <string name="waiver_text"><b>Placeholder Agreement Text</b>
@@ -48,18 +48,19 @@
     <string name="waiver_end"> I have READ and AGREED to the terms and conditions (required)</string>
     <string name="waiver_signature">Sign your name</string>
     <string name="waiver_date">Date (MM/DD/YYYY)</string>
+    <string name="sign_waiver">Sign</string>
+    <string name="agreement_card_view">You must read, sign and agree to the terms enclosed herein in order
+    to participate in Neighborhood Bike Works.</string>
 
     <!--Queue Fragment strings-->
     <string name="queue_title">Sign-in Queue</string>
-    <string name="dummy_text">
-        1. Rafael Rodriguez
-        \n2. Rudy Hernandez
-        \n3. Ahmed Ishtiaque
-        \n4. Jackson Meyer-Lee
-    </string>
+    <string name="enqueue">Add yourself to the queue</string>
+    <string name="dequeue">Remove yourself from the queue</string>
+    <string name="queue_size">Number of people currently in the queue: 0</string>
 
     <!--Map Fragment strings-->
-    <string name="map_title">map</string>
+    <string name="map_title">Map Fragment</string>
+    <string name="map_card_view">Tap the button below for directions to our campus!</string>
 
     <!--Login Fragment strings-->
     <string name="login_title">Login to Your Account</string>
@@ -78,6 +79,13 @@
     <string name="verify_password">Verify Password</string>
     <string name="signup">Sign Up</string>
 
-    <!--Waiver sign resources-->
-    <string name="sign_waiver">Sign</string>
+    <!--Post Signin Fragment strings-->
+    <string name="user_choice_title">User Choice Fragment</string>
+    <string name="signin_message">What would you like to do?</string>
+
+    <!--Orientation Fragment strings-->
+    <string name="orientation_title">Orientation Fragment</string>
+    <string name="orientation_card_view">First time here? Check out these cool, quick orientation
+    videos! They will save you a ton of time and confusion.</string>
+
 </resources>

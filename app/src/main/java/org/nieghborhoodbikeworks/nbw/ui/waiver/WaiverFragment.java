@@ -6,7 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AlertDialog;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,17 +17,23 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
+import org.nieghborhoodbikeworks.nbw.User;
 
 public class WaiverFragment extends Fragment {
 
     private static final String TAG = "WaiverFrag onCreateView";
     private SharedViewModel mViewModel;
+    private DatabaseReference mUserDatabase;
     private CheckBox mAgreementCheckBox;
     private EditText mSignature;
     private EditText mDate;
     private Button mSignWaiver;
+    private User mUser;
+    private View view;
 
     public static WaiverFragment newInstance() {
         return new WaiverFragment();
@@ -38,20 +44,22 @@ public class WaiverFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         Log.d(TAG,"1");
-        View view = inflater.inflate(R.layout.waiver_fragment, container, false);
+        view = inflater.inflate(R.layout.waiver_fragment, container, false);
+        mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
+        mUserDatabase = mViewModel.getUserDatabase();
         mAgreementCheckBox = view.findViewById(R.id.agreement_checkbox);
         mSignature = view.findViewById(R.id.waiver_signature);
         mDate = view.findViewById(R.id.waiver_date);
         mSignWaiver = view.findViewById(R.id.submit_waiver_button);
         mSignature.setEnabled(false);
         mDate.setEnabled(false);
+        mUser = mViewModel.getUser();
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
         mAgreementCheckBox.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -69,8 +77,11 @@ public class WaiverFragment extends Fragment {
         mSignWaiver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), mViewModel.getAuth().getCurrentUser().getDisplayName(),
+                Toast.makeText(getActivity(), mViewModel.getUser().getName(),
                         Toast.LENGTH_SHORT).show();
+                String userID = mUser.getUid();
+                mUserDatabase.child(userID).child("signedWaiver").setValue(true);
+                Navigation.findNavController(view).navigate(R.id.queueFragment);
             }
         });
 

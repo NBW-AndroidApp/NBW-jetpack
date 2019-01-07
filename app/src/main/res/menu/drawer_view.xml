@@ -5,13 +5,19 @@
             android:id="@+id/nav_login"
             android:title="@string/login_title" />
         <item
-            android:id="@+id/nav_map"
-            android:title="@string/map_title" />
+            android:id="@+id/nav_user_choice"
+            android:title="@string/user_choice_title" />
         <item
             android:id="@+id/nav_waiver"
             android:title="@string/waiver_title" />
         <item
+            android:id="@+id/nav_orientation"
+            android:title="@string/orientation_title" />
+        <item
             android:id="@+id/nav_queue"
             android:title="@string/queue_title" />
+        <item
+            android:id="@+id/nav_map"
+            android:title="@string/map_title" />
     </group>
 </menu>

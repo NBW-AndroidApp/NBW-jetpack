@@ -1,21 +1,20 @@
 package org.nieghborhoodbikeworks.nbw;
 
 import android.util.Log;
-
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class SharedViewModel extends ViewModel {
@@ -26,18 +25,25 @@ public class SharedViewModel extends ViewModel {
     private Task mSignInTask;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference mUserDatabase = mDatabase.getReference().child("users");
-    private LinkedList<FirebaseUser> mQueue = new LinkedList<>();
-
-    public DatabaseReference getUserDatabase() {
-        return mUserDatabase;
-    }
-    private MutableLiveData<LinkedList<FirebaseUser>> liveData;
+    private DatabaseReference mQueueDatabase = mDatabase.getReference().child("queue");
+    private ArrayList<String> mQueue = new ArrayList<String>();
     private User mUser;
-
 
     /*================================================================================
     Getters and setters
     ==================================================================================*/
+    public ArrayList<String> getmQueue() {
+        return mQueue;
+    }
+
+    public DatabaseReference getUserDatabase() {
+        return mUserDatabase;
+    }
+
+    public DatabaseReference getmQueueDatabase() {
+        return mQueueDatabase;
+    }
+
     public User getUser() {
         return mUser;
     }
@@ -52,22 +58,6 @@ public class SharedViewModel extends ViewModel {
 
     public void setDatabase(FirebaseDatabase mDatabase) {
         this.mDatabase = mDatabase;
-    }
-
-    public MutableLiveData<LinkedList<FirebaseUser>> getLiveData() {
-        return liveData;
-    }
-
-    public void setLiveData(MutableLiveData<LinkedList<FirebaseUser>> liveData) {
-        this.liveData = liveData;
-    }
-
-    public LinkedList<FirebaseUser> getQueue() {
-        return mQueue;
-    }
-
-    public void setQueue(LinkedList<FirebaseUser> mQueue) {
-        this.mQueue = mQueue;
     }
 
     public String getEmail() {
@@ -97,8 +87,6 @@ public class SharedViewModel extends ViewModel {
     /*================================================================================
     End of getters and setters
     ==================================================================================*/
-
-
     /**
      * Returns an {@link AuthResult} task that determines whether the user was signed in
      * successfully or not.
@@ -163,4 +151,34 @@ public class SharedViewModel extends ViewModel {
     public interface userDetailCallback {
         void onCallback(User user);
     }
+
+    /**
+     * Writes a new child node to the "Queue" node for every user that decides to be enqueued. The
+     * key for a new node is the user's UID; the value is the user's display name.
+     */
+    public void enqueueUser() {
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put(mUser.getUid(), mUser.getName());
+        mQueueDatabase.updateChildren(childUpdates);
+        FirebaseAuth.getInstance().signOut();
+        mUser = null;
+    }
+
+    /**
+     * Deletes the child nodes in the "Queue" node by the users UID. Allows users with the same
+     * display name to be differentiated.
+     */
+    public void dequeueUser() {
+        mQueueDatabase.child(mUser.getUid()).removeValue();
+        FirebaseAuth.getInstance().signOut();
+        mUser = null;
+    }
+
+    /**
+     * Clears the queue.
+     */
+    public void clearQueue() {
+        mQueueDatabase.setValue(null);
+    }
+
 }

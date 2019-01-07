@@ -7,6 +7,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+
+import org.nieghborhoodbikeworks.nbw.ui.queue.QueueFragment;
+
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         setupNavigation();
+
     }
 
     @Override
@@ -78,8 +82,16 @@ public class MainActivity extends AppCompatActivity {
                         mNavController.navigate(R.id.loginFragment);
                         break;
                     }
+                    case R.id.nav_user_choice: {
+                        mNavController.navigate(R.id.userChoiceFragment);
+                        break;
+                    }
                     case R.id.nav_waiver: {
                         mNavController.navigate(R.id.waiverFragment);
+                        break;
+                    }
+                    case R.id.nav_orientation: {
+                        mNavController.navigate(R.id.orientationFragment);
                         break;
                     }
                     case R.id.nav_queue: {

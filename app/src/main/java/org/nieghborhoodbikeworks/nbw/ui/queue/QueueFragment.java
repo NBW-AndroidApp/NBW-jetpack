@@ -1,70 +1,191 @@
 package org.nieghborhoodbikeworks.nbw.ui.queue;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
+import org.nieghborhoodbikeworks.nbw.User;
 
 import java.util.ArrayList;
 
 import static androidx.constraintlayout.widget.StateSet.TAG;
 
 public class QueueFragment extends Fragment {
-
     private SharedViewModel mViewModel;
-
-    public QueueFragment newInstance() { return new QueueFragment(); }
-
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    private AlertDialog.Builder alertDialogBuilder;
-    private Observer mObserver;
-    private TextView displayQueue;
+    private View view;
+    private DatabaseReference mQueueDatabase;
+    private User mUser;
+    private Button mEnqueueButton, mDequeueButton;
+    private TextView mWaiting;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<String> mQueue;
-    private FirebaseDatabase mDatabase;
-    private DatabaseReference databaseReference;
 
+    public static QueueFragment newInstance() { return new QueueFragment(); }
+
+    /**
+     * This initializes the UI variables once the fragment starts up, and returns the view
+     * to its parent.
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
+    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.queue_fragment, container, false);
-        mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
-        displayQueue = view.findViewById(R.id.textView4);
+        ((MainActivity) getActivity()).setActionBarTitle("Queue");
+        // Get the view from fragment XML
+        view = inflater.inflate(R.layout.queue_fragment, container, false);
+
+        // Initialize queue UI elements
+        mEnqueueButton = view.findViewById(R.id.enqueue_button);
+        mDequeueButton = view.findViewById(R.id.dequeue_button);
+        mWaiting = view.findViewById(R.id.waiting);
+        mRecyclerView = view.findViewById(R.id.queue_recycler_view);
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setHasFixedSize(true);
+
         return view;
     }
 
+    /**
+     * There are two OnClickListeners here:
+     *
+     * 1. mEnqueueButton:
+     *      when the user presses this button, the method adds them to the "queue" node in the
+     *      database if they are signed in. A ValueEventListener is attached to the "queue" node
+     *      which is what relays the data in the queue to the RecyclerView. The RecyclerView populates
+     *      its list items from the ValueEventListener so that the users already in the queue are shown
+     *      once the view for this fragment is inflated.
+     *
+     *      If the user is not signed in and they tap on this button, a NullPointerException is
+     *      thrown, at which point the user is redirected to theLoginFragment and is prompted to
+     *      sign in.
+     *
+     * 2. mDequeueButton:
+     *      when the user presses this button, the method removes them from the "queue" node if they
+     *      are in it. Just like in the mEnqueueButton method, this method uses the same ValueEventListener
+     *      the former method uses.
+     *
+     *      If the user is not signed in and they tap on this button, they will be redirected to the
+     *      LoginFragment.
+     *
+     * @param savedInstanceState
+     */
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        databaseReference = mDatabase.getReference();
-        mDatabase = mViewModel.getDatabase();
+        mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
+
+        // Fetch data for queue
+        mQueueDatabase = mViewModel.getmQueueDatabase();
+        mUser = mViewModel.getUser();
+        mQueue = mViewModel.getmQueue();
+        updateQueue();
+        mAdapter = new QueueAdapter(getActivity(), mQueue);
+        mRecyclerView.setAdapter(mAdapter);
+
+        mEnqueueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // If there is no user currently signed in, mUser.getName() will throw a NPE
+                try {
+                    mViewModel.enqueueUser();
+                    updateQueue();
+                } catch (NullPointerException e) {
+                    Navigation.findNavController(view).navigate(R.id.loginFragment);
+                }
+            }
+        });
+
+        mDequeueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // If there is no user currently signed in, mUser.getName() will throw a NPE
+                try {
+                    mViewModel.dequeueUser();
+                    updateQueue();
+                } catch (NullPointerException e) {
+                    Navigation.findNavController(view).navigate(R.id.loginFragment);
+                }
+            }
+        });
+
+    }
+
+    /**
+     * The updateQueue method reads from the queue node in the database and adds the users to the mQueue
+     * ArrayList.
+     */
+    private void updateQueue() {
+        // Reads the data on the "queue" node in the database
         ValueEventListener queueListener = new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                mQueue = (ArrayList<String>) dataSnapshot.child("queue").getValue();
-                Log.d(TAG, "verifying");
+            public void onDataChange(DataSnapshot dataSnapshot1) {
+                ArrayList<String> updatedQueue = new ArrayList<>();
+                // Iterates through the nodes in the queue
+                for (DataSnapshot ds1 : dataSnapshot1.getChildren()) {
+                    // key = mUser.getUid(), value = mUser.getName()
+                    String value = String.valueOf(ds1.getValue());
+                    // Add users in the queue
+                    if(!value.equals("empty") || !value.equals("test")) {
+                        updatedQueue.add(value);
+                    }
+                }
+
+                int i = 0;
+                boolean userDequeued = false;
+
+                if (mQueue.size() > updatedQueue.size()) {
+                    for (String user : updatedQueue) {
+                        if (!(user.equals(mQueue.get(i)))) {
+                            userDequeued = true;
+                            break;
+                        }
+                        i++;
+                    }
+                }
+
+                mQueue = updatedQueue;
+                if (userDequeued) {
+                    mAdapter.notifyItemRemoved(i);
+                }
+                //TODO: Find a better way to update the RecyclerView Adapter
+                mAdapter = new QueueAdapter(getActivity(), mQueue);
+                ((QueueAdapter) mAdapter).setOnClick(new QueueAdapter.OnItemClicked() {
+                    @Override
+                    public void onItemClicked(int position) {
+                        //logic once a user taps on their name
+                    }
+                });
+                mRecyclerView.setAdapter(mAdapter);
+                mWaiting.setText("Number of people currently in the queue: " + String.valueOf(mQueue.size()));
             }
 
             @Override
@@ -72,43 +193,7 @@ public class QueueFragment extends Fragment {
                 Log.w(TAG, "loadQueue:onCancelled", databaseError.toException());
             }
         };
-        databaseReference.addValueEventListener(queueListener);
-
-        alertDialogBuilder = new AlertDialog.Builder(getActivity())
-                .setTitle("Queue")
-                .setMessage("Would you like to add yourself to the queue?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-//                      some logic for when the user decides to be added to the queue
-//                      databaseReference.child("queue").updateChildren();
-                      databaseReference.child("queue").setValue(user);
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-//                      some logic for when the user decides to not be added to the queue
-                    }
-                });
-
-        alertDialogBuilder.show();
-
-//        mObserver = new Observer<LinkedList<FirebaseUser>>() {
-//            @Override
-//            public void onChanged(@Nullable final LinkedList<FirebaseUser> updatedQueue) {
-//                // Update the UI
-//                displayQueue.setText(this.updateUI(updatedQueue));
-//            }
-//
-//            private String updateUI(LinkedList<FirebaseUser> updatedQueue) {
-//                String result;
-//                for(FirebaseUser user:updatedQueue) {
-//                    user.getDisplayName();
-//                }
-//                return result;
-//            }
-//        };
-//
-//        mLiveData.observe(getActivity(), mObserver);
+        mQueueDatabase.addValueEventListener(queueListener);
 
     }
 

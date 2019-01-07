@@ -3,13 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/queueFragment">
 
     <fragment
         android:id="@+id/loginFragment"
         android:name="org.nieghborhoodbikeworks.nbw.ui.login.LoginFragment"
         android:label="login_fragment"
         tools:layout="@layout/login_fragment"/>
+    <fragment
+        android:id="@+id/userChoiceFragment"
+        android:name="org.nieghborhoodbikeworks.nbw.ui.postsignin.UserChoiceFragment"
+        android:label="user_choice_fragment"
+        tools:layout="@layout/user_choice_fragment"/>
     <fragment
         android:id="@+id/waiverFragment"
         android:name="org.nieghborhoodbikeworks.nbw.ui.waiver.WaiverFragment"
@@ -32,7 +37,7 @@
         tools:layout="@layout/signup_fragment"/>
     <fragment
         android:id="@+id/orientationFragment"
-        android:name="org.nieghborhoodbikeworks.nbw.ui.Orientation.OrientationFragment"
+        android:name="org.nieghborhoodbikeworks.nbw.ui.orientation.OrientationFragment"
         android:label="orientation_fragment"
         tools:layout="@layout/orientation_fragment"/>
 </navigation>

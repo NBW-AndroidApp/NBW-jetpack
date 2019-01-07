@@ -1,17 +1,12 @@
 package org.nieghborhoodbikeworks.nbw.ui.login;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
@@ -33,9 +28,6 @@ import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
 import org.nieghborhoodbikeworks.nbw.User;
-import org.nieghborhoodbikeworks.nbw.ui.signup.SignUpFragment;
-
-import java.util.concurrent.Executor;
 
 public class LoginFragment extends Fragment {
     private String TAG = "LoginFragment";
@@ -44,7 +36,6 @@ public class LoginFragment extends Fragment {
     private Button mLogInButton;
     private EditText mEmailText, mPasswordText;
     private TextView mForgotPassword, mSignUp;
-    private AlertDialog.Builder mAlertDialog;
     private View mView;
 
     public static LoginFragment newInstance() {
@@ -127,27 +118,29 @@ public class LoginFragment extends Fragment {
             public void onClick(final View v) {
                 String email = mEmailText.getText().toString();
                 String password = mPasswordText.getText().toString();
+
                 if (email.length() == 0 || password.length() == 0) {
                     Toast.makeText(getActivity(), "Please enter e-mail and password.",
                             Toast.LENGTH_SHORT).show();
                 }
 
                 else {
-                    mViewModel.signIn(email, password)
-                            .addOnCompleteListener(new OnCompleteListener() {
+                    FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                                 @Override
-                                public void onComplete(@NonNull Task task) {
+                                public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
                                         Log.d(TAG, "signInWithEmail:success");
                                         Toast.makeText(getActivity(),
                                                 "Signed in!", Toast.LENGTH_SHORT).show();
-                                        uid[0] = mViewModel.getAuth().getUid();
+                                        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                         mViewModel.fetchUser(
-                                                uid[0], new SharedViewModel.userDetailCallback() {
+                                                uid, new SharedViewModel.userDetailCallback() {
                                                     @Override
                                                     public void onCallback(User user) {
                                                         if (user.isSignedWaiver()) {
-                                                            showPostSignInAlert(v);
+                                                            Navigation.findNavController(v).
+                                                                    navigate(R.id.userChoiceFragment);
                                                         } else {
                                                             Navigation.findNavController(v).
                                                                     navigate(R.id.waiverFragment);
@@ -177,32 +170,5 @@ public class LoginFragment extends Fragment {
                         navigate(R.id.signupFragment);
             }
         });
-    }
-    /**
-     * This simply shows an alert to the app's screen. It's pushed here to allow less cluttering
-     * in login's onActivityCreated above.
-     * @param v
-     */
-    public void showPostSignInAlert(final View v) {
-        mAlertDialog = new AlertDialog.Builder(getActivity())
-                .setTitle("Sign-in Successful!")
-                .setMessage("What would you like to do?")
-                .setPositiveButton("Add me to the queue",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                Navigation.findNavController(v).navigate(R.id.queueFragment);
-                            }
-                        })
-                .setNegativeButton("Watch orientation videos",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                Navigation.findNavController(v).navigate(R.id.orientationFragment);
-                            }
-                        });
-        mAlertDialog.show();
     }
 }

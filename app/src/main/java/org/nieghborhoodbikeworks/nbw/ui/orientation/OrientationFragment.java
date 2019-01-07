@@ -1,4 +1,4 @@
-package org.nieghborhoodbikeworks.nbw.ui.Orientation;
+package org.nieghborhoodbikeworks.nbw.ui.orientation;
 
 import android.app.Activity;
 import androidx.lifecycle.ViewModelProviders;
@@ -11,10 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.nieghborhoodbikeworks.nbw.R;
+import org.nieghborhoodbikeworks.nbw.SharedViewModel;
 
 public class OrientationFragment extends Fragment {
 
-    private OrientationViewModel mViewModel;
+    private SharedViewModel mViewModel;
 
     private Activity mContext;
 
@@ -31,7 +32,7 @@ public class OrientationFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(OrientationViewModel.class);
+        mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
         // TODO: Use the ViewModel
 
 
