@@ -1,13 +1,11 @@
 package org.nieghborhoodbikeworks.nbw.ui.postsignin;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
 
@@ -24,6 +22,10 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
     private LayoutInflater inflater;
     private ArrayList<String> mFragments;
 
+    /**
+     * There are four ViewHolders, one for each CardView in the RecyclerView, all instances of the
+     * UserChoiceHolder abstract class.
+     */
     public static abstract class UserChoiceHolder extends RecyclerView.ViewHolder {
         public UserChoiceHolder(View itemView) {
             super(itemView);
@@ -54,6 +56,7 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
                     public void onClick(View v) {
                         try {
                             mViewModel.enqueueUser();
+                            Navigation.findNavController(mView).navigate(R.id.queueFragment);
                         } catch (NullPointerException e) {
                             Navigation.findNavController(mView).navigate(R.id.loginFragment);
                         }
@@ -64,6 +67,7 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
                     public void onClick(View v) {
                         try {
                             mViewModel.dequeueUser();
+                            Navigation.findNavController(mView).navigate(R.id.queueFragment);
                         } catch (NullPointerException e) {
                             Navigation.findNavController(mView).navigate(R.id.loginFragment);
                         }
@@ -152,7 +156,7 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
      * The adapter populates the data into the RecyclerView by converting an object at a position
      * into a list row item to be inserted. The adapter requires the existence of a "ViewHolder"
      * object which describes and provides access to all the views within each item row. In our case,
-     * each item row is composed of TextViews.
+     * each item row is composed of CardViews.
      *
      * @param context
      * @param mFragments
@@ -162,8 +166,9 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
         this.mFragments = mFragments;
     }
 
+    @NonNull
     @Override
-    public UserChoiceAdapter.UserChoiceHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public UserChoiceAdapter.UserChoiceHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflates the XML layout file that will be used for each row within the list
         View view = null;
         Context mContext = parent.getContext();

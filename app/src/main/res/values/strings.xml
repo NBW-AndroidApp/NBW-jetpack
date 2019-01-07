@@ -49,6 +49,8 @@
     <string name="waiver_signature">Sign your name</string>
     <string name="waiver_date">Date (MM/DD/YYYY)</string>
     <string name="sign_waiver">Sign</string>
+    <string name="agreement_card_view">You must read, sign and agree to the terms enclosed herein in order
+    to participate in Neighborhood Bike Works.</string>
 
     <!--Queue Fragment strings-->
     <string name="queue_title">Sign-in Queue</string>
@@ -58,6 +60,7 @@
 
     <!--Map Fragment strings-->
     <string name="map_title">Map Fragment</string>
+    <string name="map_card_view">Tap the button below for directions to our campus!</string>
 
     <!--Login Fragment strings-->
     <string name="login_title">Login to Your Account</string>
@@ -82,5 +85,7 @@
 
     <!--Orientation Fragment strings-->
     <string name="orientation_title">Orientation Fragment</string>
+    <string name="orientation_card_view">First time here? Check out these cool, quick orientation
+    videos! They will save you a ton of time and confusion.</string>
 
 </resources>

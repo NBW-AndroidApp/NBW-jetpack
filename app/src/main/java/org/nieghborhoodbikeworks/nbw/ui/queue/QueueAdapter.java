@@ -19,6 +19,9 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueHolder>
     private ArrayList<String> mUsers;
     private OnItemClicked onClick;
 
+    /**
+     * Interface for when a user is tapped on in the queue.
+     */
     interface OnItemClicked {
         void onItemClicked(int position);
     }
@@ -27,7 +30,7 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueHolder>
      * The adapter populates the data into the RecyclerView by converting an object at a position
      * into a list row item to be inserted. The adapter requires the existence of a "ViewHolder"
      * object which describes and provides access to all the views within each item row. In our case,
-     * each item row is composed of TextViews.
+     * each item row is composed of CardViews.
      *
      * @param context
      * @param mUsers

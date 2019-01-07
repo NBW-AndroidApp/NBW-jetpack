@@ -1,17 +1,12 @@
 package org.nieghborhoodbikeworks.nbw.ui.login;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
@@ -33,9 +28,6 @@ import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
 import org.nieghborhoodbikeworks.nbw.User;
-import org.nieghborhoodbikeworks.nbw.ui.signup.SignUpFragment;
-
-import java.util.concurrent.Executor;
 
 public class LoginFragment extends Fragment {
     private String TAG = "LoginFragment";
@@ -44,8 +36,6 @@ public class LoginFragment extends Fragment {
     private Button mLogInButton;
     private EditText mEmailText, mPasswordText;
     private TextView mForgotPassword, mSignUp;
-    private User mUser;
-    private AlertDialog.Builder mAlertDialog;
     private View mView;
 
     public static LoginFragment newInstance() {
@@ -149,7 +139,8 @@ public class LoginFragment extends Fragment {
                                                     @Override
                                                     public void onCallback(User user) {
                                                         if (user.isSignedWaiver()) {
-                                                            showPostSignInAlert(v);
+                                                            Navigation.findNavController(v).
+                                                                    navigate(R.id.userChoiceFragment);
                                                         } else {
                                                             Navigation.findNavController(v).
                                                                     navigate(R.id.waiverFragment);
@@ -179,40 +170,5 @@ public class LoginFragment extends Fragment {
                         navigate(R.id.signupFragment);
             }
         });
-    }
-    /**
-     * This simply shows an alert to the app's screen. It's pushed here to allow less cluttering
-     * in login's onActivityCreated above.
-     * @param v
-     */
-    public void showPostSignInAlert(final View v) {
-        mAlertDialog = new AlertDialog.Builder(getActivity())
-                .setTitle("Sign-in Successful!")
-                .setMessage("What would you like to do?")
-                .setPositiveButton("Add me to the queue",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                mViewModel.enqueueUser();
-                                Navigation.findNavController(v).navigate(R.id.queueFragment);
-                            }
-                        })
-                .setNegativeButton("Remove me from the queue", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mViewModel.dequeueUser();
-                        Navigation.findNavController(v).navigate(R.id.queueFragment);
-                    }
-                })
-                .setNeutralButton("Watch orientation videos",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                Navigation.findNavController(v).navigate(R.id.orientationFragment);
-                            }
-                        });
-        mAlertDialog.show();
     }
 }
