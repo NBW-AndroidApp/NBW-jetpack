@@ -3,6 +3,8 @@ package org.nieghborhoodbikeworks.nbw.ui.queue;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -22,6 +24,8 @@ import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
@@ -30,7 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import static androidx.constraintlayout.widget.StateSet.TAG;
 
-public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.LongClickListener {
+public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.ClickListener {
     private SharedViewModel mViewModel;
     private View view;
     private DatabaseReference mQueueDatabase;
@@ -39,9 +43,10 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Lo
     private TextView mWaiting;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    //private QueueAdapterAdmin.LongClickListener longClickListener;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<String> mQueue;
+    private ActionModeCallback actionModeCallback = new ActionModeCallback();
+    private ActionMode actionMode = null;
 
     public static QueueAdminFragment newInstance() { return new QueueAdminFragment(); }
 
@@ -107,10 +112,22 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Lo
         mUser = mViewModel.getUser();
         mQueue = mViewModel.getmQueue();
         updateQueue();
-        mAdapter = new QueueAdapterAdmin(getActivity(), mQueue, new QueueAdapterAdmin.LongClickListener() {
+        mAdapter = new QueueAdapterAdmin(getActivity(), mQueue, new QueueAdapterAdmin.ClickListener() {
+            @Override
+            public void onItemClicked(int position) {
+                if (actionMode != null) {
+                    toggleSelection(position);
+                }
+            }
+
             @Override
             public boolean onItemLongClicked(int position) {
+                if (actionMode == null) {
+                    actionMode = ((AppCompatActivity)getActivity()).startSupportActionMode(actionModeCallback);
+                }
+
                 toggleSelection(position);
+
                 return true;
             }
         });
@@ -184,10 +201,22 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Lo
                 }
 
                 //TODO: Find a better way to update the RecyclerView Adapter
-                mAdapter = new QueueAdapterAdmin(getActivity(), mQueue, new QueueAdapterAdmin.LongClickListener() {
+                mAdapter = new QueueAdapterAdmin(getActivity(), mQueue, new QueueAdapterAdmin.ClickListener() {
+                    @Override
+                    public void onItemClicked(int position) {
+                        if (actionMode != null) {
+                            toggleSelection(position);
+                        }
+                    }
+
                     @Override
                     public boolean onItemLongClicked(int position) {
+                        if (actionMode == null) {
+                            actionMode = ((AppCompatActivity)getActivity()).startSupportActionMode(actionModeCallback);
+                        }
+
                         toggleSelection(position);
+
                         return true;
                     }
                 });
@@ -205,13 +234,66 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Lo
     }
 
     @Override
+    public void onItemClicked(int position) {
+        if (actionMode != null) {
+            toggleSelection(position);
+        }
+    }
+
+    @Override
     public boolean onItemLongClicked(int position) {
+        if (actionMode == null) {
+            actionMode = ((AppCompatActivity)getActivity()).startSupportActionMode(actionModeCallback);
+        }
+
         toggleSelection(position);
+
         return true;
     }
 
     public void toggleSelection(int position) {
         ((QueueAdapterAdmin) mAdapter).toggleSelection(position);
+        int count = ((QueueAdapterAdmin) mAdapter).getSelectedItemCount();
+
+        if (count == 0) {
+            actionMode.finish();
+        } else {
+//            actionMode.setTitle(String.valueOf(count));
+            actionMode.invalidate();
+        }
+    }
+
+    private class ActionModeCallback implements ActionMode.Callback {
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate (R.menu.selected_menu, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.menu_remove:
+                    ((QueueAdapterAdmin) mAdapter).removeItems(((QueueAdapterAdmin) mAdapter).getSelectedItems());
+                    mode.finish();
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            ((QueueAdapterAdmin) mAdapter).clearSelection();
+            actionMode = null;
+        }
     }
 
 }
