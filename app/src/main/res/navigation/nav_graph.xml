@@ -26,6 +26,11 @@
         android:label="queue_fragment"
         tools:layout="@layout/queue_fragment" />
     <fragment
+        android:id="@+id/queueAdminFragment"
+        android:name="org.nieghborhoodbikeworks.nbw.ui.queue.QueueAdminFragment"
+        android:label="queue_admin_fragment"
+        tools:layout="@layout/queue_fragment" />
+    <fragment
         android:id="@+id/mapFragment"
         android:name="org.nieghborhoodbikeworks.nbw.ui.map.MapFragment"
         android:label="map_fragment"

@@ -1,16 +1,6 @@
 package org.nieghborhoodbikeworks.nbw.ui.queue;
 
-import androidx.lifecycle.ViewModelProviders;
-
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,9 +20,17 @@ import org.nieghborhoodbikeworks.nbw.User;
 
 import java.util.ArrayList;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import static androidx.constraintlayout.widget.StateSet.TAG;
 
-public class QueueFragment extends Fragment {
+public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.LongClickListener {
     private SharedViewModel mViewModel;
     private View view;
     private DatabaseReference mQueueDatabase;
@@ -41,10 +39,11 @@ public class QueueFragment extends Fragment {
     private TextView mWaiting;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
+    //private QueueAdapterAdmin.LongClickListener longClickListener;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<String> mQueue;
 
-    public static QueueFragment newInstance() { return new QueueFragment(); }
+    public static QueueAdminFragment newInstance() { return new QueueAdminFragment(); }
 
     /**
      * This initializes the UI variables once the fragment starts up, and returns the view
@@ -108,7 +107,13 @@ public class QueueFragment extends Fragment {
         mUser = mViewModel.getUser();
         mQueue = mViewModel.getmQueue();
         updateQueue();
-        mAdapter = new QueueAdapter(getActivity(), mQueue);
+        mAdapter = new QueueAdapterAdmin(getActivity(), mQueue, new QueueAdapterAdmin.LongClickListener() {
+            @Override
+            public boolean onItemLongClicked(int position) {
+                toggleSelection(position);
+                return true;
+            }
+        });
         mRecyclerView.setAdapter(mAdapter);
 
         mEnqueueButton.setOnClickListener(new View.OnClickListener() {
@@ -177,8 +182,15 @@ public class QueueFragment extends Fragment {
                 if (userDequeued) {
                     mAdapter.notifyItemRemoved(i);
                 }
+
                 //TODO: Find a better way to update the RecyclerView Adapter
-                mAdapter = new QueueAdapter(getActivity(), mQueue);
+                mAdapter = new QueueAdapterAdmin(getActivity(), mQueue, new QueueAdapterAdmin.LongClickListener() {
+                    @Override
+                    public boolean onItemLongClicked(int position) {
+                        toggleSelection(position);
+                        return true;
+                    }
+                });
                 mRecyclerView.setAdapter(mAdapter);
                 mWaiting.setText("Number of people currently in the queue: " + String.valueOf(mQueue.size()));
             }
@@ -190,6 +202,16 @@ public class QueueFragment extends Fragment {
         };
         mQueueDatabase.addValueEventListener(queueListener);
 
+    }
+
+    @Override
+    public boolean onItemLongClicked(int position) {
+        toggleSelection(position);
+        return true;
+    }
+
+    public void toggleSelection(int position) {
+        ((QueueAdapterAdmin) mAdapter).toggleSelection(position);
     }
 
 }

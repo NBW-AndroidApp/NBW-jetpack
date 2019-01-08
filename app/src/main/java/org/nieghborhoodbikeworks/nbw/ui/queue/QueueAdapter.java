@@ -11,20 +11,12 @@ import org.nieghborhoodbikeworks.nbw.R;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueHolder> {
+
     private LayoutInflater inflater;
     private ArrayList<String> mUsers;
-    private OnItemClicked onClick;
-
-    /**
-     * Interface for when a user is tapped on in the queue.
-     */
-    interface OnItemClicked {
-        void onItemClicked(int position);
-    }
 
     /**
      * The adapter populates the data into the RecyclerView by converting an object at a position
@@ -42,18 +34,19 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueHolder>
 
     public static class QueueHolder extends RecyclerView.ViewHolder {
         public TextView user;
+
         public QueueHolder(View itemView) {
             super(itemView);
             user = itemView.findViewById(R.id.user);
         }
+
     }
 
     @Override
     public QueueAdapter.QueueHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // Inflates the XML layout file that will be used for each row within the list
         View view = inflater.inflate(R.layout.queued_user, parent, false);
-        QueueHolder vh = new QueueHolder(view);
-        return vh;
+        return new QueueHolder(view);
     }
 
     /**
@@ -65,21 +58,11 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueHolder>
     public void onBindViewHolder(@NonNull QueueHolder holder, final int position) {
         String currentUser = mUsers.get(position);
         holder.user.setText(currentUser);
-        holder.user.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClick.onItemClicked(position);
-            }
-        });
     }
 
     @Override
     public int getItemCount() {
         return mUsers.size();
-    }
-
-    public void setOnClick(OnItemClicked onClick) {
-        this.onClick = onClick;
     }
 
 }

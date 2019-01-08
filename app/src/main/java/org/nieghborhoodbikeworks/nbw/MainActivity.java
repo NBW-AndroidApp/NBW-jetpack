@@ -8,8 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import org.nieghborhoodbikeworks.nbw.ui.queue.QueueFragment;
-
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
@@ -23,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView mNavigationView;
     public NavController mNavController;
     public Toolbar toolbar;
+    private SharedViewModel mViewModel;
+    private User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_activity);
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
+        mViewModel = ViewModelProviders.of(this).get(SharedViewModel.class);
+        mUser = mViewModel.getUser();
 
         setSupportActionBar(toolbar);
 
@@ -95,7 +98,12 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     }
                     case R.id.nav_queue: {
-                        mNavController.navigate(R.id.queueFragment);
+                        if(mUser.isAdmin()) {
+                            mNavController.navigate(R.id.queueAdminFragment);
+                        } else {
+                            mNavController.navigate(R.id.queueFragment);
+                        }
+
                         break;
                     }
                     case R.id.nav_map: {

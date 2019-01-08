@@ -8,6 +8,7 @@ import android.widget.Button;
 
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
+import org.nieghborhoodbikeworks.nbw.User;
 
 import java.util.ArrayList;
 
@@ -29,7 +30,7 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
     public static abstract class UserChoiceHolder extends RecyclerView.ViewHolder {
         public UserChoiceHolder(View itemView) {
             super(itemView);
-        }
+            }
     }
 
     //TODO: Make better use of the UserChoiceHolder ABSTRACT class
@@ -40,11 +41,13 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
             private Button viewQueueButton;
             private View mView;
             private SharedViewModel mViewModel;
+            private User mUser;
 
             public QueueFragmentViewHolder(View view, SharedViewModel viewModel) {
                 super(view);
                 mView = view;
                 mViewModel = viewModel;
+                mUser = mViewModel.getUser();
                 enqueueButton = view.findViewById(R.id.card_view_enqueue_button);
                 dequeueButton = view.findViewById(R.id.card_view_dequeue_button);
                 viewQueueButton = view.findViewById(R.id.card_view_queue_button);
@@ -56,7 +59,11 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
                     public void onClick(View v) {
                         try {
                             mViewModel.enqueueUser();
-                            Navigation.findNavController(mView).navigate(R.id.queueFragment);
+                            if(mUser.isAdmin()){
+                                Navigation.findNavController(mView).navigate(R.id.queueAdminFragment);
+                            } else {
+                                Navigation.findNavController(mView).navigate(R.id.queueFragment);
+                            }
                         } catch (NullPointerException e) {
                             Navigation.findNavController(mView).navigate(R.id.loginFragment);
                         }
@@ -67,7 +74,11 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
                     public void onClick(View v) {
                         try {
                             mViewModel.dequeueUser();
-                            Navigation.findNavController(mView).navigate(R.id.queueFragment);
+                            if(mUser.isAdmin()){
+                                Navigation.findNavController(mView).navigate(R.id.queueAdminFragment);
+                            } else {
+                                Navigation.findNavController(mView).navigate(R.id.queueFragment);
+                            }
                         } catch (NullPointerException e) {
                             Navigation.findNavController(mView).navigate(R.id.loginFragment);
                         }
@@ -76,7 +87,11 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
                 viewQueueButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Navigation.findNavController(mView).navigate(R.id.queueFragment);
+                        if(mUser.isAdmin()){
+                            Navigation.findNavController(mView).navigate(R.id.queueAdminFragment);
+                        } else {
+                            Navigation.findNavController(mView).navigate(R.id.queueFragment);
+                        }
                     }
                 });
             }
@@ -171,6 +186,7 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
     public UserChoiceAdapter.UserChoiceHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflates the XML layout file that will be used for each row within the list
         View view = null;
+        //TODO: It is not recommended to pass the Context due to a possible memory leaking
         Context mContext = parent.getContext();
         SharedViewModel mViewModel = ViewModelProviders.of((FragmentActivity) mContext).get(SharedViewModel.class);
         UserChoiceAdapter.UserChoiceHolder vh = null;
@@ -201,7 +217,7 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
      * @param position
      */
     @Override
-    public void onBindViewHolder(@NonNull UserChoiceAdapter.UserChoiceHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull UserChoiceAdapter.UserChoiceHolder holder, int position) {
         switch (position) {
             case 0:
                 ((QueueFragmentViewHolder)holder).bindData();
