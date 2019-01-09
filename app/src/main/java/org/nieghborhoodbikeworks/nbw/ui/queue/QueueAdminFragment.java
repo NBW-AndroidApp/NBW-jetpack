@@ -220,6 +220,8 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
                     @Override
                     public boolean onItemLongClicked(int position) {
                         if (actionMode == null) {
+                            // Starts the ActionModeCallback after a longClick with the user that
+                            // was longClicked as the first user in the selectedUsers list
                             actionMode = ((AppCompatActivity)getActivity()).
                                     startSupportActionMode(actionModeCallback);
                         }
@@ -243,6 +245,13 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
 
     }
 
+    /**
+     * onItemClicked will only run when the ActionMode is running, at which point the users
+     * that are tapped on will be added to the selectedUsers list. Otherwise, item clicks
+     * will be ignored.
+     *
+     * @param position
+     */
     @Override
     public void onItemClicked(int position) {
         if (actionMode != null) {
@@ -250,9 +259,17 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
         }
     }
 
+    /**
+     * Starts the ActionModeCallback.
+     *
+     * @param position
+     * @return
+     */
     @Override
     public boolean onItemLongClicked(int position) {
         if (actionMode == null) {
+            // Starts the ActionModeCallback after a longClick with the user that
+            // was longClicked as the first user in the selectedUsers list
             actionMode = ((AppCompatActivity)getActivity()).startSupportActionMode(actionModeCallback);
         }
 
@@ -261,21 +278,39 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
         return true;
     }
 
+    /**
+     * toggleSelection keeps track of the users that have been selected to be dequeue'd
+     * and displays the number of users currently selected in the ActionBar.
+     *
+     * @param position
+     */
     public void toggleSelection(int position) {
         ((QueueAdapterAdmin) mAdapter).toggleSelection(position);
         int count = ((QueueAdapterAdmin) mAdapter).getSelectedItemCount();
 
         if (count == 0) {
+            // If there are no users currently selected, terminate the ActionModeCallback
             actionMode.finish();
         } else {
+            actionMode.setTitle("Users selected: " + String.valueOf(count));
             actionMode.invalidate();
         }
     }
 
     private class ActionModeCallback implements ActionMode.Callback {
 
+        /**
+         *  Run once on initial creation of the ActionMode. This method sets the xml layout
+         *  for the selection process; the menu layout sets the action buttons for this
+         *  ActionMode.
+         *
+         * @param mode
+         * @param menu
+         * @return
+         */
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            // Sets the ActionBar for the selection process
             mode.getMenuInflater().inflate (R.menu.selected_menu, menu);
             return true;
         }
@@ -285,6 +320,15 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
             return false;
         }
 
+        /**
+         * Run any time a contextual action button in the ActionMode layout is clicked.
+         * In our case, the following method is run when the "remove from queue" button
+         * is clicked.
+         *
+         * @param mode
+         * @param item
+         * @return
+         */
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
@@ -295,7 +339,9 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
                         // Remove the user from the database
                         mViewModel.dequeueUser(userToBeRemoved);
                     }
+                    // Remove users from the RecyclerView on the UI
                     ((QueueAdapterAdmin) mAdapter).removeItems(selectedUsers);
+                    // updateQueue sets the appropriate data in the local queue
                     updateQueue();
                     mode.finish();
                     Toast.makeText(getActivity(), "User(s) removed from the queue!",
@@ -306,6 +352,11 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
             }
         }
 
+        /**
+         * The following method will run when the selection process is cancelled.
+         *
+         * @param mode
+         */
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             ((QueueAdapterAdmin) mAdapter).clearSelection();

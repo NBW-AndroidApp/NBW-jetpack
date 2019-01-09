@@ -50,7 +50,8 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueHolder>
     }
 
     /**
-     * Sets the view attributes based on the data
+     * Sets the view attributes based on the data.
+     *
      * @param holder
      * @param position
      */

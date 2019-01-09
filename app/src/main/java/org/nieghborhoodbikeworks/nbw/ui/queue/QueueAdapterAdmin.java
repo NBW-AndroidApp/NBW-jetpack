@@ -1,6 +1,7 @@
 package org.nieghborhoodbikeworks.nbw.ui.queue;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +45,7 @@ public class QueueAdapterAdmin extends QueueSelectableAdapter<QueueAdapterAdmin.
     public static class QueueHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
             View.OnLongClickListener {
         private TextView user;
+        public int defaultColor;
         public int primaryColor;
         private ClickListener clickListener;
 
@@ -54,6 +56,7 @@ public class QueueAdapterAdmin extends QueueSelectableAdapter<QueueAdapterAdmin.
 
             user = itemView.findViewById(R.id.user);
             primaryColor = itemView.getResources().getColor(R.color.colorPrimary);
+            defaultColor = itemView.getResources().getColor(R.color.colorDefault);
 
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
@@ -85,7 +88,8 @@ public class QueueAdapterAdmin extends QueueSelectableAdapter<QueueAdapterAdmin.
     }
 
     /**
-     * Sets the view attributes based on the data
+     * Sets the view attributes based on the data.
+     *
      * @param holder
      * @param position
      */
@@ -93,13 +97,9 @@ public class QueueAdapterAdmin extends QueueSelectableAdapter<QueueAdapterAdmin.
     public void onBindViewHolder(@NonNull QueueHolder holder, int position) {
         String currentUser = mUsers.get(position);
         holder.user.setText(currentUser);
-        if (isSelected(position)) {
-//            if (holder.user.getCurrentTextColor() == holder.primaryColor) {
-//                // User is currently selected
-//                isSelected(position);
-//            }
-            holder.user.setTextColor(holder.primaryColor);
-        }
+        // If the user is selected, set their name to a different color.
+        holder.user.setTextColor(isSelected(position) ? holder.primaryColor : holder.defaultColor);
+
     }
 
     @Override
@@ -107,11 +107,16 @@ public class QueueAdapterAdmin extends QueueSelectableAdapter<QueueAdapterAdmin.
         return mUsers.size();
     }
 
+    /**
+     * Remove the user at position 'position'.
+     *
+     * @param position
+     */
     public void removeItem(int position) {
         mUsers.remove(position);
         notifyItemRemoved(position);
     }
-
+    
     public void removeItems(List<Integer> positions) {
         // Reverse-sort the list
         Collections.sort(positions, new Comparator<Integer>() {
@@ -128,7 +133,8 @@ public class QueueAdapterAdmin extends QueueSelectableAdapter<QueueAdapterAdmin.
                 positions.remove(0);
             } else {
                 int count = 1;
-                while (positions.size() > count && positions.get(count).equals(positions.get(count - 1) - 1)) {
+                while (positions.size() > count && positions.get(count).equals
+                        (positions.get(count - 1) - 1)) {
                     count++;
                 }
 
@@ -152,6 +158,10 @@ public class QueueAdapterAdmin extends QueueSelectableAdapter<QueueAdapterAdmin.
         notifyItemRangeRemoved(positionStart, itemCount);
     }
 
+
+    /**
+     * Interface to listen for admin clicks.
+     */
     interface ClickListener {
         void onItemClicked(int position);
         boolean onItemLongClicked(int position);

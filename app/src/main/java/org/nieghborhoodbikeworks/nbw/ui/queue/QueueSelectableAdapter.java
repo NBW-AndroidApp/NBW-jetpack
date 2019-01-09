@@ -16,7 +16,8 @@ public abstract class QueueSelectableAdapter<VH extends RecyclerView.ViewHolder>
     }
 
     /**
-     * Indicates if the item at position 'position' is selected
+     * Indicates if the item at position 'position' is selected.
+     *
      * @param position Position of the item to check
      * @return true if the item is selected, false otherwise
      */
@@ -25,7 +26,8 @@ public abstract class QueueSelectableAdapter<VH extends RecyclerView.ViewHolder>
     }
 
     /**
-     * Toggle the selection status of the item at a given position
+     * Toggle the selection status of the item at a given position.
+     *
      * @param position Position of the item to toggle the selection status for
      */
     public void toggleSelection(int position) {
@@ -38,7 +40,7 @@ public abstract class QueueSelectableAdapter<VH extends RecyclerView.ViewHolder>
     }
 
     /**
-     * Clear the selection status for all items
+     * Clear the selection status for all items.
      */
     public void clearSelection() {
         List<Integer> selection = getSelectedItems();
@@ -49,7 +51,8 @@ public abstract class QueueSelectableAdapter<VH extends RecyclerView.ViewHolder>
     }
 
     /**
-     * Count the selected items
+     * Count the selected items.
+     *
      * @return Selected items count
      */
     public int getSelectedItemCount() {
@@ -57,7 +60,8 @@ public abstract class QueueSelectableAdapter<VH extends RecyclerView.ViewHolder>
     }
 
     /**
-     * Indicates the list of selected items
+     * Indicates the list of selected items.
+     *
      * @return List of selected items ids
      */
     public List<Integer> getSelectedItems() {
