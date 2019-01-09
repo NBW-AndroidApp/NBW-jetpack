@@ -116,7 +116,8 @@ public class QueueAdapterAdmin extends QueueSelectableAdapter<QueueAdapterAdmin.
         mUsers.remove(position);
         notifyItemRemoved(position);
     }
-    
+
+    //TODO: Document this method
     public void removeItems(List<Integer> positions) {
         // Reverse-sort the list
         Collections.sort(positions, new Comparator<Integer>() {
@@ -151,6 +152,7 @@ public class QueueAdapterAdmin extends QueueSelectableAdapter<QueueAdapterAdmin.
         }
     }
 
+    //TODO: Document this method
     private void removeRange(int positionStart, int itemCount) {
         for (int i = 0; i < itemCount; i++) {
             mUsers.remove(positionStart);
