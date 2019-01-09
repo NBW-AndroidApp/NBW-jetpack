@@ -43,6 +43,7 @@ public class QueueFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<String> mQueue;
+    private ArrayList<String> displayQueue;
 
     public static QueueFragment newInstance() { return new QueueFragment(); }
 
@@ -107,8 +108,9 @@ public class QueueFragment extends Fragment {
         mQueueDatabase = mViewModel.getmQueueDatabase();
         mUser = mViewModel.getUser();
         mQueue = mViewModel.getmQueue();
+        displayQueue = new ArrayList<>();
         updateQueue();
-        mAdapter = new QueueAdapter(getActivity(), mQueue);
+        mAdapter = new QueueAdapter(getActivity(), displayQueue);
         mRecyclerView.setAdapter(mAdapter);
 
         mEnqueueButton.setOnClickListener(new View.OnClickListener() {
@@ -150,14 +152,15 @@ public class QueueFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot1) {
                 ArrayList<String> updatedQueue = new ArrayList<>();
+                displayQueue = new ArrayList<>();
                 // Iterates through the nodes in the queue
                 for (DataSnapshot ds1 : dataSnapshot1.getChildren()) {
                     // key = mUser.getUid(), value = mUser.getName()
+                    String key = String.valueOf(ds1.getKey());
                     String value = String.valueOf(ds1.getValue());
-                    // Add users in the queue
-                    if(!value.equals("empty") || !value.equals("test")) {
-                        updatedQueue.add(value);
-                    }
+                    // Add users in the database queue to local queue
+                    updatedQueue.add(key);
+                    displayQueue.add(value);
                 }
 
                 int i = 0;
@@ -178,9 +181,10 @@ public class QueueFragment extends Fragment {
                     mAdapter.notifyItemRemoved(i);
                 }
                 //TODO: Find a better way to update the RecyclerView Adapter
-                mAdapter = new QueueAdapter(getActivity(), mQueue);
+                mAdapter = new QueueAdapter(getActivity(), displayQueue);
                 mRecyclerView.setAdapter(mAdapter);
-                mWaiting.setText("Number of people currently in the queue: " + String.valueOf(mQueue.size()));
+                mWaiting.setText("Number of people currently in the queue: " +
+                        String.valueOf(mQueue.size()));
             }
 
             @Override

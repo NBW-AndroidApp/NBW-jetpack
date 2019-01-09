@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,6 +22,7 @@ import org.nieghborhoodbikeworks.nbw.SharedViewModel;
 import org.nieghborhoodbikeworks.nbw.User;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,6 +47,7 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<String> mQueue;
+    private ArrayList<String> displayQueue;
     private ActionModeCallback actionModeCallback = new ActionModeCallback();
     private ActionMode actionMode = null;
 
@@ -111,8 +114,10 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
         mQueueDatabase = mViewModel.getmQueueDatabase();
         mUser = mViewModel.getUser();
         mQueue = mViewModel.getmQueue();
+        displayQueue = new ArrayList<>();
         updateQueue();
-        mAdapter = new QueueAdapterAdmin(getActivity(), mQueue, new QueueAdapterAdmin.ClickListener() {
+        mAdapter = new QueueAdapterAdmin(getActivity(), displayQueue,
+                new QueueAdapterAdmin.ClickListener() {
             @Override
             public void onItemClicked(int position) {
                 if (actionMode != null) {
@@ -123,7 +128,8 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
             @Override
             public boolean onItemLongClicked(int position) {
                 if (actionMode == null) {
-                    actionMode = ((AppCompatActivity)getActivity()).startSupportActionMode(actionModeCallback);
+                    actionMode = ((AppCompatActivity)getActivity()).
+                            startSupportActionMode(actionModeCallback);
                 }
 
                 toggleSelection(position);
@@ -172,14 +178,15 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
             @Override
             public void onDataChange(DataSnapshot dataSnapshot1) {
                 ArrayList<String> updatedQueue = new ArrayList<>();
+                displayQueue = new ArrayList<>();
                 // Iterates through the nodes in the queue
                 for (DataSnapshot ds1 : dataSnapshot1.getChildren()) {
                     // key = mUser.getUid(), value = mUser.getName()
+                    String key = String.valueOf(ds1.getKey());
                     String value = String.valueOf(ds1.getValue());
-                    // Add users in the queue
-                    if(!value.equals("empty") || !value.equals("test")) {
-                        updatedQueue.add(value);
-                    }
+                    // Add users in the database queue to local queue
+                    updatedQueue.add(key);
+                    displayQueue.add(value);
                 }
 
                 int i = 0;
@@ -201,7 +208,8 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
                 }
 
                 //TODO: Find a better way to update the RecyclerView Adapter
-                mAdapter = new QueueAdapterAdmin(getActivity(), mQueue, new QueueAdapterAdmin.ClickListener() {
+                mAdapter = new QueueAdapterAdmin(getActivity(), displayQueue,
+                        new QueueAdapterAdmin.ClickListener() {
                     @Override
                     public void onItemClicked(int position) {
                         if (actionMode != null) {
@@ -212,7 +220,8 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
                     @Override
                     public boolean onItemLongClicked(int position) {
                         if (actionMode == null) {
-                            actionMode = ((AppCompatActivity)getActivity()).startSupportActionMode(actionModeCallback);
+                            actionMode = ((AppCompatActivity)getActivity()).
+                                    startSupportActionMode(actionModeCallback);
                         }
 
                         toggleSelection(position);
@@ -221,7 +230,8 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
                     }
                 });
                 mRecyclerView.setAdapter(mAdapter);
-                mWaiting.setText("Number of people currently in the queue: " + String.valueOf(mQueue.size()));
+                mWaiting.setText("Number of people currently in the queue: " +
+                        String.valueOf(mQueue.size()));
             }
 
             @Override
@@ -258,7 +268,6 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
         if (count == 0) {
             actionMode.finish();
         } else {
-//            actionMode.setTitle(String.valueOf(count));
             actionMode.invalidate();
         }
     }
@@ -280,10 +289,18 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.menu_remove:
-                    ((QueueAdapterAdmin) mAdapter).removeItems(((QueueAdapterAdmin) mAdapter).getSelectedItems());
+                    List<Integer> selectedUsers = ((QueueAdapterAdmin) mAdapter).getSelectedItems();
+                    for(Integer position : selectedUsers) {
+                        String userToBeRemoved = mQueue.get(position);
+                        // Remove the user from the database
+                        mViewModel.dequeueUser(userToBeRemoved);
+                    }
+                    ((QueueAdapterAdmin) mAdapter).removeItems(selectedUsers);
+                    updateQueue();
                     mode.finish();
+                    Toast.makeText(getActivity(), "User(s) removed from the queue!",
+                            Toast.LENGTH_SHORT).show();
                     return true;
-
                 default:
                     return false;
             }

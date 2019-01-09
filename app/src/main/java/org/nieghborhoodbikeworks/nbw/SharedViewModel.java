@@ -160,8 +160,10 @@ public class SharedViewModel extends ViewModel {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put(mUser.getUid(), mUser.getName());
         mQueueDatabase.updateChildren(childUpdates);
-        FirebaseAuth.getInstance().signOut();
-        mUser = null;
+        if(!mUser.isAdmin()){
+            FirebaseAuth.getInstance().signOut();
+            mUser = null;
+        }
     }
 
     /**
@@ -170,8 +172,14 @@ public class SharedViewModel extends ViewModel {
      */
     public void dequeueUser() {
         mQueueDatabase.child(mUser.getUid()).removeValue();
-        FirebaseAuth.getInstance().signOut();
-        mUser = null;
+        if(!mUser.isAdmin()){
+            FirebaseAuth.getInstance().signOut();
+            mUser = null;
+        }
+    }
+
+    public void dequeueUser(String Uid) {
+        mQueueDatabase.child(Uid).removeValue();
     }
 
     /**
