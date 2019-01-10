@@ -8,6 +8,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +45,7 @@ public class WaiverFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         Log.d(TAG,"1");
         view = inflater.inflate(R.layout.waiver_fragment, container, false);
         mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
@@ -53,6 +56,7 @@ public class WaiverFragment extends Fragment {
         mSignWaiver = view.findViewById(R.id.submit_waiver_button);
         mSignature.setEnabled(false);
         mDate.setEnabled(false);
+        mSignWaiver.setEnabled(false);
         mUser = mViewModel.getUser();
         return view;
     }
@@ -60,6 +64,7 @@ public class WaiverFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         mAgreementCheckBox.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -74,6 +79,32 @@ public class WaiverFragment extends Fragment {
             }
         });
 
+        mSignature.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkRequiredFields();
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
+
+        mDate.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkRequiredFields();
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
+
         mSignWaiver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,6 +116,14 @@ public class WaiverFragment extends Fragment {
             }
         });
 
+    }
+
+    private void checkRequiredFields() {
+        if (!mSignature.getText().toString().isEmpty() && !mDate.getText().toString().isEmpty()) {
+            mSignWaiver.setEnabled(true);
+        } else {
+            mSignWaiver.setEnabled(false);
+        }
     }
 
 }

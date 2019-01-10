@@ -37,6 +37,7 @@ public class LoginFragment extends Fragment {
     private EditText mEmailText, mPasswordText;
     private TextView mForgotPassword, mSignUp;
     private View mView;
+    private CharSequence externalFragmentMessage;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -64,8 +65,9 @@ public class LoginFragment extends Fragment {
         mPasswordText = mView.findViewById(R.id.password);
         mSignUp = mView.findViewById(R.id.sign_up);
         mForgotPassword = mView.findViewById(R.id.forgot_password);
+        externalFragmentMessage = getArguments().getCharSequence("externalFragmentMessage");
 
-        // TODO: Set onClickListeners for new account and forgot password
+        // TODO: Set onClickListeners for forgot password
 
         return mView;
     }
@@ -98,15 +100,9 @@ public class LoginFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
 
-        // TODO: Use the ViewModel
         mAuth = mViewModel.getAuth();
         try {
             FirebaseUser currentUser = mAuth.getCurrentUser();
-            Toast.makeText(
-                    getActivity(),
-                    currentUser.getEmail(),
-                    Toast.LENGTH_SHORT)
-                    .show();
         } catch (Exception e) {
             Toast.makeText(getActivity(), "User isn't logged in!",
                     Toast.LENGTH_SHORT).show();
@@ -139,8 +135,43 @@ public class LoginFragment extends Fragment {
                                                     @Override
                                                     public void onCallback(User user) {
                                                         if (user.isSignedWaiver()) {
-                                                            Navigation.findNavController(v).
-                                                                    navigate(R.id.userChoiceFragment);
+
+                                                            // If the user pressed enqueue somewhere
+                                                            // in the app but wasn't logged in
+                                                            if (externalFragmentMessage.equals("enqueue")) {
+                                                                mViewModel.enqueueUser();
+                                                                Navigation.findNavController(v).
+                                                                        navigate(R.id.queueFragment);
+                                                                Toast.makeText(getActivity(),
+                                                                        "Added to the queue!",
+                                                                        Toast.LENGTH_SHORT).show();
+
+                                                            // If the user pressed dequeue somewhere
+                                                            // in the app but wasn't logged in
+                                                            } else if (externalFragmentMessage.equals("dequeue")) {
+                                                                mViewModel.dequeueUser();
+                                                                Navigation.findNavController(v).
+                                                                        navigate(R.id.queueFragment);
+                                                                Toast.makeText(getActivity(),
+                                                                        "Removed from the queue!",
+                                                                        Toast.LENGTH_SHORT).show();
+
+                                                            // If the user pressed see queue somewhere
+                                                            // in the app but wasn't logged in
+                                                            } else if (externalFragmentMessage.equals("seeQueue")) {
+                                                                Navigation.findNavController(v).
+                                                                        navigate(R.id.queueFragment);
+                                                                Toast.makeText(getActivity(),
+                                                                        "Welcome to the queue!",
+                                                                        Toast.LENGTH_SHORT).show();
+
+                                                            // If the user signed in without previously
+                                                            // having pressed any button related to
+                                                            // the queue anywhere else in the app
+                                                            } else {
+                                                                Navigation.findNavController(v).
+                                                                        navigate(R.id.userChoiceFragment);
+                                                            }
                                                         } else {
                                                             Navigation.findNavController(v).
                                                                     navigate(R.id.waiverFragment);

@@ -79,9 +79,9 @@
     <string name="verify_password">Verify Password</string>
     <string name="signup">Sign Up</string>
 
-    <!--Post Signin Fragment strings-->
+    <!--UserChoice Fragment strings-->
     <string name="user_choice_title">User Choice Fragment</string>
-    <string name="signin_message">What would you like to do?</string>
+    <string name="signin_message">Welcome to Neighborhood Bike Works!</string>
 
     <!--Orientation Fragment strings-->
     <string name="orientation_title">Orientation Fragment</string>

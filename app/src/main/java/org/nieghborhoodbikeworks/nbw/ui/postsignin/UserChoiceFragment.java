@@ -5,10 +5,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
+import org.nieghborhoodbikeworks.nbw.ui.queue.QueueFragment;
 
 import java.util.ArrayList;
 
@@ -68,5 +75,4 @@ public class UserChoiceFragment extends Fragment {
         mAdapter = new UserChoiceAdapter(getActivity(), mFragments);
         mRecyclerView.setAdapter(mAdapter);
     }
-
 }

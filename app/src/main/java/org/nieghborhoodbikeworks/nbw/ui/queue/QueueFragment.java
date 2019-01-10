@@ -38,7 +38,7 @@ public class QueueFragment extends Fragment {
     private DatabaseReference mQueueDatabase;
     private User mUser;
     private Button mEnqueueButton, mDequeueButton;
-    private TextView mWaiting;
+    private TextView mWaiting, cardViewWaiting;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -67,6 +67,7 @@ public class QueueFragment extends Fragment {
         mEnqueueButton = view.findViewById(R.id.enqueue_button);
         mDequeueButton = view.findViewById(R.id.dequeue_button);
         mWaiting = view.findViewById(R.id.waiting);
+        cardViewWaiting = view.findViewById(R.id.card_view_waiting);
         mRecyclerView = view.findViewById(R.id.queue_recycler_view);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -121,7 +122,9 @@ public class QueueFragment extends Fragment {
                     mViewModel.enqueueUser();
                     updateQueue();
                 } catch (NullPointerException e) {
-                    Navigation.findNavController(view).navigate(R.id.loginFragment);
+                    Bundle bundle = new Bundle();
+                    bundle.putCharSequence("externalFragmentMessage", "enqueue");
+                    Navigation.findNavController(view).navigate(R.id.loginFragment, bundle);
                 }
             }
         });
@@ -134,7 +137,9 @@ public class QueueFragment extends Fragment {
                     mViewModel.dequeueUser();
                     updateQueue();
                 } catch (NullPointerException e) {
-                    Navigation.findNavController(view).navigate(R.id.loginFragment);
+                    Bundle bundle = new Bundle();
+                    bundle.putCharSequence("externalFragmentMessage", "dequeue");
+                    Navigation.findNavController(view).navigate(R.id.loginFragment, bundle);
                 }
             }
         });
@@ -184,6 +189,8 @@ public class QueueFragment extends Fragment {
                 mAdapter = new QueueAdapter(getActivity(), displayQueue);
                 mRecyclerView.setAdapter(mAdapter);
                 mWaiting.setText("Number of people currently in the queue: " +
+                        String.valueOf(mQueue.size()));
+                cardViewWaiting.setText("Number of people currently in the queue: " +
                         String.valueOf(mQueue.size()));
             }
 

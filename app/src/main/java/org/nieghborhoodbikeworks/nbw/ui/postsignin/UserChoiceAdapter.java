@@ -1,6 +1,7 @@
 package org.nieghborhoodbikeworks.nbw.ui.postsignin;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,13 +60,15 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
                     public void onClick(View v) {
                         try {
                             mViewModel.enqueueUser();
-                            if(mUser.isAdmin()){
+                            if (mUser.isAdmin()) {
                                 Navigation.findNavController(mView).navigate(R.id.queueAdminFragment);
                             } else {
                                 Navigation.findNavController(mView).navigate(R.id.queueFragment);
                             }
                         } catch (NullPointerException e) {
-                            Navigation.findNavController(mView).navigate(R.id.loginFragment);
+                            Bundle bundle = new Bundle();
+                            bundle.putCharSequence("externalFragmentMessage", "enqueue");
+                            Navigation.findNavController(mView).navigate(R.id.loginFragment, bundle);
                         }
                     }
                 });
@@ -74,28 +77,35 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
                     public void onClick(View v) {
                         try {
                             mViewModel.dequeueUser();
-                            if(mUser.isAdmin()){
+                            if (mUser.isAdmin()) {
                                 Navigation.findNavController(mView).navigate(R.id.queueAdminFragment);
                             } else {
                                 Navigation.findNavController(mView).navigate(R.id.queueFragment);
                             }
                         } catch (NullPointerException e) {
-                            Navigation.findNavController(mView).navigate(R.id.loginFragment);
+                            Bundle bundle = new Bundle();
+                            bundle.putCharSequence("externalFragmentMessage", "dequeue");
+                            Navigation.findNavController(mView).navigate(R.id.loginFragment, bundle);
                         }
                     }
                 });
                 viewQueueButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(mUser.isAdmin()){
-                            Navigation.findNavController(mView).navigate(R.id.queueAdminFragment);
-                        } else {
-                            Navigation.findNavController(mView).navigate(R.id.queueFragment);
+                        try {
+                            if (mUser.isAdmin()) {
+                                Navigation.findNavController(mView).navigate(R.id.queueAdminFragment);
+                            } else {
+                                Navigation.findNavController(mView).navigate(R.id.queueFragment);
+                            }
+                        } catch (NullPointerException e) {
+                            Bundle bundle = new Bundle();
+                            bundle.putCharSequence("externalFragmentMessage", "seeQueue");
+                            Navigation.findNavController(mView).navigate(R.id.loginFragment, bundle);
                         }
                     }
                 });
             }
-
         }
 
         public static class WaiverFragmentViewHolder extends UserChoiceHolder {
@@ -114,11 +124,14 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
                 viewWaiverButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                         Navigation.findNavController(mView).navigate(R.id.waiverFragment);
+                        if (mViewModel.getUser() == null) {
+                            Navigation.findNavController(mView).navigate(R.id.loginFragment);
+                        } else {
+                            Navigation.findNavController(mView).navigate(R.id.waiverFragment);
+                        }
                     }
                 });
             }
-
         }
 
         public static class OrientationFragmentViewHolder extends UserChoiceHolder {
@@ -141,7 +154,6 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
                     }
                 });
             }
-
         }
 
         public static class MapFragmentViewHolder extends UserChoiceHolder {
@@ -164,7 +176,6 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
                     }
                 });
             }
-
         }
 
     /**

@@ -5,8 +5,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    card_view:cardElevation="4dp"
-    android:layout_margin="-16dp"
+    card_view:cardElevation="8dp"
+    card_view:cardCornerRadius="8dp"
     app:cardUseCompatPadding="true">
 
     <LinearLayout
@@ -29,11 +29,11 @@
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
 
         <TextView
+            android:id="@+id/card_view_waiting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
             android:text="@+id/waiting"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption" />
 
