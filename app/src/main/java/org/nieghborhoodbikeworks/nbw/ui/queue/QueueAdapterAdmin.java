@@ -1,7 +1,6 @@
 package org.nieghborhoodbikeworks.nbw.ui.queue;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;

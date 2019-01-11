@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 
+import org.nieghborhoodbikeworks.nbw.DrawerLocker;
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
 import org.nieghborhoodbikeworks.nbw.User;
@@ -45,6 +46,8 @@ public class WaiverFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
+        ((DrawerLocker)getActivity()).setDrawerLocked(false);
 
         Log.d(TAG,"1");
         view = inflater.inflate(R.layout.waiver_fragment, container, false);

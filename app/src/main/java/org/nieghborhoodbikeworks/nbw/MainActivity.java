@@ -1,11 +1,13 @@
 package org.nieghborhoodbikeworks.nbw;
 
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -17,7 +19,7 @@ import androidx.navigation.ui.NavigationUI;
 import static androidx.navigation.Navigation.findNavController;
 import static androidx.navigation.ui.NavigationUI.setupActionBarWithNavController;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DrawerLocker {
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
@@ -25,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     public Toolbar toolbar;
     private SharedViewModel mViewModel;
     private User mUser;
-    private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +57,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
         // Setting Up One Time Navigation
     private void setupNavigation(){
-
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -69,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         mNavigationView = findViewById(R.id.nav_view);
 
-        mNavController = (NavController)findNavController(this, R.id.nav_host_fragment);
+        mNavController = findNavController(this, R.id.nav_host_fragment);
 
         setupActionBarWithNavController(this, mNavController, mDrawerLayout);
 
@@ -78,13 +77,20 @@ public class MainActivity extends AppCompatActivity {
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
-                // set item as selected to persist highlight
-                menuItem.setChecked(true);
                 // close drawer when item is tapped
                 mDrawerLayout.closeDrawers();
                 switch (menuItem.getItemId()) {
                     case R.id.nav_login: {
-                        mNavController.navigate(R.id.loginFragment);
+                        // If the user is not logged in, navigate them
+                        // to the Login Fragment
+                        if (mNavigationView.getMenu().findItem(R.id.nav_login).getTitle()
+                                .equals("Login to Your Account")) {
+                            mNavController.navigate(R.id.loginFragment);
+                        // If the user is logged in, log them out
+                        } else {
+                            FirebaseAuth.getInstance().signOut();
+                            mUser = null;
+                        }
                         break;
                     }
                     case R.id.nav_user_choice: {
@@ -123,5 +129,14 @@ public class MainActivity extends AppCompatActivity {
         if (title != null) {
             getSupportActionBar().setTitle(title);
         }
+    }
+
+    public void setDrawerLocked(boolean enabled){
+        if (enabled) {
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        } else {
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        }
+
     }
 }

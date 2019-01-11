@@ -14,21 +14,17 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 
+import org.nieghborhoodbikeworks.nbw.DrawerLocker;
 import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
 import org.nieghborhoodbikeworks.nbw.User;
-import org.nieghborhoodbikeworks.nbw.ui.login.LoginFragment;
-import org.nieghborhoodbikeworks.nbw.ui.waiver.WaiverFragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
@@ -53,10 +49,12 @@ public class SignUpFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        // Set Title for the Fragment.
+        // Set Title for the Fragment
         ((MainActivity) getActivity()).setActionBarTitle("Sign Up with NBW");
         // Get the view from fragment XML
         View v = inflater.inflate(R.layout.signup_fragment, container, false);
+
+        ((DrawerLocker)getActivity()).setDrawerLocked(false);
 
         // Fetch SharedViewModel from MainActivity.
         mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);

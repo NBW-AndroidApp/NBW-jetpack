@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import org.nieghborhoodbikeworks.nbw.DrawerLocker;
 import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
@@ -38,7 +39,7 @@ public class QueueFragment extends Fragment {
     private DatabaseReference mQueueDatabase;
     private User mUser;
     private Button mEnqueueButton, mDequeueButton;
-    private TextView mWaiting, cardViewWaiting;
+    private TextView mWaiting;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -63,11 +64,12 @@ public class QueueFragment extends Fragment {
         // Get the view from fragment XML
         view = inflater.inflate(R.layout.queue_fragment, container, false);
 
+        ((DrawerLocker)getActivity()).setDrawerLocked(false);
+
         // Initialize queue UI elements
         mEnqueueButton = view.findViewById(R.id.enqueue_button);
         mDequeueButton = view.findViewById(R.id.dequeue_button);
         mWaiting = view.findViewById(R.id.waiting);
-        cardViewWaiting = view.findViewById(R.id.card_view_waiting);
         mRecyclerView = view.findViewById(R.id.queue_recycler_view);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -189,8 +191,6 @@ public class QueueFragment extends Fragment {
                 mAdapter = new QueueAdapter(getActivity(), displayQueue);
                 mRecyclerView.setAdapter(mAdapter);
                 mWaiting.setText("Number of people currently in the queue: " +
-                        String.valueOf(mQueue.size()));
-                cardViewWaiting.setText("Number of people currently in the queue: " +
                         String.valueOf(mQueue.size()));
             }
 

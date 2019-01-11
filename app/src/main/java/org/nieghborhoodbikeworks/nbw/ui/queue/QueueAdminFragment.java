@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import org.nieghborhoodbikeworks.nbw.DrawerLocker;
 import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
@@ -68,6 +69,8 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
         ((MainActivity) getActivity()).setActionBarTitle("Queue");
         // Get the view from fragment XML
         view = inflater.inflate(R.layout.queue_fragment, container, false);
+
+        ((DrawerLocker)getActivity()).setDrawerLocked(false);
 
         // Initialize queue UI elements
         mEnqueueButton = view.findViewById(R.id.enqueue_button);

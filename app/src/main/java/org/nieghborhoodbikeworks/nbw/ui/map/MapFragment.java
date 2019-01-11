@@ -16,6 +16,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.nieghborhoodbikeworks.nbw.DrawerLocker;
 import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
@@ -34,6 +35,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                              @Nullable Bundle savedInstanceState) {
         ((MainActivity) getActivity()).setActionBarTitle("Map");
         View v = inflater.inflate(R.layout.map_fragment, container, false);
+        ((DrawerLocker)getActivity()).setDrawerLocked(false);
         return v;
     }
 
@@ -61,9 +63,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setBuildingsEnabled(true);
 
         LatLng NBWcampus = new LatLng(39.962720,-75.201020);
-        mMap.addMarker(new MarkerOptions().position(NBWcampus).title("Neighborhood Bike Works Shop"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(NBWcampus));
+        mMap.addMarker(new MarkerOptions().position(NBWcampus).title("Neighborhood Bike Works"));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(NBWcampus, 16));
     }
 }

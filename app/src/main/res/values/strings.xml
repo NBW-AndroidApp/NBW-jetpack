@@ -61,6 +61,15 @@
     <!--Map Fragment strings-->
     <string name="map_title">Map Fragment</string>
     <string name="map_card_view">Tap the button below for directions to our campus!</string>
+    <string name="shop_hours"><b>Shop Hours</b> \n\n Tuesday - Friday: 3:00PM - 6:00PM \n\n Saturdays and Sundays: 12:00PM
+        - 4:00PM</string>
+    <string name="repair_stands_et_al"><b>We are closed on Mondays \n\n Use of Repair Stands only available during Bike Church</b></string>
+    <string name="church_hours"><b>Bike Church</b> \n\n Tuesday - Thursday: 6:30PM - 9:00PM \n\n Saturdays and Sundays: 12:00PM - 4:00PM</string>
+    <string name="women_and_LGBTQIA"><b>Wednesday Bike Church</b> is limited to those identifying as women or
+        transgender, which includes all gender identities beyond cisgender, i.e. transgender,
+        genderqueer, nonbinary, genderfluid, and so on. We hold this space for women/trans/queer
+        people in an effort to make cycling more accessible to women/trans/queer folks who may find
+        all-gender shops unwelcoming or unsafe. </string>
 
     <!--Login Fragment strings-->
     <string name="login_title">Login to Your Account</string>
@@ -87,5 +96,8 @@
     <string name="orientation_title">Orientation Fragment</string>
     <string name="orientation_card_view">First time here? Check out these cool, quick orientation
     videos! They will save you a ton of time and confusion.</string>
+
+    <!--Miscellaneous-->
+    <string name="logout_title">Logout of Your Account</string>
 
 </resources>
