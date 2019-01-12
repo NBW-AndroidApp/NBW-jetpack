@@ -71,7 +71,7 @@ public class LoginFragment extends Fragment {
         mForgotPassword = mView.findViewById(R.id.forgot_password);
         externalFragmentMessage = getArguments().getCharSequence("externalFragmentMessage");
 
-        // TODO: Set onClickListeners for forgot password
+        // TODO: Set onClickListener for forgot password
 
         return mView;
     }

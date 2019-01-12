@@ -27,7 +27,6 @@ import org.nieghborhoodbikeworks.nbw.SharedViewModel;
 import org.nieghborhoodbikeworks.nbw.User;
 
 public class WaiverFragment extends Fragment {
-
     private static final String TAG = "WaiverFrag onCreateView";
     private SharedViewModel mViewModel;
     private DatabaseReference mUserDatabase;
@@ -36,7 +35,7 @@ public class WaiverFragment extends Fragment {
     private EditText mDate;
     private Button mSignWaiver;
     private User mUser;
-    private View view;
+    private View mView;
 
     public static WaiverFragment newInstance() {
         return new WaiverFragment();
@@ -50,18 +49,18 @@ public class WaiverFragment extends Fragment {
         ((DrawerLocker)getActivity()).setDrawerLocked(false);
 
         Log.d(TAG,"1");
-        view = inflater.inflate(R.layout.waiver_fragment, container, false);
+        mView = inflater.inflate(R.layout.waiver_fragment, container, false);
         mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
         mUserDatabase = mViewModel.getUserDatabase();
-        mAgreementCheckBox = view.findViewById(R.id.agreement_checkbox);
-        mSignature = view.findViewById(R.id.waiver_signature);
-        mDate = view.findViewById(R.id.waiver_date);
-        mSignWaiver = view.findViewById(R.id.submit_waiver_button);
+        mAgreementCheckBox = mView.findViewById(R.id.agreement_checkbox);
+        mSignature = mView.findViewById(R.id.waiver_signature);
+        mDate = mView.findViewById(R.id.waiver_date);
+        mSignWaiver = mView.findViewById(R.id.submit_waiver_button);
         mSignature.setEnabled(false);
         mDate.setEnabled(false);
         mSignWaiver.setEnabled(false);
         mUser = mViewModel.getUser();
-        return view;
+        return mView;
     }
 
     @Override
@@ -115,7 +114,7 @@ public class WaiverFragment extends Fragment {
                         Toast.LENGTH_SHORT).show();
                 String userID = mUser.getUid();
                 mUserDatabase.child(userID).child("signedWaiver").setValue(true);
-                Navigation.findNavController(view).navigate(R.id.queueFragment);
+                Navigation.findNavController(mView).navigate(R.id.queueFragment);
             }
         });
 

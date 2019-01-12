@@ -29,6 +29,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 public class SignUpFragment extends Fragment {
+    private View mView;
     private String TAG = "SignUpFragment";
     private SharedViewModel mViewModel;
     private Button mSignUpButton;
@@ -52,7 +53,7 @@ public class SignUpFragment extends Fragment {
         // Set Title for the Fragment
         ((MainActivity) getActivity()).setActionBarTitle("Sign Up with NBW");
         // Get the view from fragment XML
-        View v = inflater.inflate(R.layout.signup_fragment, container, false);
+        mView = inflater.inflate(R.layout.signup_fragment, container, false);
 
         ((DrawerLocker)getActivity()).setDrawerLocked(false);
 
@@ -60,15 +61,15 @@ public class SignUpFragment extends Fragment {
         mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
 
         // Assign values to the variables involved on the Fragment view.
-        mSignUpButton= v.findViewById(R.id.signup_button);
-        mEmail = v.findViewById(R.id.email);
-        mPassword = v.findViewById(R.id.password);
-        mAgeCheckBox = v.findViewById(R.id.age_checkbox);
-        mPasswordVerify = v.findViewById(R.id.password_verify);
-        mName = v.findViewById(R.id.name);
+        mSignUpButton= mView.findViewById(R.id.signup_button);
+        mEmail = mView.findViewById(R.id.email);
+        mPassword = mView.findViewById(R.id.password);
+        mAgeCheckBox = mView.findViewById(R.id.age_checkbox);
+        mPasswordVerify = mView.findViewById(R.id.password_verify);
+        mName = mView.findViewById(R.id.name);
 
         // Set views for listening events
-        return v;
+        return mView;
     }
 
     /**

@@ -39,7 +39,7 @@ import static androidx.constraintlayout.widget.StateSet.TAG;
 
 public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.ClickListener {
     private SharedViewModel mViewModel;
-    private View view;
+    private View mView;
     private DatabaseReference mQueueDatabase;
     private User mUser;
     private Button mEnqueueButton, mDequeueButton;
@@ -68,20 +68,20 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
                              @Nullable Bundle savedInstanceState) {
         ((MainActivity) getActivity()).setActionBarTitle("Queue");
         // Get the view from fragment XML
-        view = inflater.inflate(R.layout.queue_fragment, container, false);
+        mView = inflater.inflate(R.layout.queue_fragment, container, false);
 
         ((DrawerLocker)getActivity()).setDrawerLocked(false);
 
         // Initialize queue UI elements
-        mEnqueueButton = view.findViewById(R.id.enqueue_button);
-        mDequeueButton = view.findViewById(R.id.dequeue_button);
-        mWaiting = view.findViewById(R.id.waiting);
-        mRecyclerView = view.findViewById(R.id.queue_recycler_view);
+        mEnqueueButton = mView.findViewById(R.id.enqueue_button);
+        mDequeueButton = mView.findViewById(R.id.dequeue_button);
+        mWaiting = mView.findViewById(R.id.waiting);
+        mRecyclerView = mView.findViewById(R.id.queue_recycler_view);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        return view;
+        return mView;
     }
 
     /**
@@ -150,7 +150,7 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
                     mViewModel.enqueueUser();
                     updateQueue();
                 } catch (NullPointerException e) {
-                    Navigation.findNavController(view).navigate(R.id.loginFragment);
+                    Navigation.findNavController(mView).navigate(R.id.loginFragment);
                 }
             }
         });
@@ -163,7 +163,7 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
                     mViewModel.dequeueUser();
                     updateQueue();
                 } catch (NullPointerException e) {
-                    Navigation.findNavController(view).navigate(R.id.loginFragment);
+                    Navigation.findNavController(mView).navigate(R.id.loginFragment);
                 }
             }
         });

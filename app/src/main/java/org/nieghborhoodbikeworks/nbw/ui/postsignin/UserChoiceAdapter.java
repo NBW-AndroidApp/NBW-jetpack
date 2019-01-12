@@ -1,6 +1,8 @@
 package org.nieghborhoodbikeworks.nbw.ui.postsignin;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,8 +27,9 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
     private ArrayList<String> mFragments;
 
     /**
-     * There are four ViewHolders, one for each CardView in the RecyclerView, all instances of the
-     * UserChoiceHolder abstract class.
+     * There are five ViewHolders, the first being the title of the UserChoiceFragment, and the
+     * subsequent ones for each CardView in the RecyclerView, all instances of the UserChoiceHolder
+     * abstract class.
      */
     public static abstract class UserChoiceHolder extends RecyclerView.ViewHolder {
         public UserChoiceHolder(View itemView) {
@@ -34,20 +37,27 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
             }
     }
 
-    //TODO: Make better use of the UserChoiceHolder ABSTRACT class
+        // Making the title of the fragment a ViewHolder item instead of a TextView allows for
+        // continuous scrolling of the CardViews and the title; using a TextView would result in a
+        // "sticky" header
+        public static class TitleViewHolder extends UserChoiceHolder {
+            public TitleViewHolder(View view) {
+                super(view);
+            }
+        }
 
         public static class QueueFragmentViewHolder extends UserChoiceHolder {
-            private Button enqueueButton;
-            private Button dequeueButton;
-            private Button viewQueueButton;
+            private Button enqueueButton, dequeueButton, viewQueueButton;
             private View mView;
+            private Context mContext;
             private SharedViewModel mViewModel;
             private User mUser;
 
-            public QueueFragmentViewHolder(View view, SharedViewModel viewModel) {
+            public QueueFragmentViewHolder(View view) {
                 super(view);
                 mView = view;
-                mViewModel = viewModel;
+                mContext = mView.getContext();
+                mViewModel = ViewModelProviders.of((FragmentActivity) mContext).get(SharedViewModel.class);
                 mUser = mViewModel.getUser();
                 enqueueButton = view.findViewById(R.id.card_view_enqueue_button);
                 dequeueButton = view.findViewById(R.id.card_view_dequeue_button);
@@ -111,12 +121,14 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
         public static class WaiverFragmentViewHolder extends UserChoiceHolder {
             private Button viewWaiverButton;
             private View mView;
+            private Context mContext;
             private SharedViewModel mViewModel;
 
-            public WaiverFragmentViewHolder(View view, SharedViewModel viewModel) {
+            public WaiverFragmentViewHolder(View view) {
                 super(view);
                 mView = view;
-                mViewModel = viewModel;
+                mContext = mView.getContext();
+                mViewModel = ViewModelProviders.of((FragmentActivity) mContext).get(SharedViewModel.class);
                 viewWaiverButton = view.findViewById(R.id.card_view_waiver_button);
             }
 
@@ -137,12 +149,10 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
         public static class OrientationFragmentViewHolder extends UserChoiceHolder {
             private Button viewOrientationButton;
             private View mView;
-            private SharedViewModel mViewModel;
 
-            public OrientationFragmentViewHolder(View view, SharedViewModel viewModel) {
+            public OrientationFragmentViewHolder(View view) {
                 super(view);
                 mView = view;
-                mViewModel = viewModel;
                 viewOrientationButton = view.findViewById(R.id.card_view_orientation_button);
             }
 
@@ -157,22 +167,30 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
         }
 
         public static class MapFragmentViewHolder extends UserChoiceHolder {
-            private Button navigateButton;
+            private Button mapButton, navigateButton;
             private View mView;
-            private SharedViewModel mViewModel;
 
-            public MapFragmentViewHolder(View view, SharedViewModel viewModel) {
+            public MapFragmentViewHolder(View view) {
                 super(view);
                 mView = view;
-                mViewModel = viewModel;
+                mapButton = view.findViewById(R.id.card_view_map_button);
                 navigateButton = view.findViewById(R.id.card_view_navigate_button);
             }
 
             public void bindData() {
-                navigateButton.setOnClickListener(new View.OnClickListener() {
+                mapButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Navigation.findNavController(mView).navigate(R.id.mapFragment);
+                    }
+                });
+                navigateButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent mapsIntent = new Intent(android.content.Intent.ACTION_VIEW,
+                                Uri.parse("google.navigation:q=3939 Lancaster Avenue, Philadelphia, PA"));
+                        mapsIntent.setPackage("com.google.android.apps.maps");
+                        mView.getContext().startActivity(mapsIntent);
                     }
                 });
             }
@@ -197,26 +215,27 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
     public UserChoiceAdapter.UserChoiceHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflates the XML layout file that will be used for each row within the list
         View view = null;
-        //TODO: It is not recommended to pass the Context due to a possible memory leaking
-        Context mContext = parent.getContext();
-        SharedViewModel mViewModel = ViewModelProviders.of((FragmentActivity) mContext).get(SharedViewModel.class);
         UserChoiceAdapter.UserChoiceHolder vh = null;
         switch (viewType) {
             case 0:
-                view = inflater.inflate(R.layout.queue_fragment_choice, parent, false);
-                vh = new QueueFragmentViewHolder(view, mViewModel);
+                view = inflater.inflate(R.layout.user_choice_fragment_title, parent, false);
+                vh = new TitleViewHolder(view);
                 break;
             case 1:
-                view = inflater.inflate(R.layout.waiver_fragment_choice, parent, false);
-                vh = new WaiverFragmentViewHolder(view, mViewModel);
+                view = inflater.inflate(R.layout.queue_fragment_choice, parent, false);
+                vh = new QueueFragmentViewHolder(view);
                 break;
             case 2:
-                view = inflater.inflate(R.layout.orientation_fragment_choice, parent, false);
-                vh = new OrientationFragmentViewHolder(view, mViewModel);
+                view = inflater.inflate(R.layout.waiver_fragment_choice, parent, false);
+                vh = new WaiverFragmentViewHolder(view);
                 break;
             case 3:
+                view = inflater.inflate(R.layout.orientation_fragment_choice, parent, false);
+                vh = new OrientationFragmentViewHolder(view);
+                break;
+            case 4:
                 view = inflater.inflate(R.layout.map_fragment_choice, parent, false);
-                vh = new MapFragmentViewHolder(view, mViewModel);
+                vh = new MapFragmentViewHolder(view);
                 break;
         }
         return vh;
@@ -231,15 +250,17 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
     public void onBindViewHolder(@NonNull UserChoiceAdapter.UserChoiceHolder holder, int position) {
         switch (position) {
             case 0:
-                ((QueueFragmentViewHolder)holder).bindData();
                 break;
             case 1:
-                ((WaiverFragmentViewHolder)holder).bindData();
+                ((QueueFragmentViewHolder)holder).bindData();
                 break;
             case 2:
-                ((OrientationFragmentViewHolder)holder).bindData();
+                ((WaiverFragmentViewHolder)holder).bindData();
                 break;
             case 3:
+                ((OrientationFragmentViewHolder)holder).bindData();
+                break;
+            case 4:
                 ((MapFragmentViewHolder)holder).bindData();
                 break;
         }
@@ -247,16 +268,23 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
 
     @Override
     public int getItemViewType(int position) {
-        // TODO: Replace the following "if" statement with "switch" statement
         int result = 0;
-        if (mFragments.get(position).equals("Queue")) {
-            result = 0;
-        } else if (mFragments.get(position).equals("Waiver")) {
-            result = 1;
-        } else if (mFragments.get(position).equals("Orientation")) {
-            result = 2;
-        } else if (mFragments.get(position).equals("Map")) {
-            result = 3;
+        switch(mFragments.get(position)) {
+            case "Title":
+                result = 0;
+                break;
+            case "Queue":
+                result = 1;
+                break;
+            case "Waiver":
+                result = 2;
+                break;
+            case "Orientation":
+                result = 3;
+                break;
+            case "Map":
+                result = 4;
+                break;
         }
         return result;
     }

@@ -1,6 +1,5 @@
 package org.nieghborhoodbikeworks.nbw.ui.map;
 
-import androidx.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,11 +18,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.nieghborhoodbikeworks.nbw.DrawerLocker;
 import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
-import org.nieghborhoodbikeworks.nbw.SharedViewModel;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
-    private SharedViewModel mViewModel;
+    private View mView;
     private GoogleMap mMap;
 
     public static MapFragment newInstance() {
@@ -33,21 +31,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        ((MainActivity) getActivity()).setActionBarTitle("Map");
-        View v = inflater.inflate(R.layout.map_fragment, container, false);
+        ((MainActivity) getActivity()).setActionBarTitle("Location & Hours");
+        mView = inflater.inflate(R.layout.map_fragment, container, false);
         ((DrawerLocker)getActivity()).setDrawerLocked(false);
-        return v;
+        return mView;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
         SupportMapFragment mapFragment = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
-
 
     /**
      * Manipulates the map once available. This callback is triggered when the map is ready to be used.
@@ -64,9 +60,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setBuildingsEnabled(true);
-
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setZoomGesturesEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(true);
         LatLng NBWcampus = new LatLng(39.962720,-75.201020);
-        mMap.addMarker(new MarkerOptions().position(NBWcampus).title("Neighborhood Bike Works"));
+        mMap.addMarker(new MarkerOptions().position(NBWcampus)
+                .title("Neighborhood Bike Works")
+                .snippet("3939 Lancaster Avenue, Philadelphia, PA"))
+                .showInfoWindow();
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(NBWcampus, 16));
     }
 }

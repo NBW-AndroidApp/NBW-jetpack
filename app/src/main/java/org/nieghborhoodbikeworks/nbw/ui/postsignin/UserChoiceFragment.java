@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class UserChoiceFragment extends Fragment {
     private SharedViewModel mViewModel;
     private NavigationView mNavigationView;
-    private View view;
+    private View mView;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -46,25 +46,26 @@ public class UserChoiceFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         ((MainActivity) getActivity()).setActionBarTitle("User Choice Fragment");
         // Get the view from fragment XML
-        view = inflater.inflate(R.layout.user_choice_fragment, container, false);
+        mView = inflater.inflate(R.layout.user_choice_fragment, container, false);
         mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
 
         ((DrawerLocker)getActivity()).setDrawerLocked(true);
         mNavigationView = getActivity().findViewById(R.id.nav_view);
 
         mFragments = new ArrayList<>();
+        mFragments.add("Title");
         mFragments.add("Queue");
         mFragments.add("Waiver");
         mFragments.add("Orientation");
         mFragments.add("Map");
 
         // Initialize queue UI elements
-        mRecyclerView = view.findViewById(R.id.user_choice_recycler_view);
+        mRecyclerView = mView.findViewById(R.id.user_choice_recycler_view);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        return view;
+        return mView;
     }
 
     @Override

@@ -16,8 +16,8 @@ import org.nieghborhoodbikeworks.nbw.SharedViewModel;
 
 public class OrientationFragment extends Fragment {
 
+    private View mView;
     private SharedViewModel mViewModel;
-
     private Activity mContext;
 
     public static OrientationFragment newInstance() {
@@ -28,7 +28,8 @@ public class OrientationFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         ((DrawerLocker)getActivity()).setDrawerLocked(false);
-        return inflater.inflate(R.layout.orientation_fragment, container, false);
+        mView = inflater.inflate(R.layout.orientation_fragment, container, false);
+        return mView;
     }
 
     @Override

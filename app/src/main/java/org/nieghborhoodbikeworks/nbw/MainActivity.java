@@ -20,7 +20,6 @@ import static androidx.navigation.Navigation.findNavController;
 import static androidx.navigation.ui.NavigationUI.setupActionBarWithNavController;
 
 public class MainActivity extends AppCompatActivity implements DrawerLocker {
-
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     public NavController mNavController;
