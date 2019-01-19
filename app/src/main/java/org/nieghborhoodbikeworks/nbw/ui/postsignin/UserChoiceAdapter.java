@@ -22,7 +22,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.UserChoiceHolder>{
-
     private LayoutInflater inflater;
     private ArrayList<String> mFragments;
 

@@ -60,11 +60,10 @@ public class QueueFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        ((MainActivity) getActivity()).setActionBarTitle("Queue");
+        ((MainActivity) getActivity()).setActionBarTitle("Sign-in Queue");
+        ((DrawerLocker) getActivity()).setDrawerLocked(false);
         // Get the view from fragment XML
         mView = inflater.inflate(R.layout.queue_fragment, container, false);
-
-        ((DrawerLocker)getActivity()).setDrawerLocked(false);
 
         // Initialize queue UI elements
         mEnqueueButton = mView.findViewById(R.id.enqueue_button);

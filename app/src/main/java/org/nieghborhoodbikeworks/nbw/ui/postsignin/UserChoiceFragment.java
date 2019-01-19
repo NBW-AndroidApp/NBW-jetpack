@@ -45,11 +45,10 @@ public class UserChoiceFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         ((MainActivity) getActivity()).setActionBarTitle("User Choice Fragment");
+        ((DrawerLocker) getActivity()).setDrawerLocked(true);
         // Get the view from fragment XML
         mView = inflater.inflate(R.layout.user_choice_fragment, container, false);
         mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
-
-        ((DrawerLocker)getActivity()).setDrawerLocked(true);
         mNavigationView = getActivity().findViewById(R.id.nav_view);
 
         mFragments = new ArrayList<>();

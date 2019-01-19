@@ -20,7 +20,6 @@ import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
-
     private View mView;
     private GoogleMap mMap;
 
@@ -28,12 +27,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         return new MapFragment();
     }
 
+    /**
+     * This initializes the UI variables once the fragment starts up, and returns the view
+     * to its parent.
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         ((MainActivity) getActivity()).setActionBarTitle("Location & Hours");
+        ((DrawerLocker) getActivity()).setDrawerLocked(false);
         mView = inflater.inflate(R.layout.map_fragment, container, false);
-        ((DrawerLocker)getActivity()).setDrawerLocked(false);
         return mView;
     }
 

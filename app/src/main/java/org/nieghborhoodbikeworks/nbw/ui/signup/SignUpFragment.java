@@ -52,10 +52,9 @@ public class SignUpFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         // Set Title for the Fragment
         ((MainActivity) getActivity()).setActionBarTitle("Sign Up with NBW");
+        ((DrawerLocker) getActivity()).setDrawerLocked(false);
         // Get the view from fragment XML
         mView = inflater.inflate(R.layout.signup_fragment, container, false);
-
-        ((DrawerLocker)getActivity()).setDrawerLocked(false);
 
         // Fetch SharedViewModel from MainActivity.
         mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);

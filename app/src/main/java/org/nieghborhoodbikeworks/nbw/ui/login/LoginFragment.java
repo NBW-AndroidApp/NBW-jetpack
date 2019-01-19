@@ -58,10 +58,10 @@ public class LoginFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         ((MainActivity) getActivity()).setActionBarTitle("Login to NBW");
+        ((DrawerLocker) getActivity()).setDrawerLocked(false);
         // Get the view from fragment XML
         mView = inflater.inflate(R.layout.login_fragment, container, false);
         mNavigationView = getActivity().findViewById(R.id.nav_view);
-        ((DrawerLocker)getActivity()).setDrawerLocked(false);
 
         // Set button for logging in
         mLogInButton = mView.findViewById(R.id.login_button);

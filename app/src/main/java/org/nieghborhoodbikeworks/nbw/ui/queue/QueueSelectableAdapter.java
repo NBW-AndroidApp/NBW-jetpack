@@ -8,7 +8,6 @@ import java.util.List;
 import androidx.recyclerview.widget.RecyclerView;
 
 public abstract class QueueSelectableAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
-
     private SparseBooleanArray selectedItems;
 
     public QueueSelectableAdapter() {

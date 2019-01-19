@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 
 import org.nieghborhoodbikeworks.nbw.DrawerLocker;
+import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
 import org.nieghborhoodbikeworks.nbw.User;
@@ -41,12 +42,19 @@ public class WaiverFragment extends Fragment {
         return new WaiverFragment();
     }
 
-    @Nullable
+    /**
+     * This initializes the UI variables once the fragment starts up, and returns the view
+     * to its parent.
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
-        ((DrawerLocker)getActivity()).setDrawerLocked(false);
+        ((MainActivity) getActivity()).setActionBarTitle("Waiver Fragment");
+        ((DrawerLocker) getActivity()).setDrawerLocked(false);
 
         Log.d(TAG,"1");
         mView = inflater.inflate(R.layout.waiver_fragment, container, false);
