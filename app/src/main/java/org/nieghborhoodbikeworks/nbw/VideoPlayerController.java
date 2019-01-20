@@ -1,10 +1,15 @@
 package org.nieghborhoodbikeworks.nbw;
 
 import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -13,7 +18,6 @@ import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
 
 public class VideoPlayerController {
     private Context context;
-    private FileCache fileCache;
     private int currentPositionOfItemToPlay = 0;
     private Video currentPlayingVideo;
     private Map<String, VideoPlayer> videos = Collections.synchronizedMap(new WeakHashMap<String, VideoPlayer>());
@@ -21,7 +25,6 @@ public class VideoPlayerController {
 
     public VideoPlayerController(Context context) {
         this.context = context;
-        fileCache = new FileCache(context);
     }
 
     public void loadVideo(Video video, VideoPlayer videoPlayer, ProgressBar progressBar) {
@@ -42,7 +45,7 @@ public class VideoPlayerController {
         if(isVideoDownloaded(video)) {
             // Then check if it is currently at a visible or playable position in the recyclerview
             if(isVideoVisible(video)) {
-                // If yes, then playvideo
+                // If yes, then playVideo()
                 playVideo(video);
             }
         }
@@ -54,14 +57,30 @@ public class VideoPlayerController {
             // Start playing new url
             if(videos.containsKey(video.getIndexPosition())) {
                 final VideoPlayer videoPlayer2 = videos.get(video.getIndexPosition());
-                String localPath = fileCache.getFile(video.getUrl()).getAbsolutePath();
+                File rootDir = Environment.getExternalStorageDirectory();
+                String fileName = "Video " + video.getId();
+//                File f = new File();
+//                FileInputStream fiStream = null;
+//                try {
+//                    fiStream = new FileInputStream(f);
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//                byte[] bytes = new byte[1024];
+//                try {
+//                    fiStream.read(bytes);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                fiStream.close();
+
                 if(!videoPlayer2.isLoaded) {
-                    videoPlayer2.loadVideo(localPath, video);
+                    videoPlayer2.loadVideo(rootDir + File.separator + fileName, video);
                     videoPlayer2.setOnVideoPreparedListener(new IVideoPreparedListener() {
                         @Override
                         public void onVideoPrepared(Video mVideo) {
                             // Pause current playing video if any
-                            if(video.getIndexPosition() == mVideo.getIndexPosition()) {
+                            if(video.getIndexPosition().equals(mVideo.getIndexPosition())) {
                                 if(currentPlayingVideo!=null) {
                                     VideoPlayer videoPlayer1 = videos.get(currentPlayingVideo.getIndexPosition());
                                     videoPlayer1.pausePlay();

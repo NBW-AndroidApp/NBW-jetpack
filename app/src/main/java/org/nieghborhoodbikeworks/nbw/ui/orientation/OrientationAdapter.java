@@ -132,10 +132,4 @@ public class OrientationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return mVideos.size();
     }
 
-    @Override
-    public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
-        super.onViewRecycled(holder);
-        ((VideoViewHolder)holder).layout.removeAllViews();
-    }
-
 }

@@ -40,7 +40,7 @@ public class VideoPlayer extends TextureView implements TextureView.SurfaceTextu
         this.video = video;
         isLoaded = true;
 
-        if (this.isAvailable()) {
+        if(this.isAvailable()) {
             prepareVideo(getSurfaceTexture());
         }
 

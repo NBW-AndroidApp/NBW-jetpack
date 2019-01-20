@@ -26,7 +26,7 @@ import org.nieghborhoodbikeworks.nbw.VideoDownloader;
 
 import java.util.ArrayList;
 
-public class OrientationFragment extends Fragment {
+public class OrientationFragment extends Fragment implements IVideoDownloadListener {
     private View mView;
     private SharedViewModel mViewModel;
     private RecyclerView mRecyclerView;
@@ -64,8 +64,6 @@ public class OrientationFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new OrientationAdapter(getActivity(), mVideos);
-        mRecyclerView.setAdapter(mAdapter);
 
         videoDownloader = new VideoDownloader(getActivity());
         videoDownloader.setOnVideoDownloadListener(new IVideoDownloadListener() {
@@ -104,14 +102,20 @@ public class OrientationFragment extends Fragment {
         Video video7 = new Video("6", "7", "http://sample-videos.com/video/mp4/720/big_buck_bunny_720p_1mb.mp4");
         mVideos.add(video7);
 
+        mAdapter = new OrientationAdapter(getActivity(), mVideos);
+        mRecyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
         progressBar.setVisibility(View.GONE);
         videoDownloader.startVideosDownloading(mVideos);
     }
 
     @Override
+    public void onVideoDownloaded(Video video) {
+        mAdapter.videoPlayerController.handlePlayBack(video);
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
-
 }

@@ -2,6 +2,7 @@ package org.nieghborhoodbikeworks.nbw;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
@@ -9,6 +10,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -18,17 +20,16 @@ import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
 
 public class VideoDownloader {
     private Context context;
-    private FileCache fileCache;
     private IVideoDownloadListener iVideoDownloadListener;
 
     public VideoDownloader(Context context) {
         this.context = context;
-        fileCache = new FileCache(context);
     }
 
     /**
      * startVideosDownloading iterates through the list of videos (urls), asking on each iteration (i.e.
-     * for each video) whether or not it has been downloaded.
+     * for each video) whether or not it has been downloaded. If it has not been downloaded, the
+     * downloadVideo() method is called for that particular url.
      *
      * @param videosList
      */
@@ -48,7 +49,7 @@ public class VideoDownloader {
                     if(!isVideoAvailable) {
                         Log.i(TAG, "Downloading video");
                         // Download video from url
-                        downloadVideo(url);
+                        downloadVideo(url, video.getId());
                         Activity activity = (Activity) context;
                         activity.runOnUiThread(new Runnable() {
                             @Override
@@ -64,36 +65,38 @@ public class VideoDownloader {
         thread.start();
     }
 
-    private String downloadVideo(String urlStr) {
-        URL url = null;
-        File file = null;
+    /**
+     * Downloads a video from a url to the device's local storage.
+     *
+     * @param urlStr
+     */
+    private void downloadVideo(String urlStr, String videoId) {
         try {
-            file = fileCache.getFile(urlStr);
-            url = new URL(urlStr);
-            URLConnection ucon = url.openConnection();
-            InputStream is = ucon.getInputStream();
-            BufferedInputStream inStream = new BufferedInputStream(is, 1024 * 5);
-            FileOutputStream outStream = new FileOutputStream(file);
-            byte[] buff = new byte[5 * 1024];
+            String rootDir = Environment.getExternalStorageDirectory()
+                    + File.separator + "Video" + File.separator + videoId + ".mp4";
+            File rootFile = new File(rootDir);
+            rootFile.mkdir();
 
-            //Read bytes (and store them) until there is nothing more to read(-1)
-            int len;
-            while ((len = inStream.read(buff)) != -1) {
-                outStream.write(buff, 0, len);
+            Log.i(TAG, rootFile.toString());
+
+            URL url = new URL(urlStr);
+            HttpURLConnection c = (HttpURLConnection) url.openConnection();
+            c.setRequestMethod("GET");
+            c.setDoOutput(true);
+            c.connect();
+            FileOutputStream f = new FileOutputStream(new File(rootFile,
+                    "Video " + videoId + ".mp4"));
+            InputStream in = c.getInputStream();
+            byte[] buffer = new byte[1024];
+            int len1 = 0;
+            while ((len1 = in.read(buffer)) > 0) {
+                f.write(buffer, 0, len1);
             }
+            f.close();
+        } catch (IOException e) {
+            Log.d("Error....", e.toString());
+        }
 
-            //clean up
-            outStream.flush();
-            outStream.close();
-            inStream.close();
-        }
-        catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return file.getAbsolutePath();
     }
 
     public void setOnVideoDownloadListener(IVideoDownloadListener iVideoDownloadListener) {
