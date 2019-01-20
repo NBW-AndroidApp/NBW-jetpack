@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import static androidx.constraintlayout.widget.StateSet.TAG;
 
 public class QueueFragment extends Fragment {
+    private static String TAG = "Queue Fragment";
     private SharedViewModel mViewModel;
     private View mView;
     private DatabaseReference mQueueDatabase;
@@ -51,6 +52,7 @@ public class QueueFragment extends Fragment {
     /**
      * This initializes the UI variables once the fragment starts up, and returns the view
      * to its parent.
+     *
      * @param inflater
      * @param container
      * @param savedInstanceState

@@ -17,6 +17,7 @@ import java.util.WeakHashMap;
 import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
 
 public class VideoPlayerController {
+    private static String TAG = "VideoPlayerController";
     private Context context;
     private int currentPositionOfItemToPlay = 0;
     private Video currentPlayingVideo;

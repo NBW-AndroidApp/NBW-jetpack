@@ -31,7 +31,7 @@ import org.nieghborhoodbikeworks.nbw.SharedViewModel;
 import org.nieghborhoodbikeworks.nbw.User;
 
 public class LoginFragment extends Fragment {
-    private String TAG = "LoginFragment";
+    private static String TAG = "LoginFragment";
     private SharedViewModel mViewModel;
     private NavigationView mNavigationView;
     private FirebaseAuth mAuth;
@@ -48,6 +48,7 @@ public class LoginFragment extends Fragment {
     /**
      * This initializes the UI variables once the fragment starts up, and returns the view
      * to its parent.
+     *
      * @param inflater
      * @param container
      * @param savedInstanceState

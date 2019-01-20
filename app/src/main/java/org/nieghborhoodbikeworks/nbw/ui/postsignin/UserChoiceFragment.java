@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class UserChoiceFragment extends Fragment {
+    private static String TAG = "User Choice Fragment";
     private SharedViewModel mViewModel;
     private NavigationView mNavigationView;
     private View mView;
@@ -35,6 +36,7 @@ public class UserChoiceFragment extends Fragment {
     /**
      * This initializes the UI variables once the fragment starts up, and returns the view
      * to its parent.
+     *
      * @param inflater
      * @param container
      * @param savedInstanceState
@@ -51,6 +53,7 @@ public class UserChoiceFragment extends Fragment {
         mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
         mNavigationView = getActivity().findViewById(R.id.nav_view);
 
+        // Initialize CardViews that will be displayed on the recyclerview
         mFragments = new ArrayList<>();
         mFragments.add("Title");
         mFragments.add("Queue");
@@ -58,7 +61,7 @@ public class UserChoiceFragment extends Fragment {
         mFragments.add("Orientation");
         mFragments.add("Map");
 
-        // Initialize queue UI elements
+        // Initialize user choice fragment UI elements
         mRecyclerView = mView.findViewById(R.id.user_choice_recycler_view);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);

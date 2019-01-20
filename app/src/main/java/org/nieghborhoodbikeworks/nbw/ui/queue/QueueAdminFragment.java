@@ -38,6 +38,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import static androidx.constraintlayout.widget.StateSet.TAG;
 
 public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.ClickListener {
+    private static String TAG = "Queue Admin Fragment";
     private SharedViewModel mViewModel;
     private View mView;
     private DatabaseReference mQueueDatabase;
@@ -57,6 +58,7 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
     /**
      * This initializes the UI variables once the fragment starts up, and returns the view
      * to its parent.
+     *
      * @param inflater
      * @param container
      * @param savedInstanceState
@@ -302,9 +304,9 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
     private class ActionModeCallback implements ActionMode.Callback {
 
         /**
-         *  Run once on initial creation of the ActionMode. This method sets the xml layout
-         *  for the selection process; the menu layout sets the action buttons for this
-         *  ActionMode.
+         * Run once on initial creation of the ActionMode. This method sets the xml layout
+         * for the selection process; the menu layout sets the action buttons for this
+         * ActionMode.
          *
          * @param mode
          * @param menu

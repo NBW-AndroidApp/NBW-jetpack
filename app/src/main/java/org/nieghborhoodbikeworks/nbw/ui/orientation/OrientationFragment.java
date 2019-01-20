@@ -27,6 +27,7 @@ import org.nieghborhoodbikeworks.nbw.VideoDownloader;
 import java.util.ArrayList;
 
 public class OrientationFragment extends Fragment implements IVideoDownloadListener {
+    private static String TAG = "Orientation Fragment";
     private View mView;
     private SharedViewModel mViewModel;
     private RecyclerView mRecyclerView;
@@ -43,6 +44,7 @@ public class OrientationFragment extends Fragment implements IVideoDownloadListe
     /**
      * This initializes the UI variables once the fragment starts up, and returns the view
      * to its parent.
+     *
      * @param inflater
      * @param container
      * @param savedInstanceState

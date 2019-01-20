@@ -22,6 +22,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.UserChoiceHolder>{
+    private static String TAG = "User Choice Adapter";
     private LayoutInflater inflater;
     private ArrayList<String> mFragments;
 
@@ -45,6 +46,7 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
             }
         }
 
+        // Queue fragment CardView
         public static class QueueFragmentViewHolder extends UserChoiceHolder {
             private Button enqueueButton, dequeueButton, viewQueueButton;
             private View mView;
@@ -117,6 +119,7 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
             }
         }
 
+        // Waiver fragment CardView
         public static class WaiverFragmentViewHolder extends UserChoiceHolder {
             private Button viewWaiverButton;
             private View mView;
@@ -145,6 +148,7 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
             }
         }
 
+        // Orientation fragment CardView
         public static class OrientationFragmentViewHolder extends UserChoiceHolder {
             private Button viewOrientationButton;
             private View mView;
@@ -165,6 +169,7 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
             }
         }
 
+        // Map fragment CardView
         public static class MapFragmentViewHolder extends UserChoiceHolder {
             private Button mapButton, navigateButton;
             private View mView;
@@ -183,6 +188,8 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
                         Navigation.findNavController(mView).navigate(R.id.mapFragment);
                     }
                 });
+                // Creates an intent and boots up the Google Maps app with the directions from the
+                // User's location to NBW's campus
                 navigateButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -202,7 +209,7 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
      * each item row is composed of CardViews.
      *
      * @param context
-     * @param mFragments
+     * @param mFragments The fragment that will be displayed as CardViews
      */
     public UserChoiceAdapter(Context context, ArrayList<String> mFragments) {
         inflater = LayoutInflater.from(context);
@@ -242,6 +249,7 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
 
     /**
      * Sets the view attributes based on the data.
+     *
      * @param holder
      * @param position
      */

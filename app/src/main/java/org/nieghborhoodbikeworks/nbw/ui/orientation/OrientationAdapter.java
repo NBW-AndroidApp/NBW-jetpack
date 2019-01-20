@@ -21,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class OrientationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+    private static String TAG = "Orientation Adapter";
     private Context context;
     private ArrayList mVideos;
     private LayoutInflater inflater;
@@ -32,7 +33,7 @@ public class OrientationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      * object which describes and provides access to all the views within each item row.
      *
      * @param context
-     * @param mVideos
+     * @param mVideos The list of videos to be displayed on the Orientation fragment
      */
     public OrientationAdapter(Context context, final ArrayList mVideos) {
         inflater = LayoutInflater.from(context);
@@ -75,8 +76,8 @@ public class OrientationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             view = inflater.inflate(R.layout.orientation_fragment, parent, false);
 
             Configuration configuration = context.getResources().getConfiguration();
-            int screenWidthDp = configuration.screenWidthDp; //The current width of the available screen space, in dp units, corresponding to screen width resource qualifier.
-            int smallestScreenWidthDp = configuration.smallestScreenWidthDp; //The smallest screen size an application will see in normal operation, corresponding to smallest screen width resource qualifier.
+            int screenWidthDp = configuration.screenWidthDp; // The current width of the available screen space, in dp units, corresponding to screen width resource qualifier.
+            int smallestScreenWidthDp = configuration.smallestScreenWidthDp; // The smallest screen size an application will see in normal operation, corresponding to smallest screen width resource qualifier.
 
             vh = new VideoViewHolder(view);
 
@@ -91,14 +92,16 @@ public class OrientationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     /**
      * Sets the view attributes based on the data.
-     * @param holder
-     * @param position
+     *
+     * @param holder The ViewHolder type: either TitleViewHolder or VideoViewHolder
+     * @param position The video at position 'position'
      */
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if(mVideos.get(position).equals("Title")) {
             //do nothing, this is the title
         } else {
+            // Initialize video item UI features
             Video video = ((Video)mVideos.get(position));
             ((VideoViewHolder)holder).textView.setText("Video " + video.getId());
 

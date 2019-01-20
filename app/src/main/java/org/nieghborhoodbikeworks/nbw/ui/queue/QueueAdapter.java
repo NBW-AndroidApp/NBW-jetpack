@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueHolder> {
+    private static String TAG = "Queue Adapter";
     private LayoutInflater inflater;
     private ArrayList<String> mUsers;
 
@@ -24,7 +25,7 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueHolder>
      * each item row is composed of CardViews.
      *
      * @param context
-     * @param mUsers
+     * @param mUsers The list of users that are in the queue
      */
     public QueueAdapter(Context context, ArrayList<String> mUsers) {
         inflater = LayoutInflater.from(context);
@@ -52,7 +53,7 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueHolder>
      * Sets the view attributes based on the data.
      *
      * @param holder
-     * @param position
+     * @param position The user at position 'position' in the queue
      */
     @Override
     public void onBindViewHolder(@NonNull QueueHolder holder, final int position) {

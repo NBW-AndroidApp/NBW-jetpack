@@ -28,7 +28,7 @@ import org.nieghborhoodbikeworks.nbw.SharedViewModel;
 import org.nieghborhoodbikeworks.nbw.User;
 
 public class WaiverFragment extends Fragment {
-    private static final String TAG = "WaiverFrag onCreateView";
+    private static final String TAG = "Waiver Fragment";
     private SharedViewModel mViewModel;
     private DatabaseReference mUserDatabase;
     private CheckBox mAgreementCheckBox;

@@ -29,8 +29,8 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 public class SignUpFragment extends Fragment {
+    private static String TAG = "Sign Up Fragment";
     private View mView;
-    private String TAG = "SignUpFragment";
     private SharedViewModel mViewModel;
     private Button mSignUpButton;
     private EditText mEmail, mPassword, mPasswordVerify, mName;
@@ -80,6 +80,7 @@ public class SignUpFragment extends Fragment {
      * to enter valid credentials. If all of them are valid, the info is taken in and a {@link FirebaseUser}
      * FirebaseUser is created as well as a {@link com.google.firebase.database.FirebaseDatabase}
      * FirebaseDataBase User instance. After that, the person is navigated into the UserChoiceFragment.
+     *
      * @param savedInstanceState
      */
     @Override
@@ -146,6 +147,7 @@ public class SignUpFragment extends Fragment {
     /**
      * Checks if a given password is valid. this is in place so it can be modified to have stricter
      * rules in the future.
+     *
      * @param password
      * @return
      */
@@ -155,6 +157,7 @@ public class SignUpFragment extends Fragment {
 
     /**
      * Checks e-mail validity using Android's {@link android.util.Patterns}.
+     *
      * @param target
      * @return
      */

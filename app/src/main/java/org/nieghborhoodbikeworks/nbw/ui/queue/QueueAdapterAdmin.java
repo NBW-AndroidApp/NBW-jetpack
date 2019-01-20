@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 
 public class QueueAdapterAdmin extends QueueSelectableAdapter<QueueAdapterAdmin.QueueHolder> {
+    private static String TAG = "Queue Admin Adapter";
     private LayoutInflater inflater;
     private ArrayList<String> mUsers;
     private ClickListener clickListener;
@@ -40,6 +41,7 @@ public class QueueAdapterAdmin extends QueueSelectableAdapter<QueueAdapterAdmin.
         this.clickListener = clickListener;
     }
 
+    // Allows users to be selectable after a long click on any user
     public static class QueueHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
             View.OnLongClickListener {
         private TextView user;
@@ -53,13 +55,16 @@ public class QueueAdapterAdmin extends QueueSelectableAdapter<QueueAdapterAdmin.
             this.clickListener = clickListener;
 
             user = itemView.findViewById(R.id.user);
+            // Color user's names will be highlighted with once selected
             primaryColor = itemView.getResources().getColor(R.color.colorPrimary);
+            // Default color user's will display (i.e. when not selected or de-selected)
             defaultColor = itemView.getResources().getColor(R.color.colorDefault);
 
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
         }
 
+        // Only available when action mode is running
         @Override
         public void onClick(View v) {
             if (clickListener != null) {
@@ -68,6 +73,7 @@ public class QueueAdapterAdmin extends QueueSelectableAdapter<QueueAdapterAdmin.
             }
         }
 
+        // Starts the selection action mode
         @Override
         public boolean onLongClick(View v) {
             if (clickListener != null) {
@@ -95,7 +101,7 @@ public class QueueAdapterAdmin extends QueueSelectableAdapter<QueueAdapterAdmin.
     public void onBindViewHolder(@NonNull QueueHolder holder, int position) {
         String currentUser = mUsers.get(position);
         holder.user.setText(currentUser);
-        // If the user is selected, set their name to a different color.
+        // If the user is selected, set their name to a different color
         holder.user.setTextColor(isSelected(position) ? holder.primaryColor : holder.defaultColor);
 
     }
