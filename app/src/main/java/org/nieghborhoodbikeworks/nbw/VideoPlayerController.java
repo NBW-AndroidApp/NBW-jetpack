@@ -17,7 +17,7 @@ import java.util.WeakHashMap;
 import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
 
 public class VideoPlayerController {
-    private static String TAG = "VideoPlayerController";
+    private static String TAG = "Video Player Controller";
     private Context context;
     private int currentPositionOfItemToPlay = 0;
     private Video currentPlayingVideo;
@@ -58,8 +58,10 @@ public class VideoPlayerController {
             // Start playing new url
             if(videos.containsKey(video.getIndexPosition())) {
                 final VideoPlayer videoPlayer2 = videos.get(video.getIndexPosition());
-                File rootDir = Environment.getExternalStorageDirectory();
-                String fileName = "Video " + video.getId();
+                String rootPath = Environment.getExternalStorageDirectory()
+                        + File.separator + "Video";
+                File rootDir = new File(rootPath);
+                String fileName = "Video " + video.getId() + ".mp4";
 //                File f = new File();
 //                FileInputStream fiStream = null;
 //                try {

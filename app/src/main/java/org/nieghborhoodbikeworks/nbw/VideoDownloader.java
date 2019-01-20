@@ -18,7 +18,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 
 public class VideoDownloader {
-    private static String TAG = "VideoDownloader";
+    private static String TAG = "Video Downloader";
     private Context context;
     private IVideoDownloadListener iVideoDownloadListener;
     private final int TIMEOUT_CONNECTION = 5000; // 5 sec
