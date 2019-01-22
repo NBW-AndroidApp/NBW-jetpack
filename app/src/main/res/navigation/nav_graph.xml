@@ -45,4 +45,9 @@
         android:name="org.nieghborhoodbikeworks.nbw.ui.orientation.OrientationFragment"
         android:label="orientation_fragment"
         tools:layout="@layout/orientation_fragment"/>
+    <fragment
+        android:id="@+id/videoPlayerFragment"
+        android:name="org.nieghborhoodbikeworks.nbw.ui.orientation.VideoPlayerFragment"
+        android:label="video_player_fragment"
+        tools:layout="@layout/video_player_fragment"/>
 </navigation>

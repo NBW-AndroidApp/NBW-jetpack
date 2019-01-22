@@ -95,6 +95,7 @@
 
     <!--Orientation Fragment strings-->
     <string name="orientation_title">Orientation Fragment</string>
+    <string name="orientation_message">Orientation Videos</string>
     <string name="orientation_card_view">First time here? Check out these cool, quick orientation
     videos! They will save you a ton of time and confusion.</string>
 

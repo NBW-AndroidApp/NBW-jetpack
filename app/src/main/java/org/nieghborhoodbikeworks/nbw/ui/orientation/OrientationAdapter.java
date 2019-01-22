@@ -1,66 +1,109 @@
 package org.nieghborhoodbikeworks.nbw.ui.orientation;
 
 import android.content.Context;
-import android.content.res.Configuration;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nieghborhoodbikeworks.nbw.R;
-import org.nieghborhoodbikeworks.nbw.Utils;
-import org.nieghborhoodbikeworks.nbw.Video;
-import org.nieghborhoodbikeworks.nbw.VideoPlayer;
-import org.nieghborhoodbikeworks.nbw.VideoPlayerController;
 
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class OrientationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private static String TAG = "Orientation Adapter";
-    private Context context;
-    private ArrayList mVideos;
     private LayoutInflater inflater;
-    public VideoPlayerController videoPlayerController;
+    private ArrayList<String> mVideos;
+    private String url;
 
     /**
-     * The adapter populates the data into the RecyclerView by converting an object at a position
-     * into a list row item to be inserted. The adapter requires the existence of a "ViewHolder"
-     * object which describes and provides access to all the views within each item row.
-     *
-     * @param context
-     * @param mVideos The list of videos to be displayed on the Orientation fragment
+     * There are two types of ViewHolders, the first being the title of the Orientation fragment,
+     * and the second being the CardViews containing thumbnails for the videos to be displayed.
      */
-    public OrientationAdapter(Context context, final ArrayList mVideos) {
-        inflater = LayoutInflater.from(context);
-        this.context = context;
-        this.mVideos = mVideos;
-        videoPlayerController = new VideoPlayerController(context);
-    }
 
     // Making the title of the fragment a ViewHolder item instead of a TextView allows for
-    // continuous scrolling; using a TextView would result in a "sticky" header
+    // continuous scrolling of the CardViews and the title; using a TextView would result in a
+    // "sticky" header
     public static class TitleViewHolder extends RecyclerView.ViewHolder {
         public TitleViewHolder(View view) {
             super(view);
         }
     }
 
+    // Video CardViews
     public static class VideoViewHolder extends RecyclerView.ViewHolder {
-        public TextView textView;
-        public ProgressBar progressBar;
-        public RelativeLayout layout;
+        private View mView;
+        private Context mContext;
+        private ImageView mThumbnail;
+        private TextView mTitle;
+        private TextView mDescription;
+        private TextView mLength;
 
         public VideoViewHolder(View view) {
             super(view);
-            layout = view.findViewById(R.id.layout);
-            textView = view.findViewById(R.id.textView);
-            progressBar = view.findViewById(R.id.progressBar);
+            mView = view;
+            mContext = mView.getContext();
+            mThumbnail = mView.findViewById(R.id.orientation_video_thumbnail);
+            mTitle = mView.findViewById(R.id.orientation_video_title);
+            mDescription = mView.findViewById(R.id.orientation_video_description);
+            mLength = mView.findViewById(R.id.orientation_video_length);
         }
+
+        public void bindData() {
+            mThumbnail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Play video
+                    VideoPlayerFragment videoPlayerFragment = new VideoPlayerFragment();
+                    Bundle args = new Bundle();
+                    args.putString("VideoURL", "http://techslides.com/demos/sample-videos/small.mp4");
+                    videoPlayerFragment.setArguments(args);
+                    Navigation.findNavController(mView).navigate(R.id.videoPlayerFragment);
+                }
+            });
+            mTitle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Play video
+                    VideoPlayerFragment videoPlayerFragment = new VideoPlayerFragment();
+                    Bundle args = new Bundle();
+                    args.putString("VideoURL", "http://techslides.com/demos/sample-videos/small.mp4");
+                    videoPlayerFragment.setArguments(args);
+                    Navigation.findNavController(mView).navigate(R.id.videoPlayerFragment);
+                }
+            });
+            mDescription.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Play video
+                    VideoPlayerFragment videoPlayerFragment = new VideoPlayerFragment();
+                    Bundle args = new Bundle();
+                    args.putString("VideoURL", "http://techslides.com/demos/sample-videos/small.mp4");
+                    videoPlayerFragment.setArguments(args);
+                    Navigation.findNavController(mView).navigate(R.id.videoPlayerFragment);
+                }
+            });
+        }
+    }
+
+    /**
+     * The adapter populates the data into the RecyclerView by converting an object at a position
+     * into a list row item to be inserted. The adapter requires the existence of a "ViewHolder"
+     * object which describes and provides access to all the views within each item row. In our case,
+     * each item row is composed of CardViews.
+     *
+     * @param context
+     * @param mVideos The videos that will be displayed as CardViews
+     */
+    public OrientationAdapter(Context context, ArrayList<String> mVideos) {
+        inflater = LayoutInflater.from(context);
+        this.mVideos = mVideos;
     }
 
     @NonNull
@@ -69,65 +112,45 @@ public class OrientationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         // Inflates the XML layout file that will be used for each row within the list
         View view = null;
         RecyclerView.ViewHolder vh = null;
-//        if(viewType == 0) {
-//            view = inflater.inflate(R.layout.orientation_title, parent, false);
-//            vh = new TitleViewHolder(view);
-//        } else {
-            view = inflater.inflate(R.layout.orientation_fragment, parent, false);
-
-            Configuration configuration = context.getResources().getConfiguration();
-            int screenWidthDp = configuration.screenWidthDp; // The current width of the available screen space, in dp units, corresponding to screen width resource qualifier.
-            int smallestScreenWidthDp = configuration.smallestScreenWidthDp; // The smallest screen size an application will see in normal operation, corresponding to smallest screen width resource qualifier.
-
-            vh = new VideoViewHolder(view);
-
-            int screenWidthPixels = Utils.convertDpToPixel(screenWidthDp, context);
-            RelativeLayout.LayoutParams rel_btn = new RelativeLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, screenWidthPixels);
-
-        ((VideoViewHolder)vh).layout.setLayoutParams(rel_btn);
-        //}
+        switch (viewType) {
+            case 0:
+                view = inflater.inflate(R.layout.orientation_title, parent, false);
+                vh = new TitleViewHolder(view);
+                break;
+            case 1:
+                view = inflater.inflate(R.layout.orientation_video, parent, false);
+                vh = new VideoViewHolder(view);
+                break;
+        }
         return vh;
     }
 
     /**
      * Sets the view attributes based on the data.
      *
-     * @param holder The ViewHolder type: either TitleViewHolder or VideoViewHolder
+     * @param holder
      * @param position The video at position 'position'
      */
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if(mVideos.get(position).equals("Title")) {
-            //do nothing, this is the title
-        } else {
-            // Initialize video item UI features
-            Video video = ((Video)mVideos.get(position));
-            ((VideoViewHolder)holder).textView.setText("Video " + video.getId());
-
-            final VideoPlayer videoPlayer = new VideoPlayer(context);
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams
-                    (RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-            videoPlayer.setLayoutParams(params);
-
-            ((VideoViewHolder)holder).layout.addView(videoPlayer);
-            videoPlayerController.loadVideo(video, videoPlayer, ((VideoViewHolder)holder).progressBar);
-            videoPlayer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    videoPlayer.changePlayState();
-                }
-            });
+        switch (position) {
+            case 0:
+                break;
+            case 1:
+                ((VideoViewHolder)holder).bindData();
+                break;
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-//        if(mVideos.get(position).equals("Title")) {
-            return 0;
-//        } else {
-//            return 1;
-//        }
+        int result = 0;
+        if(mVideos.get(position).equals("Title")) {
+            result = 0;
+        } else {
+            result = 1;
+        }
+        return result;
     }
 
     @Override

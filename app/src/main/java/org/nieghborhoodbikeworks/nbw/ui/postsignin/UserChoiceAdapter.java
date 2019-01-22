@@ -21,186 +21,180 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.UserChoiceHolder>{
+public class UserChoiceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private static String TAG = "User Choice Adapter";
     private LayoutInflater inflater;
     private ArrayList<String> mFragments;
 
     /**
      * There are five ViewHolders, the first being the title of the UserChoiceFragment, and the
-     * subsequent ones for each CardView in the RecyclerView, all instances of the UserChoiceHolder
-     * abstract class.
+     * subsequent ones for each CardView in the RecyclerView.
      */
-    public static abstract class UserChoiceHolder extends RecyclerView.ViewHolder {
-        public UserChoiceHolder(View itemView) {
-            super(itemView);
-            }
+
+    // Making the title of the fragment a ViewHolder item instead of a TextView allows for
+    // continuous scrolling of the CardViews and the title; using a TextView would result in a
+    // "sticky" header
+    public static class TitleViewHolder extends RecyclerView.ViewHolder {
+        public TitleViewHolder(View view) {
+            super(view);
+        }
     }
 
-        // Making the title of the fragment a ViewHolder item instead of a TextView allows for
-        // continuous scrolling of the CardViews and the title; using a TextView would result in a
-        // "sticky" header
-        public static class TitleViewHolder extends UserChoiceHolder {
-            public TitleViewHolder(View view) {
-                super(view);
-            }
+    // Queue fragment CardView
+    public static class QueueFragmentViewHolder extends RecyclerView.ViewHolder {
+        private Button enqueueButton, dequeueButton, viewQueueButton;
+        private View mView;
+        private Context mContext;
+        private SharedViewModel mViewModel;
+        private User mUser;
+
+        public QueueFragmentViewHolder(View view) {
+            super(view);
+            mView = view;
+            mContext = mView.getContext();
+            mViewModel = ViewModelProviders.of((FragmentActivity) mContext).get(SharedViewModel.class);
+            mUser = mViewModel.getUser();
+            enqueueButton = view.findViewById(R.id.card_view_enqueue_button);
+            dequeueButton = view.findViewById(R.id.card_view_dequeue_button);
+            viewQueueButton = view.findViewById(R.id.card_view_queue_button);
         }
 
-        // Queue fragment CardView
-        public static class QueueFragmentViewHolder extends UserChoiceHolder {
-            private Button enqueueButton, dequeueButton, viewQueueButton;
-            private View mView;
-            private Context mContext;
-            private SharedViewModel mViewModel;
-            private User mUser;
-
-            public QueueFragmentViewHolder(View view) {
-                super(view);
-                mView = view;
-                mContext = mView.getContext();
-                mViewModel = ViewModelProviders.of((FragmentActivity) mContext).get(SharedViewModel.class);
-                mUser = mViewModel.getUser();
-                enqueueButton = view.findViewById(R.id.card_view_enqueue_button);
-                dequeueButton = view.findViewById(R.id.card_view_dequeue_button);
-                viewQueueButton = view.findViewById(R.id.card_view_queue_button);
-            }
-
-            public void bindData() {
-                enqueueButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            mViewModel.enqueueUser();
-                            if (mUser.isAdmin()) {
-                                Navigation.findNavController(mView).navigate(R.id.queueAdminFragment);
-                            } else {
-                                Navigation.findNavController(mView).navigate(R.id.queueFragment);
-                            }
-                        } catch (NullPointerException e) {
-                            Bundle bundle = new Bundle();
-                            bundle.putCharSequence("externalFragmentMessage", "enqueue");
-                            Navigation.findNavController(mView).navigate(R.id.loginFragment, bundle);
-                        }
-                    }
-                });
-                dequeueButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            mViewModel.dequeueUser();
-                            if (mUser.isAdmin()) {
-                                Navigation.findNavController(mView).navigate(R.id.queueAdminFragment);
-                            } else {
-                                Navigation.findNavController(mView).navigate(R.id.queueFragment);
-                            }
-                        } catch (NullPointerException e) {
-                            Bundle bundle = new Bundle();
-                            bundle.putCharSequence("externalFragmentMessage", "dequeue");
-                            Navigation.findNavController(mView).navigate(R.id.loginFragment, bundle);
-                        }
-                    }
-                });
-                viewQueueButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            if (mUser.isAdmin()) {
-                                Navigation.findNavController(mView).navigate(R.id.queueAdminFragment);
-                            } else {
-                                Navigation.findNavController(mView).navigate(R.id.queueFragment);
-                            }
-                        } catch (NullPointerException e) {
-                            Bundle bundle = new Bundle();
-                            bundle.putCharSequence("externalFragmentMessage", "seeQueue");
-                            Navigation.findNavController(mView).navigate(R.id.loginFragment, bundle);
-                        }
-                    }
-                });
-            }
-        }
-
-        // Waiver fragment CardView
-        public static class WaiverFragmentViewHolder extends UserChoiceHolder {
-            private Button viewWaiverButton;
-            private View mView;
-            private Context mContext;
-            private SharedViewModel mViewModel;
-
-            public WaiverFragmentViewHolder(View view) {
-                super(view);
-                mView = view;
-                mContext = mView.getContext();
-                mViewModel = ViewModelProviders.of((FragmentActivity) mContext).get(SharedViewModel.class);
-                viewWaiverButton = view.findViewById(R.id.card_view_waiver_button);
-            }
-
-            public void bindData() {
-                viewWaiverButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mViewModel.getUser() == null) {
-                            Navigation.findNavController(mView).navigate(R.id.loginFragment);
+        public void bindData() {
+            enqueueButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        mViewModel.enqueueUser();
+                        if (mUser.isAdmin()) {
+                            Navigation.findNavController(mView).navigate(R.id.queueAdminFragment);
                         } else {
-                            Navigation.findNavController(mView).navigate(R.id.waiverFragment);
+                            Navigation.findNavController(mView).navigate(R.id.queueFragment);
                         }
+                    } catch (NullPointerException e) {
+                        Bundle bundle = new Bundle();
+                        bundle.putCharSequence("externalFragmentMessage", "enqueue");
+                        Navigation.findNavController(mView).navigate(R.id.loginFragment, bundle);
                     }
-                });
-            }
+                }
+            });
+            dequeueButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        mViewModel.dequeueUser();
+                        if (mUser.isAdmin()) {
+                            Navigation.findNavController(mView).navigate(R.id.queueAdminFragment);
+                        } else {
+                            Navigation.findNavController(mView).navigate(R.id.queueFragment);
+                        }
+                    } catch (NullPointerException e) {
+                        Bundle bundle = new Bundle();
+                        bundle.putCharSequence("externalFragmentMessage", "dequeue");
+                        Navigation.findNavController(mView).navigate(R.id.loginFragment, bundle);
+                    }
+                }
+            });
+            viewQueueButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        if (mUser.isAdmin()) {
+                            Navigation.findNavController(mView).navigate(R.id.queueAdminFragment);
+                        } else {
+                            Navigation.findNavController(mView).navigate(R.id.queueFragment);
+                        }
+                    } catch (NullPointerException e) {
+                        Bundle bundle = new Bundle();
+                        bundle.putCharSequence("externalFragmentMessage", "seeQueue");
+                        Navigation.findNavController(mView).navigate(R.id.loginFragment, bundle);
+                    }
+                }
+            });
+        }
+    }
+
+    // Waiver fragment CardView
+    public static class WaiverFragmentViewHolder extends RecyclerView.ViewHolder {
+        private Button viewWaiverButton;
+        private View mView;
+        private Context mContext;
+        private SharedViewModel mViewModel;
+
+        public WaiverFragmentViewHolder(View view) {
+            super(view);
+            mView = view;
+            mContext = mView.getContext();
+            mViewModel = ViewModelProviders.of((FragmentActivity) mContext).get(SharedViewModel.class);
+            viewWaiverButton = view.findViewById(R.id.card_view_waiver_button);
         }
 
-        // Orientation fragment CardView
-        public static class OrientationFragmentViewHolder extends UserChoiceHolder {
-            private Button viewOrientationButton;
-            private View mView;
-
-            public OrientationFragmentViewHolder(View view) {
-                super(view);
-                mView = view;
-                viewOrientationButton = view.findViewById(R.id.card_view_orientation_button);
-            }
-
-            public void bindData() {
-                viewOrientationButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                         Navigation.findNavController(mView).navigate(R.id.orientationFragment);
+        public void bindData() {
+            viewWaiverButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mViewModel.getUser() == null) {
+                        Navigation.findNavController(mView).navigate(R.id.loginFragment);
+                    } else {
+                        Navigation.findNavController(mView).navigate(R.id.waiverFragment);
                     }
-                });
-            }
+                }
+            });
+        }
+    }
+
+    // Orientation fragment CardView
+    public static class OrientationFragmentViewHolder extends RecyclerView.ViewHolder {
+        private Button viewOrientationButton;
+        private View mView;
+
+        public OrientationFragmentViewHolder(View view) {
+            super(view);
+            mView = view;
+            viewOrientationButton = view.findViewById(R.id.card_view_orientation_button);
         }
 
-        // Map fragment CardView
-        public static class MapFragmentViewHolder extends UserChoiceHolder {
-            private Button mapButton, navigateButton;
-            private View mView;
-
-            public MapFragmentViewHolder(View view) {
-                super(view);
-                mView = view;
-                mapButton = view.findViewById(R.id.card_view_map_button);
-                navigateButton = view.findViewById(R.id.card_view_navigate_button);
-            }
-
-            public void bindData() {
-                mapButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Navigation.findNavController(mView).navigate(R.id.mapFragment);
-                    }
-                });
-                // Creates an intent and boots up the Google Maps app with the directions from the
-                // User's location to NBW's campus
-                navigateButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent mapsIntent = new Intent(android.content.Intent.ACTION_VIEW,
-                                Uri.parse("google.navigation:q=3939 Lancaster Avenue, Philadelphia, PA"));
-                        mapsIntent.setPackage("com.google.android.apps.maps");
-                        mView.getContext().startActivity(mapsIntent);
-                    }
-                });
-            }
+        public void bindData() {
+            viewOrientationButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                     Navigation.findNavController(mView).navigate(R.id.orientationFragment);
+                }
+            });
         }
+    }
+
+    // Map fragment CardView
+    public static class MapFragmentViewHolder extends RecyclerView.ViewHolder {
+        private Button mapButton, navigateButton;
+        private View mView;
+
+        public MapFragmentViewHolder(View view) {
+            super(view);
+            mView = view;
+            mapButton = view.findViewById(R.id.card_view_map_button);
+            navigateButton = view.findViewById(R.id.card_view_navigate_button);
+        }
+
+        public void bindData() {
+            mapButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Navigation.findNavController(mView).navigate(R.id.mapFragment);
+                }
+            });
+            // Creates an intent and boots up the Google Maps app with the directions from the
+            // User's location to NBW's campus
+            navigateButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent mapsIntent = new Intent(android.content.Intent.ACTION_VIEW,
+                            Uri.parse("google.navigation:q=3939 Lancaster Avenue, Philadelphia, PA"));
+                    mapsIntent.setPackage("com.google.android.apps.maps");
+                    mView.getContext().startActivity(mapsIntent);
+                }
+            });
+        }
+    }
 
     /**
      * The adapter populates the data into the RecyclerView by converting an object at a position
@@ -209,7 +203,7 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
      * each item row is composed of CardViews.
      *
      * @param context
-     * @param mFragments The fragment that will be displayed as CardViews
+     * @param mFragments The fragments that will be displayed as CardViews
      */
     public UserChoiceAdapter(Context context, ArrayList<String> mFragments) {
         inflater = LayoutInflater.from(context);
@@ -218,10 +212,10 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
 
     @NonNull
     @Override
-    public UserChoiceAdapter.UserChoiceHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflates the XML layout file that will be used for each row within the list
         View view = null;
-        UserChoiceAdapter.UserChoiceHolder vh = null;
+        RecyclerView.ViewHolder vh = null;
         switch (viewType) {
             case 0:
                 view = inflater.inflate(R.layout.user_choice_fragment_title, parent, false);
@@ -254,7 +248,7 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<UserChoiceAdapter.Us
      * @param position
      */
     @Override
-    public void onBindViewHolder(@NonNull UserChoiceAdapter.UserChoiceHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         switch (position) {
             case 0:
                 break;
