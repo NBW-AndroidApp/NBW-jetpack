@@ -55,38 +55,26 @@ public class OrientationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             mLength = mView.findViewById(R.id.orientation_video_length);
         }
 
-        public void bindData() {
+        public void bindData(final Bundle args) {
             mThumbnail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // Play video
-                    VideoPlayerFragment videoPlayerFragment = new VideoPlayerFragment();
-                    Bundle args = new Bundle();
-                    args.putString("VideoURL", "http://techslides.com/demos/sample-videos/small.mp4");
-                    videoPlayerFragment.setArguments(args);
-                    Navigation.findNavController(mView).navigate(R.id.videoPlayerFragment);
+                    Navigation.findNavController(mView).navigate(R.id.videoPlayerFragment, args);
                 }
             });
             mTitle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // Play video
-                    VideoPlayerFragment videoPlayerFragment = new VideoPlayerFragment();
-                    Bundle args = new Bundle();
-                    args.putString("VideoURL", "http://techslides.com/demos/sample-videos/small.mp4");
-                    videoPlayerFragment.setArguments(args);
-                    Navigation.findNavController(mView).navigate(R.id.videoPlayerFragment);
+                    Navigation.findNavController(mView).navigate(R.id.videoPlayerFragment, args);
                 }
             });
             mDescription.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // Play video
-                    VideoPlayerFragment videoPlayerFragment = new VideoPlayerFragment();
-                    Bundle args = new Bundle();
-                    args.putString("VideoURL", "http://techslides.com/demos/sample-videos/small.mp4");
-                    videoPlayerFragment.setArguments(args);
-                    Navigation.findNavController(mView).navigate(R.id.videoPlayerFragment);
+                    Navigation.findNavController(mView).navigate(R.id.videoPlayerFragment, args);
                 }
             });
         }
@@ -133,12 +121,13 @@ public class OrientationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      */
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        switch (position) {
-            case 0:
-                break;
-            case 1:
-                ((VideoViewHolder)holder).bindData();
-                break;
+        if(position == 0) {
+            return;
+        } else {
+            Bundle args = new Bundle();
+            url = mVideos.get(position);
+            args.putString("VideoURL", url);
+            ((VideoViewHolder)holder).bindData(args);
         }
     }
 

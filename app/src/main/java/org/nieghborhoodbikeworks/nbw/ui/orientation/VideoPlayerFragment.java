@@ -81,12 +81,13 @@ public class VideoPlayerFragment extends Fragment {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 mDialog.dismiss();
-                try {
-                    mp.setDataSource(videoURL);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                mp.setLooping(true);
+//                try {
+//                    mp.prepare();
+//                    mp.setDataSource(videoURL);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                mp.setLooping(true);
                 videoView.start();
             }
         });
