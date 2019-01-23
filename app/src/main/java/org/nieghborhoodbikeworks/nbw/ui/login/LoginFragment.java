@@ -3,6 +3,7 @@ package org.nieghborhoodbikeworks.nbw.ui.login;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -214,6 +216,61 @@ public class LoginFragment extends Fragment {
 
                     Navigation.findNavController(v).
                             navigate(R.id.signupFragment);
+                }
+            });
+
+            mForgotPassword.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "Sending reset password email.");
+                    // Empty these fields before sending email.
+                    mEmailText.setText("");
+                    mPasswordText.setText("");
+
+                    // Create AlertDialog to allow user to input their email.
+                    final AlertDialog.Builder mPasswordResetAlert = new AlertDialog.Builder(getActivity());
+                    mPasswordResetAlert.setTitle("Reset Password");
+                    mPasswordResetAlert.setMessage("Please enter your email address below to reset " +
+                            "your password.");
+
+                    // EditText where user will provide email address.
+                    final EditText input = new EditText(getActivity());
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.MATCH_PARENT);
+                    input.setLayoutParams(lp);
+                    mPasswordResetAlert.setView(input);
+
+                    // Once user clicks the "Reset my password" button, an email will be sent with
+                    // instructions.
+                    mPasswordResetAlert.setPositiveButton("Reset my password",
+                            new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mAuth.sendPasswordResetEmail(input.toString())
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Log.d(TAG, "Email sent.");
+                                                Toast.makeText(getActivity(), "Reset password " +
+                                                        "email has been sent! Please follow the " +
+                                                        "instructions provided in that email.",
+                                                        Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    });
+                        }
+                    });
+
+                    // The "Cancel" button dismisses the AlertDialog.
+                    mPasswordResetAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    mPasswordResetAlert.show();
                 }
             });
         }

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.MediaController;
 import android.widget.VideoView;
 
 import org.nieghborhoodbikeworks.nbw.R;
@@ -21,6 +22,7 @@ public class VideoPlayerFragment extends Fragment {
     private View mView;
     private ProgressDialog mDialog;
     private VideoView videoView;
+    private MediaController mediaController;
     private String videoURL;
     private Uri uri;
 
@@ -73,6 +75,9 @@ public class VideoPlayerFragment extends Fragment {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 mDialog.dismiss();
+                mediaController = new MediaController(getActivity());
+                mediaController.setAnchorView(videoView);
+                videoView.setMediaController(mediaController);
                 videoView.start();
             }
         });
