@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import com.google.android.material.navigation.NavigationView;
 
-import org.nieghborhoodbikeworks.nbw.DrawerLocker;
 import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
@@ -22,9 +21,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class UserChoiceFragment extends Fragment {
-    private static String TAG = "User Choice Fragment";
+    private static String TAG = "UserChoiceFragment";
     private SharedViewModel mViewModel;
-    private NavigationView mNavigationView;
     private View mView;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -47,11 +45,9 @@ public class UserChoiceFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         ((MainActivity) getActivity()).setActionBarTitle("User Choice Fragment");
-        ((DrawerLocker) getActivity()).setDrawerLocked(true);
         // Get the view from fragment XML
         mView = inflater.inflate(R.layout.user_choice_fragment, container, false);
         mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
-        mNavigationView = getActivity().findViewById(R.id.nav_view);
 
         // Initialize CardViews that will be displayed on the recyclerview
         mFragments = new ArrayList<>();

@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueHolder> {
-    private static String TAG = "Queue Adapter";
+    private static String TAG = "QueueAdapter";
     private LayoutInflater inflater;
     private ArrayList<String> mUsers;
 

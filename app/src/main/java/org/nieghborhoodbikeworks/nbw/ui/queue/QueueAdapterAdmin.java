@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 
 public class QueueAdapterAdmin extends QueueSelectableAdapter<QueueAdapterAdmin.QueueHolder> {
-    private static String TAG = "Queue Admin Adapter";
+    private static String TAG = "QueueAdminAdapter";
     private LayoutInflater inflater;
     private ArrayList<String> mUsers;
     private ClickListener clickListener;

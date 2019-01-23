@@ -23,7 +23,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import org.nieghborhoodbikeworks.nbw.DrawerLocker;
 import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
@@ -31,13 +30,11 @@ import org.nieghborhoodbikeworks.nbw.User;
 
 import java.util.ArrayList;
 
-import static androidx.constraintlayout.widget.StateSet.TAG;
-
 public class QueueFragment extends Fragment {
-    private static String TAG = "Queue Fragment";
+    private static String TAG = "QueueFragment";
     private SharedViewModel mViewModel;
     private View mView;
-    private DatabaseReference mQueueDatabase;
+    private DatabaseReference mQueueDatabase, mQueueSize;
     private User mUser;
     private Button mEnqueueButton, mDequeueButton;
     private TextView mWaiting;
@@ -63,7 +60,6 @@ public class QueueFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         ((MainActivity) getActivity()).setActionBarTitle("Sign-in Queue");
-        ((DrawerLocker) getActivity()).setDrawerLocked(false);
         // Get the view from fragment XML
         mView = inflater.inflate(R.layout.queue_fragment, container, false);
 
@@ -110,6 +106,7 @@ public class QueueFragment extends Fragment {
 
         // Fetch data for queue
         mQueueDatabase = mViewModel.getmQueueDatabase();
+        mQueueSize = mViewModel.getmQueueSize();
         mUser = mViewModel.getUser();
         mQueue = mViewModel.getmQueue();
         displayQueue = new ArrayList<>();
@@ -151,7 +148,7 @@ public class QueueFragment extends Fragment {
 
     /**
      * The updateQueue method reads from the queue node in the database and adds the users to the mQueue
-     * ArrayList.
+     * ArrayList. This is how we read from the database at runtime.
      */
     //TODO: Move this method into the SharedViewModel
     private void updateQueue() {
@@ -193,6 +190,7 @@ public class QueueFragment extends Fragment {
                 mRecyclerView.setAdapter(mAdapter);
                 mWaiting.setText("Number of people currently in the queue: " +
                         String.valueOf(mQueue.size()));
+                mQueueSize.setValue(mQueue.size());
             }
 
             @Override

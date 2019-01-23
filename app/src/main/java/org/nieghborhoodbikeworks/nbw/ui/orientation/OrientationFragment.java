@@ -12,10 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import org.nieghborhoodbikeworks.nbw.DrawerLocker;
 import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
@@ -23,7 +20,7 @@ import org.nieghborhoodbikeworks.nbw.SharedViewModel;
 import java.util.ArrayList;
 
 public class OrientationFragment extends Fragment {
-    private static String TAG = "Orientation Fragment";
+    private static String TAG = "OrientationFragment";
     private View mView;
     private SharedViewModel mViewModel;
     private RecyclerView mRecyclerView;
@@ -48,7 +45,6 @@ public class OrientationFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         ((MainActivity) getActivity()).setActionBarTitle("Orientation Fragment");
-        ((DrawerLocker) getActivity()).setDrawerLocked(false);
         // Get the view from fragment XML
         mView = inflater.inflate(R.layout.orientation_fragment, container, false);
         mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);

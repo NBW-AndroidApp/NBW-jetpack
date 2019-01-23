@@ -21,14 +21,13 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 
-import org.nieghborhoodbikeworks.nbw.DrawerLocker;
 import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
 import org.nieghborhoodbikeworks.nbw.User;
 
 public class WaiverFragment extends Fragment {
-    private static final String TAG = "Waiver Fragment";
+    private static final String TAG = "WaiverFragment";
     private SharedViewModel mViewModel;
     private DatabaseReference mUserDatabase;
     private CheckBox mAgreementCheckBox;
@@ -54,7 +53,6 @@ public class WaiverFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         ((MainActivity) getActivity()).setActionBarTitle("Waiver Fragment");
-        ((DrawerLocker) getActivity()).setDrawerLocked(false);
 
         Log.d(TAG,"1");
         mView = inflater.inflate(R.layout.waiver_fragment, container, false);

@@ -24,7 +24,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-import org.nieghborhoodbikeworks.nbw.DrawerLocker;
 import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
@@ -59,7 +58,6 @@ public class LoginFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         ((MainActivity) getActivity()).setActionBarTitle("Login to NBW");
-        ((DrawerLocker) getActivity()).setDrawerLocked(false);
         // Get the view from fragment XML
         mView = inflater.inflate(R.layout.login_fragment, container, false);
         mNavigationView = getActivity().findViewById(R.id.nav_view);
@@ -127,6 +125,12 @@ public class LoginFragment extends Fragment {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
+
+                                            // Hide the nav menu for when the user is signed out and show
+                                            // the menu for when the user is signed in
+                                            mNavigationView.getMenu().setGroupVisible(R.id.signedOut, false);
+                                            mNavigationView.getMenu().setGroupVisible(R.id.signedIn, true);
+
                                             Log.d(TAG, "signInWithEmail:success");
                                             Toast.makeText(getActivity(),
                                                     "Signed in!", Toast.LENGTH_SHORT).show();
@@ -136,55 +140,53 @@ public class LoginFragment extends Fragment {
                                                         @Override
                                                         public void onCallback(User user) {
 
-                                                            // Once sign-in is successful, replace the login
-                                                            // option in the nav drawer with a logout option
-                                                            mNavigationView.getMenu().findItem(R.id.nav_login)
-                                                                    .setTitle(R.string.logout_title);
-
                                                             // If the user signed the waiver
                                                             if (user.isSignedWaiver()) {
 
                                                                 // TODO: Replace the following "if" statement with
                                                                 // "switch" statement
 
-                                                                // If the user pressed enqueue somewhere
-                                                                // in the app but wasn't logged in
-                                                                if (externalFragmentMessage.equals("enqueue")) {
-                                                                    mViewModel.enqueueUser();
-                                                                    Navigation.findNavController(v).
-                                                                            navigate(R.id.queueFragment);
-                                                                    Toast.makeText(getActivity(),
-                                                                            "Added to the queue!",
-                                                                            Toast.LENGTH_SHORT).show();
+                                                                if (externalFragmentMessage != null) {
+
+                                                                    // If the user pressed enqueue somewhere
+                                                                    // in the app but wasn't logged in
+                                                                    if (externalFragmentMessage.equals("enqueue")) {
+                                                                        mViewModel.enqueueUser();
+                                                                        Navigation.findNavController(v).
+                                                                                navigate(R.id.queueFragment);
+                                                                        Toast.makeText(getActivity(),
+                                                                                "Added to the queue!",
+                                                                                Toast.LENGTH_SHORT).show();
 
                                                                     // If the user pressed dequeue somewhere
                                                                     // in the app but wasn't logged in
-                                                                } else if (externalFragmentMessage.equals("dequeue")) {
-                                                                    mViewModel.dequeueUser();
-                                                                    Navigation.findNavController(v).
-                                                                            navigate(R.id.queueFragment);
-                                                                    Toast.makeText(getActivity(),
-                                                                            "Removed from the queue!",
-                                                                            Toast.LENGTH_SHORT).show();
+                                                                    } else if (externalFragmentMessage.equals("dequeue")) {
+                                                                        mViewModel.dequeueUser();
+                                                                        Navigation.findNavController(v).
+                                                                                navigate(R.id.queueFragment);
+                                                                        Toast.makeText(getActivity(),
+                                                                                "Removed from the queue!",
+                                                                                Toast.LENGTH_SHORT).show();
 
                                                                     // If the user pressed see queue somewhere
                                                                     // in the app but wasn't logged in
-                                                                } else if (externalFragmentMessage.equals("seeQueue")) {
-                                                                    Navigation.findNavController(v).
-                                                                            navigate(R.id.queueFragment);
-                                                                    Toast.makeText(getActivity(),
-                                                                            "Welcome to the queue!",
-                                                                            Toast.LENGTH_SHORT).show();
+                                                                    } else if (externalFragmentMessage.equals("seeQueue")) {
+                                                                        Navigation.findNavController(v).
+                                                                                navigate(R.id.queueFragment);
+                                                                        Toast.makeText(getActivity(),
+                                                                                "Welcome to the queue!",
+                                                                                Toast.LENGTH_SHORT).show();
+                                                                    }
 
-                                                                    // If the user signed in without previously
-                                                                    // having pressed any button related to
-                                                                    // the queue anywhere else in the app
+                                                                // If the user signed in without previously
+                                                                // having pressed any button related to
+                                                                // the queue anywhere else in the app
                                                                 } else {
                                                                     Navigation.findNavController(v).
                                                                             navigate(R.id.userChoiceFragment);
                                                                 }
 
-                                                                // Make the user sign the waiver if they haven't
+                                                            // Make the user sign the waiver if they haven't
                                                             } else {
                                                                 Navigation.findNavController(v).
                                                                         navigate(R.id.waiverFragment);

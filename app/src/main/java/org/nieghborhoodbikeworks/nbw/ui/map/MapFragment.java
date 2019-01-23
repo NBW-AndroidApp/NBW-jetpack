@@ -15,12 +15,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.nieghborhoodbikeworks.nbw.DrawerLocker;
 import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
-    private static String TAG = "Map Fragment";
+    private static String TAG = "MapFragment";
     private View mView;
     private GoogleMap mMap;
 
@@ -41,7 +40,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         ((MainActivity) getActivity()).setActionBarTitle("Location & Hours");
-        ((DrawerLocker) getActivity()).setDrawerLocked(false);
         // Get the view from fragment XML
         mView = inflater.inflate(R.layout.map_fragment, container, false);
         return mView;

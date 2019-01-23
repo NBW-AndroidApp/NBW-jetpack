@@ -26,6 +26,7 @@ public class SharedViewModel extends ViewModel {
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference mUserDatabase = mDatabase.getReference().child("users");
     private DatabaseReference mQueueDatabase = mDatabase.getReference().child("queue");
+    private DatabaseReference mQueueSize = mDatabase.getReference().child("queueCount");
     private ArrayList<String> mQueue = new ArrayList<String>();
     private User mUser;
 
@@ -42,6 +43,10 @@ public class SharedViewModel extends ViewModel {
 
     public DatabaseReference getmQueueDatabase() {
         return mQueueDatabase;
+    }
+
+    public DatabaseReference getmQueueSize() {
+        return mQueueSize;
     }
 
     public User getUser() {

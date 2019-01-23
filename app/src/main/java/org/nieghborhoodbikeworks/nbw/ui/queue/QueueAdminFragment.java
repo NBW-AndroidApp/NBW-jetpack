@@ -16,7 +16,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import org.nieghborhoodbikeworks.nbw.DrawerLocker;
 import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
@@ -35,13 +34,11 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static androidx.constraintlayout.widget.StateSet.TAG;
-
 public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.ClickListener {
-    private static String TAG = "Queue Admin Fragment";
+    private static String TAG = "QueueAdminFragment";
     private SharedViewModel mViewModel;
     private View mView;
-    private DatabaseReference mQueueDatabase;
+    private DatabaseReference mQueueDatabase, mQueueSize;
     private User mUser;
     private Button mEnqueueButton, mDequeueButton;
     private TextView mWaiting;
@@ -69,7 +66,6 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         ((MainActivity) getActivity()).setActionBarTitle("Queue");
-        ((DrawerLocker) getActivity()).setDrawerLocked(false);
         // Get the view from fragment XML
         mView = inflater.inflate(R.layout.queue_fragment, container, false);
 
@@ -116,6 +112,7 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
 
         // Fetch data for queue
         mQueueDatabase = mViewModel.getmQueueDatabase();
+        mQueueSize = mViewModel.getmQueueSize();
         mUser = mViewModel.getUser();
         mQueue = mViewModel.getmQueue();
         displayQueue = new ArrayList<>();
@@ -238,6 +235,7 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
                 mRecyclerView.setAdapter(mAdapter);
                 mWaiting.setText("Number of people currently in the queue: " +
                         String.valueOf(mQueue.size()));
+                mQueueSize.setValue(mQueue.size());
             }
 
             @Override

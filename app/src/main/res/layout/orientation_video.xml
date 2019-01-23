@@ -23,7 +23,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitXY"
-                android:clickable="true"
                 android:src="@drawable/orientation_thumbnail"/>
 
             <TextView
@@ -58,7 +57,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="0.5"
-                    android:clickable="true"
                     android:text="Sample Title"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
                     android:paddingLeft="8dp"
@@ -69,7 +67,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="0.5"
-                    android:clickable="true"
                     android:text="Sample description"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                     android:paddingLeft="8dp"

@@ -4,10 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
@@ -22,7 +29,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class UserChoiceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private static String TAG = "User Choice Adapter";
+    private static String TAG = "UserChoiceAdapter";
     private LayoutInflater inflater;
     private ArrayList<String> mFragments;
 
@@ -42,11 +49,13 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     // Queue fragment CardView
     public static class QueueFragmentViewHolder extends RecyclerView.ViewHolder {
+        private TextView queueSize;
         private Button enqueueButton, dequeueButton, viewQueueButton;
         private View mView;
         private Context mContext;
         private SharedViewModel mViewModel;
         private User mUser;
+        private DatabaseReference mQueueSize;
 
         public QueueFragmentViewHolder(View view) {
             super(view);
@@ -54,12 +63,44 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mContext = mView.getContext();
             mViewModel = ViewModelProviders.of((FragmentActivity) mContext).get(SharedViewModel.class);
             mUser = mViewModel.getUser();
+            mQueueSize = mViewModel.getmQueueSize();
+            queueSize = view.findViewById(R.id.card_view_queue_size);
             enqueueButton = view.findViewById(R.id.card_view_enqueue_button);
             dequeueButton = view.findViewById(R.id.card_view_dequeue_button);
             viewQueueButton = view.findViewById(R.id.card_view_queue_button);
         }
 
         public void bindData() {
+            ValueEventListener queueSizeListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Object queueCount = dataSnapshot.getValue();
+                    queueCount = queueCount.toString();
+                    queueSize.setText("Number of people currently in the queue: " + queueCount);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // Auto generated method stub
+                }
+            };
+            mQueueSize.addValueEventListener(queueSizeListener);
+            mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        if (mUser.isAdmin()) {
+                            Navigation.findNavController(mView).navigate(R.id.queueAdminFragment);
+                        } else {
+                            Navigation.findNavController(mView).navigate(R.id.queueFragment);
+                        }
+                    } catch (NullPointerException e) {
+                        Bundle bundle = new Bundle();
+                        bundle.putCharSequence("externalFragmentMessage", "seeQueue");
+                        Navigation.findNavController(mView).navigate(R.id.loginFragment, bundle);
+                    }
+                }
+            });
             enqueueButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -129,6 +170,16 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         public void bindData() {
+            mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mViewModel.getUser() == null) {
+                        Navigation.findNavController(mView).navigate(R.id.loginFragment);
+                    } else {
+                        Navigation.findNavController(mView).navigate(R.id.waiverFragment);
+                    }
+                }
+            });
             viewWaiverButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -154,6 +205,12 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         public void bindData() {
+            mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Navigation.findNavController(mView).navigate(R.id.orientationFragment);
+                }
+            });
             viewOrientationButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -176,6 +233,12 @@ public class UserChoiceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         public void bindData() {
+            mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Navigation.findNavController(mView).navigate(R.id.mapFragment);
+                }
+            });
             mapButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

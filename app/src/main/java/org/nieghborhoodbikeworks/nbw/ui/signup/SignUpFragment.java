@@ -16,7 +16,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseUser;
 
-import org.nieghborhoodbikeworks.nbw.DrawerLocker;
 import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
@@ -29,7 +28,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 public class SignUpFragment extends Fragment {
-    private static String TAG = "Sign Up Fragment";
+    private static String TAG = "SignUpFragment";
     private View mView;
     private SharedViewModel mViewModel;
     private Button mSignUpButton;
@@ -52,7 +51,6 @@ public class SignUpFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         // Set Title for the Fragment
         ((MainActivity) getActivity()).setActionBarTitle("Sign Up with NBW");
-        ((DrawerLocker) getActivity()).setDrawerLocked(false);
         // Get the view from fragment XML
         mView = inflater.inflate(R.layout.signup_fragment, container, false);
 

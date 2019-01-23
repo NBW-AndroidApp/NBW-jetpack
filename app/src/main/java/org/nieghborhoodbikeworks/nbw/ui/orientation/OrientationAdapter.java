@@ -17,7 +17,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class OrientationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private static String TAG = "Orientation Adapter";
+    private static String TAG = "OrientationAdapter";
     private LayoutInflater inflater;
     private ArrayList<String> mVideos;
     private String url;
@@ -56,21 +56,7 @@ public class OrientationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
 
         public void bindData(final Bundle args) {
-            mThumbnail.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Play video
-                    Navigation.findNavController(mView).navigate(R.id.videoPlayerFragment, args);
-                }
-            });
-            mTitle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Play video
-                    Navigation.findNavController(mView).navigate(R.id.videoPlayerFragment, args);
-                }
-            });
-            mDescription.setOnClickListener(new View.OnClickListener() {
+            mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // Play video

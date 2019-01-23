@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
@@ -19,7 +20,7 @@ import androidx.navigation.ui.NavigationUI;
 import static androidx.navigation.Navigation.findNavController;
 import static androidx.navigation.ui.NavigationUI.setupActionBarWithNavController;
 
-public class MainActivity extends AppCompatActivity implements DrawerLocker {
+public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     public NavController mNavController;
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements DrawerLocker {
         }
     }
 
-        // Setting Up One Time Navigation
+    // Setting Up One Time Navigation
     private void setupNavigation(){
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -80,16 +81,16 @@ public class MainActivity extends AppCompatActivity implements DrawerLocker {
                 mDrawerLayout.closeDrawers();
                 switch (menuItem.getItemId()) {
                     case R.id.nav_login: {
-                        // If the user is not logged in, navigate them
-                        // to the Login Fragment
-                        if (mNavigationView.getMenu().findItem(R.id.nav_login).getTitle()
-                                .equals("Login to Your Account")) {
-                            mNavController.navigate(R.id.loginFragment);
-                        // If the user is logged in, log them out
-                        } else {
-                            FirebaseAuth.getInstance().signOut();
-                            mUser = null;
-                        }
+                        mNavController.navigate(R.id.loginFragment);
+                        break;
+                    }
+                    case R.id.nav_logout: {
+                        FirebaseAuth.getInstance().signOut();
+                        mUser = null;
+                        Toast.makeText(MainActivity.this, "Logged out successfully!",
+                                Toast.LENGTH_SHORT).show();
+                        mNavigationView.getMenu().setGroupVisible(R.id.signedOut, true);
+                        mNavigationView.getMenu().setGroupVisible(R.id.signedIn, false);
                         break;
                     }
                     case R.id.nav_user_choice: {
@@ -105,12 +106,11 @@ public class MainActivity extends AppCompatActivity implements DrawerLocker {
                         break;
                     }
                     case R.id.nav_queue: {
-                        if(mUser.isAdmin()) {
+                        if(mUser != null && mUser.isAdmin()) {
                             mNavController.navigate(R.id.queueAdminFragment);
                         } else {
                             mNavController.navigate(R.id.queueFragment);
                         }
-
                         break;
                     }
                     case R.id.nav_map: {
@@ -128,14 +128,5 @@ public class MainActivity extends AppCompatActivity implements DrawerLocker {
         if (title != null) {
             getSupportActionBar().setTitle(title);
         }
-    }
-
-    public void setDrawerLocked(boolean enabled){
-        if (enabled) {
-            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        } else {
-            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-        }
-
     }
 }
