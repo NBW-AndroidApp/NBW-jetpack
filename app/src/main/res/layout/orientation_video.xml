@@ -22,8 +22,8 @@
                 android:contentDescription="Video thumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitXY"
-                android:src="@drawable/orientation_thumbnail"/>
+                android:scaleType="fitXY"/>
+                <!--android:src="@drawable/orientation_thumbnail"-->
 
             <TextView
                 android:id="@+id/orientation_video_length"
@@ -34,7 +34,8 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginEnd="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginBottom="15dp" />
+                android:layout_marginBottom="15dp"
+                android:text="1:00"/>
 
         </RelativeLayout>
 
