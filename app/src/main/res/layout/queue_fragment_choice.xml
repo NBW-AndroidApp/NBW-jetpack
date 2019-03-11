@@ -5,14 +5,15 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    card_view:cardElevation="4dp"
-    android:layout_margin="-16dp"
+    card_view:cardElevation="8dp"
+    card_view:cardCornerRadius="8dp"
     app:cardUseCompatPadding="true">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="8dp">
 
         <ImageView
             android:contentDescription="Queue image"
@@ -25,22 +26,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Queue Fragment"
+            android:text="Sign-in Queue"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
 
         <TextView
+            android:id="@+id/card_view_queue_size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="@+id/waiting"
+            android:text="Number of people currently in the queue:"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_margin="8dp"
             android:weightSum="1">
 
             <Button
@@ -48,17 +50,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
-                android:text="Enqueue"
-                android:textColor="@color/colorPrimary"
-                android:layout_weight=".33"
-                android:layout_gravity="center"/>
-
-            <Button
-                android:id="@+id/card_view_dequeue_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:text="Dequeue"
+                android:text="@string/enqueue"
                 android:textColor="@color/colorPrimary"
                 android:layout_weight=".33"
                 android:layout_gravity="center"/>
@@ -68,10 +60,20 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
-                android:text="See queue"
+                android:text="See the queue"
                 android:textColor="@color/colorPrimary"
                 android:layout_weight=".33"
                 android:layout_gravity="center"/>
+
+            <Button
+                android:id="@+id/card_view_dequeue_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="@string/dequeue"
+                android:textColor="@color/colorPrimary"
+                android:layout_weight=".33"
+                android:layout_gravity="end"/>
 
         </LinearLayout>
 

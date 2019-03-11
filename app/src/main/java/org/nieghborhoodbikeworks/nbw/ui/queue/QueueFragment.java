@@ -30,12 +30,11 @@ import org.nieghborhoodbikeworks.nbw.User;
 
 import java.util.ArrayList;
 
-import static androidx.constraintlayout.widget.StateSet.TAG;
-
 public class QueueFragment extends Fragment {
+    private static String TAG = "QueueFragment";
     private SharedViewModel mViewModel;
-    private View view;
-    private DatabaseReference mQueueDatabase;
+    private View mView;
+    private DatabaseReference mQueueDatabase, mQueueSize;
     private User mUser;
     private Button mEnqueueButton, mDequeueButton;
     private TextView mWaiting;
@@ -50,6 +49,7 @@ public class QueueFragment extends Fragment {
     /**
      * This initializes the UI variables once the fragment starts up, and returns the view
      * to its parent.
+     *
      * @param inflater
      * @param container
      * @param savedInstanceState
@@ -59,20 +59,20 @@ public class QueueFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        ((MainActivity) getActivity()).setActionBarTitle("Queue");
+        ((MainActivity) getActivity()).setActionBarTitle("Sign-in Queue");
         // Get the view from fragment XML
-        view = inflater.inflate(R.layout.queue_fragment, container, false);
+        mView = inflater.inflate(R.layout.queue_fragment, container, false);
 
         // Initialize queue UI elements
-        mEnqueueButton = view.findViewById(R.id.enqueue_button);
-        mDequeueButton = view.findViewById(R.id.dequeue_button);
-        mWaiting = view.findViewById(R.id.waiting);
-        mRecyclerView = view.findViewById(R.id.queue_recycler_view);
+        mEnqueueButton = mView.findViewById(R.id.enqueue_button);
+        mDequeueButton = mView.findViewById(R.id.dequeue_button);
+        mWaiting = mView.findViewById(R.id.waiting);
+        mRecyclerView = mView.findViewById(R.id.queue_recycler_view);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        return view;
+        return mView;
     }
 
     /**
@@ -106,6 +106,7 @@ public class QueueFragment extends Fragment {
 
         // Fetch data for queue
         mQueueDatabase = mViewModel.getmQueueDatabase();
+        mQueueSize = mViewModel.getmQueueSize();
         mUser = mViewModel.getUser();
         mQueue = mViewModel.getmQueue();
         displayQueue = new ArrayList<>();
@@ -121,7 +122,9 @@ public class QueueFragment extends Fragment {
                     mViewModel.enqueueUser();
                     updateQueue();
                 } catch (NullPointerException e) {
-                    Navigation.findNavController(view).navigate(R.id.loginFragment);
+                    Bundle bundle = new Bundle();
+                    bundle.putCharSequence("externalFragmentMessage", "enqueue");
+                    Navigation.findNavController(mView).navigate(R.id.loginFragment, bundle);
                 }
             }
         });
@@ -134,7 +137,9 @@ public class QueueFragment extends Fragment {
                     mViewModel.dequeueUser();
                     updateQueue();
                 } catch (NullPointerException e) {
-                    Navigation.findNavController(view).navigate(R.id.loginFragment);
+                    Bundle bundle = new Bundle();
+                    bundle.putCharSequence("externalFragmentMessage", "dequeue");
+                    Navigation.findNavController(mView).navigate(R.id.loginFragment, bundle);
                 }
             }
         });
@@ -143,7 +148,7 @@ public class QueueFragment extends Fragment {
 
     /**
      * The updateQueue method reads from the queue node in the database and adds the users to the mQueue
-     * ArrayList.
+     * ArrayList. This is how we read from the database at runtime.
      */
     //TODO: Move this method into the SharedViewModel
     private void updateQueue() {
@@ -185,6 +190,7 @@ public class QueueFragment extends Fragment {
                 mRecyclerView.setAdapter(mAdapter);
                 mWaiting.setText("Number of people currently in the queue: " +
                         String.valueOf(mQueue.size()));
+                mQueueSize.setValue(mQueue.size());
             }
 
             @Override

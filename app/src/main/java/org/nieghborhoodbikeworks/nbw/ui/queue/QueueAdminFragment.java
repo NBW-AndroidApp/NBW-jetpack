@@ -34,12 +34,11 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static androidx.constraintlayout.widget.StateSet.TAG;
-
 public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.ClickListener {
+    private static String TAG = "QueueAdminFragment";
     private SharedViewModel mViewModel;
-    private View view;
-    private DatabaseReference mQueueDatabase;
+    private View mView;
+    private DatabaseReference mQueueDatabase, mQueueSize;
     private User mUser;
     private Button mEnqueueButton, mDequeueButton;
     private TextView mWaiting;
@@ -56,6 +55,7 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
     /**
      * This initializes the UI variables once the fragment starts up, and returns the view
      * to its parent.
+     *
      * @param inflater
      * @param container
      * @param savedInstanceState
@@ -67,18 +67,18 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
                              @Nullable Bundle savedInstanceState) {
         ((MainActivity) getActivity()).setActionBarTitle("Queue");
         // Get the view from fragment XML
-        view = inflater.inflate(R.layout.queue_fragment, container, false);
+        mView = inflater.inflate(R.layout.queue_fragment, container, false);
 
         // Initialize queue UI elements
-        mEnqueueButton = view.findViewById(R.id.enqueue_button);
-        mDequeueButton = view.findViewById(R.id.dequeue_button);
-        mWaiting = view.findViewById(R.id.waiting);
-        mRecyclerView = view.findViewById(R.id.queue_recycler_view);
+        mEnqueueButton = mView.findViewById(R.id.enqueue_button);
+        mDequeueButton = mView.findViewById(R.id.dequeue_button);
+        mWaiting = mView.findViewById(R.id.waiting);
+        mRecyclerView = mView.findViewById(R.id.queue_recycler_view);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        return view;
+        return mView;
     }
 
     /**
@@ -112,6 +112,7 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
 
         // Fetch data for queue
         mQueueDatabase = mViewModel.getmQueueDatabase();
+        mQueueSize = mViewModel.getmQueueSize();
         mUser = mViewModel.getUser();
         mQueue = mViewModel.getmQueue();
         displayQueue = new ArrayList<>();
@@ -147,7 +148,7 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
                     mViewModel.enqueueUser();
                     updateQueue();
                 } catch (NullPointerException e) {
-                    Navigation.findNavController(view).navigate(R.id.loginFragment);
+                    Navigation.findNavController(mView).navigate(R.id.loginFragment);
                 }
             }
         });
@@ -160,7 +161,7 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
                     mViewModel.dequeueUser();
                     updateQueue();
                 } catch (NullPointerException e) {
-                    Navigation.findNavController(view).navigate(R.id.loginFragment);
+                    Navigation.findNavController(mView).navigate(R.id.loginFragment);
                 }
             }
         });
@@ -234,6 +235,7 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
                 mRecyclerView.setAdapter(mAdapter);
                 mWaiting.setText("Number of people currently in the queue: " +
                         String.valueOf(mQueue.size()));
+                mQueueSize.setValue(mQueue.size());
             }
 
             @Override
@@ -300,9 +302,9 @@ public class QueueAdminFragment extends Fragment implements QueueAdapterAdmin.Cl
     private class ActionModeCallback implements ActionMode.Callback {
 
         /**
-         *  Run once on initial creation of the ActionMode. This method sets the xml layout
-         *  for the selection process; the menu layout sets the action buttons for this
-         *  ActionMode.
+         * Run once on initial creation of the ActionMode. This method sets the xml layout
+         * for the selection process; the menu layout sets the action buttons for this
+         * ActionMode.
          *
          * @param mode
          * @param menu

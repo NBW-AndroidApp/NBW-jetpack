@@ -14,26 +14,22 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 
 import org.nieghborhoodbikeworks.nbw.MainActivity;
 import org.nieghborhoodbikeworks.nbw.R;
 import org.nieghborhoodbikeworks.nbw.SharedViewModel;
 import org.nieghborhoodbikeworks.nbw.User;
-import org.nieghborhoodbikeworks.nbw.ui.login.LoginFragment;
-import org.nieghborhoodbikeworks.nbw.ui.waiver.WaiverFragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 public class SignUpFragment extends Fragment {
-    private String TAG = "SignUpFragment";
+    private static String TAG = "SignUpFragment";
+    private View mView;
     private SharedViewModel mViewModel;
     private Button mSignUpButton;
     private EditText mEmail, mPassword, mPasswordVerify, mName;
@@ -53,24 +49,24 @@ public class SignUpFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        // Set Title for the Fragment.
+        // Set Title for the Fragment
         ((MainActivity) getActivity()).setActionBarTitle("Sign Up with NBW");
         // Get the view from fragment XML
-        View v = inflater.inflate(R.layout.signup_fragment, container, false);
+        mView = inflater.inflate(R.layout.signup_fragment, container, false);
 
         // Fetch SharedViewModel from MainActivity.
         mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
 
         // Assign values to the variables involved on the Fragment view.
-        mSignUpButton= v.findViewById(R.id.signup_button);
-        mEmail = v.findViewById(R.id.email);
-        mPassword = v.findViewById(R.id.password);
-        mAgeCheckBox = v.findViewById(R.id.age_checkbox);
-        mPasswordVerify = v.findViewById(R.id.password_verify);
-        mName = v.findViewById(R.id.name);
+        mSignUpButton= mView.findViewById(R.id.signup_button);
+        mEmail = mView.findViewById(R.id.email);
+        mPassword = mView.findViewById(R.id.password);
+        mAgeCheckBox = mView.findViewById(R.id.age_checkbox);
+        mPasswordVerify = mView.findViewById(R.id.password_verify);
+        mName = mView.findViewById(R.id.name);
 
         // Set views for listening events
-        return v;
+        return mView;
     }
 
     /**
@@ -82,6 +78,7 @@ public class SignUpFragment extends Fragment {
      * to enter valid credentials. If all of them are valid, the info is taken in and a {@link FirebaseUser}
      * FirebaseUser is created as well as a {@link com.google.firebase.database.FirebaseDatabase}
      * FirebaseDataBase User instance. After that, the person is navigated into the UserChoiceFragment.
+     *
      * @param savedInstanceState
      */
     @Override
@@ -148,6 +145,7 @@ public class SignUpFragment extends Fragment {
     /**
      * Checks if a given password is valid. this is in place so it can be modified to have stricter
      * rules in the future.
+     *
      * @param password
      * @return
      */
@@ -157,6 +155,7 @@ public class SignUpFragment extends Fragment {
 
     /**
      * Checks e-mail validity using Android's {@link android.util.Patterns}.
+     *
      * @param target
      * @return
      */
